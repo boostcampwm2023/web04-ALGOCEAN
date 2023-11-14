@@ -6,3 +6,27 @@
   box-sizing: border-box;
   font-family: 'Noto Sans KR', serif;
 }
+
+body {
+  width: 100%;
+}
+
+main {
+  display: flex;
+  gap: 2rem;
+
+  width: 100%;
+  padding: 2rem 3rem;
+}
+
+main > div {
+  width: 1px;
+  flex: 1;
+}
+
+main > aside {
+  width: 23rem;
+  min-height: 100%;
+  border: 1px solid;
+  opacity: 30%;
+}

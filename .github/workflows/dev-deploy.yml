@@ -3,7 +3,7 @@ name: git push into personal repo to deploy to vercel
 on:
   push:
     branches:
-      - 'dev'
+      - dev
 
 jobs:
   build:

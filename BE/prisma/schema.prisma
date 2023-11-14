@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model answers {
+  Id         Int        @id @default(autoincrement())
+  UserId     Int?
+  QuestionId Int?
+  Content    String?    @db.Text
+  VideoLink  String?    @db.VarChar(255)
+  IsAdopted  Boolean?   @default(false)
+  CreatedAt  DateTime?  @db.DateTime(0)
+  UpdatedAt  DateTime?  @db.DateTime(0)
+  DeletedAt  DateTime?  @db.DateTime(0)
+  users      users?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "answers_ibfk_1")
+  questions  questions? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "answers_ibfk_2")
+
+  @@index([QuestionId], map: "QuestionId")
+  @@index([UserId], map: "UserId")
+}
+
+model delete_history {
+  Id                Int       @id @default(autoincrement())
+  OriginalTableName String?   @db.VarChar(255)
+  OriginalDataId    Int?
+  DeleteDate        DateTime? @db.DateTime(0)
+  DeletedBy         Int?
+  users             users?    @relation(fields: [DeletedBy], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "delete_history_ibfk_1")
+
+  @@index([DeletedBy], map: "DeletedBy")
+}
+
+model items {
+  Id          Int          @id @default(autoincrement())
+  Name        String?      @db.VarChar(255)
+  Description String?      @db.Text
+  Price       Int?
+  Quantity    Int?
+  user_items  user_items[]
+}
+
+model likes {
+  Id              Int      @id @default(autoincrement())
+  UserId          Int?
+  LikedEntityId   Int?
+  LikedEntityType String?  @db.VarChar(255)
+  IsLiked         Boolean? @default(false)
+  users           users?   @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "likes_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model point_history {
+  Id          Int       @id @default(autoincrement())
+  UserId      Int?
+  PointChange Int?
+  Reason      String?   @db.VarChar(255)
+  ChangeDate  DateTime? @db.DateTime(0)
+  users       users?    @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "point_history_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model questions {
+  Id           Int       @id @default(autoincrement())
+  UserId       Int?
+  Title        String?   @db.VarChar(255)
+  Content      String?   @db.Text
+  Tag          String?   @db.VarChar(255)
+  OriginalLink String?   @db.VarChar(255)
+  IsAdopted    Boolean?  @default(false)
+  CreatedAt    DateTime? @db.DateTime(0)
+  UpdatedAt    DateTime? @db.DateTime(0)
+  ViewCount    Int?      @default(0)
+  DeletedAt    DateTime? @db.DateTime(0)
+  answers      answers[]
+  users        users?    @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "questions_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model user_items {
+  Id           Int       @id @default(autoincrement())
+  UserId       Int?
+  ItemId       Int?
+  PurchaseDate DateTime? @db.DateTime(0)
+  users        users?    @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "user_items_ibfk_1")
+  items        items?    @relation(fields: [ItemId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "user_items_ibfk_2")
+
+  @@index([ItemId], map: "ItemId")
+  @@index([UserId], map: "UserId")
+}
+
+model users {
+  Id             Int              @id @default(autoincrement())
+  UserId         String?          @unique(map: "UserId") @db.VarChar(255)
+  Password       String?          @db.VarChar(255)
+  Nickname       String?          @db.VarChar(255)
+  ProfileImage   String?          @db.VarChar(255)
+  Points         Int?             @default(0)
+  IsAdopted      Boolean?         @default(false)
+  CreatedAt      DateTime?        @db.DateTime(0)
+  UpdatedAt      DateTime?        @db.DateTime(0)
+  DeletedAt      DateTime?        @db.DateTime(0)
+  answers        answers[]
+  delete_history delete_history[]
+  likes          likes[]
+  point_history  point_history[]
+  questions      questions[]
+  user_items     user_items[]
+}

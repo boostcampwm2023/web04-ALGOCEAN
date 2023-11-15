@@ -4,6 +4,7 @@ import {
   MainNav,
   UniqueQuestions,
   QuestionList,
+  QuestionProfile,
 } from './components';
 import dummyQuestionList from './assets/questionlistMockdata.json';
 import '../style/index.css';
@@ -33,7 +34,14 @@ function Main() {
         <UniqueQuestions questions={dummyQuestions} />
         <QuestionList itemDatas={dummyQuestionList} />
       </div>
-      <aside>banner</aside>
+      <aside>
+        <img
+          className="banner"
+          src="https://i.pinimg.com/originals/b0/df/95/b0df95cfc6f31293d002d4d6daac253c.jpg"
+          alt="포인트 정보가 들어갈 배너"
+        />
+        <QuestionProfile />
+      </aside>
     </main>
   );
 }

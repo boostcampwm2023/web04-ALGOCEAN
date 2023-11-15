@@ -5,5 +5,13 @@ import {
   Item as QuestionItem,
   QuestionList,
 } from './QuestionList/QuestionList';
+import { QuestionProfile } from './QuestionProfile/QuestionProfile';
 
-export { MainHeader, MainNav, UniqueQuestions, QuestionItem, QuestionList };
+export {
+  MainHeader,
+  MainNav,
+  UniqueQuestions,
+  QuestionItem,
+  QuestionList,
+  QuestionProfile,
+};

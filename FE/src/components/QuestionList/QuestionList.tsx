@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Pagination } from '../index';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
 import * as S from './QuestionList.styles';
@@ -25,6 +27,10 @@ const getColor = (programmingLanguage: string) => {
   }
 };
 
+const getCurrentItems = (itemDatas: ItemData[], currentPage: number) => {
+  return itemDatas.slice(currentPage * 10, currentPage * 10 + 10);
+};
+
 export function Header() {
   return (
     <S.Header>
@@ -33,6 +39,7 @@ export function Header() {
     </S.Header>
   );
 }
+
 export function Item({ itemData }: { itemData: ItemData }) {
   const {
     id,
@@ -75,14 +82,25 @@ export function Item({ itemData }: { itemData: ItemData }) {
 }
 
 export function QuestionList({ itemDatas }: { itemDatas: ItemData[] }) {
+  const [currentPage, setCurrentPage] = useState(0);
+  const wholePage = Math.ceil(itemDatas.length / 10);
+
   return (
     <S.QuestionList>
       <Header />
       <ul>
-        {itemDatas.map((itemData, idx) => (
+        {getCurrentItems(itemDatas, currentPage).map((itemData, idx) => (
           <Item key={idx} itemData={itemData} />
         ))}
       </ul>
+      <Pagination
+        wholePageCount={wholePage}
+        currentPage={currentPage}
+        handleCurrentPage={(i) => {
+          setCurrentPage(i);
+        }}
+        splitNumber={10}
+      />
     </S.QuestionList>
   );
 }

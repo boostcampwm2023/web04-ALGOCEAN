@@ -16,6 +16,7 @@ export const Item = styled.div<ItemProps>`
   background-color: ${({ bgColor }) => bgColor};
   color: var(--color-grayscale-white);
   transition: all 0.2s ease-in;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-0.5rem);

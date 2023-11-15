@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Logo = styled.div`
   display: flex;
   align-items: center;
+  cursor: default;
 
   img {
     width: 2.3rem;
@@ -66,4 +67,5 @@ export const Container = styled.header`
   height: 5rem;
   padding: 0 3rem;
   border-bottom: 1px solid var(--color-grayscale-100);
+  background-color: var(--color-grayscale-white);
 `;

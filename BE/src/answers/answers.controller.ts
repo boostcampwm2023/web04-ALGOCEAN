@@ -20,20 +20,28 @@ export class AnswersController {
 
   @Post()
   async create(@Body() createAnswerDto: CreateAnswerDto, @Res() res: Response) {
-    // this.answersService.create(createAnswerDto) 가 성공하면 201, 실패하면 400 리턴
     try {
       await this.answersService.create(createAnswerDto);
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'Answer created successfully' });
     } catch (e) {
-      return res.status(HttpStatus.BAD_REQUEST).json({ message: e.message });
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Answer creation failed' });
     }
   }
 
   @Post('adopt')
-  adopt(@Body() adoptAnswerDto: AdoptAnswerDto) {
+  adopt(@Body() adoptAnswerDto: AdoptAnswerDto, @Res() res: Response) {
     //TODO: get user id from request, and pass it to answersService.adopt
-    return this.answersService.adopt(adoptAnswerDto);
+    try {
+      this.answersService.adopt(adoptAnswerDto);
+      return res.status(HttpStatus.OK).json({ message: 'Answer adopted' });
+    } catch (e) {
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Answer adoption failed' });
+    }
   }
 }

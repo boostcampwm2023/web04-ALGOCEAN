@@ -13,6 +13,9 @@
 
 <br/>
 
+## 개발 위키
+[개발 위키](https://github.com/boostcampwm2023/web04-ALGOCEAN/wiki)
+
 ## ⛳️ 그라운드 룰
 
 ### 정규 일정

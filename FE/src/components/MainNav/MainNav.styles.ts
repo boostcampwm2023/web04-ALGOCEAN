@@ -9,6 +9,7 @@ export const MainNav = styled.nav`
   height: 3.2rem;
   padding: 0 3rem;
   border-bottom: 1px solid var(--color-grayscale-100);
+  background-color: var(--color-grayscale-white);
 
   ol {
     display: flex;
@@ -26,9 +27,6 @@ export const MainNav = styled.nav`
       text-decoration: underline;
       color: var(--color-grayscale-black);
       font-weight: 700;
-      cursor: default;
-    }
-    li:hover {
       cursor: pointer;
     }
   }

@@ -34,6 +34,7 @@ export const Item = styled.li<ItemProps>`
   border: 1px solid var(--color-grayscale-50);
   color: var(--color-grayscale-200);
   font-size: 0.8rem;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--color-grayscale-50);

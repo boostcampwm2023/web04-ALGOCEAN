@@ -1,5 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { MainHeader, MainNav, UniqueQuestions } from './components';
+import {
+  MainHeader,
+  MainNav,
+  UniqueQuestions,
+  QuestionList,
+} from './components';
+import dummyQuestionList from './assets/questionlistMockdata.json';
 import '../style/index.css';
 
 const dummyQuestions = [
@@ -23,7 +29,10 @@ const dummyQuestions = [
 function Main() {
   return (
     <main>
-      <UniqueQuestions questions={dummyQuestions} />
+      <div>
+        <UniqueQuestions questions={dummyQuestions} />
+        <QuestionList itemDatas={dummyQuestionList} />
+      </div>
       <aside>banner</aside>
     </main>
   );

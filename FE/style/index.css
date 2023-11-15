@@ -9,22 +9,26 @@
 
 body {
   width: 100%;
+  background-color: var(--color-grayscale-50);
 }
 
 main {
   display: flex;
   gap: 2rem;
-
   width: 100%;
   padding: 2rem 3rem;
 }
 
 main > div {
-  width: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   flex: 1;
+  width: 1px;
 }
 
 main > aside {
+  flex-shrink: 0;
   width: 23rem;
   min-height: 100%;
   border: 1px solid;

@@ -23,8 +23,9 @@
     "paths": {
       "common": ["./style/common.ts"],
       "@/*": ["./@/*"]
-    }
+    },
+    "composite": true,
+    "resolveJsonModule": true
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "./src/**/*.json"]
 }

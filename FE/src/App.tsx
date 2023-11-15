@@ -30,18 +30,20 @@ const dummyQuestions = [
 function Main() {
   return (
     <main>
-      <div>
-        <UniqueQuestions questions={dummyQuestions} />
-        <QuestionList itemDatas={dummyQuestionList} />
+      <div className="inner">
+        <div>
+          <UniqueQuestions questions={dummyQuestions} />
+          <QuestionList itemDatas={dummyQuestionList} />
+        </div>
+        <aside>
+          <img
+            className="banner"
+            src="https://i.pinimg.com/originals/b0/df/95/b0df95cfc6f31293d002d4d6daac253c.jpg"
+            alt="포인트 정보가 들어갈 배너"
+          />
+          <QuestionProfile />
+        </aside>
       </div>
-      <aside>
-        <img
-          className="banner"
-          src="https://i.pinimg.com/originals/b0/df/95/b0df95cfc6f31293d002d4d6daac253c.jpg"
-          alt="포인트 정보가 들어갈 배너"
-        />
-        <QuestionProfile />
-      </aside>
     </main>
   );
 }

@@ -41,3 +41,10 @@ lerna-debug.log*
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# env
+.env
+
+# prisma build files
+prisma/*
+!prisma/schema.prisma

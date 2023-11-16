@@ -11,21 +11,15 @@
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "common": ["./style/common.ts"],
-      "@/*": ["./@/*"]
-    },
-    "composite": true,
-    "resolveJsonModule": true
+    "moduleResolution": "node"
   },
-  "include": ["src", "./src/**/*.json"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

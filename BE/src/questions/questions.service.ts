@@ -7,7 +7,6 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 export class QuestionsService {
   constructor(private prisma: PrismaService) {}
 
-  // TODO: Implement logic to associate the question with the user by including the user id
   async createOneQuestion(
     createQuestionDto: CreateQuestionDto,
     userId: number,

@@ -12,21 +12,25 @@ export class QuestionsService {
     createQuestionDto: CreateQuestionDto,
     userId: number,
   ): Promise<number> {
-    const question = await this.prisma.question.create({
-      data: {
-        User: {
-          connect: {
-            Id: userId,
+    try {
+      const question = await this.prisma.question.create({
+        data: {
+          User: {
+            connect: {
+              Id: userId,
+            },
           },
+          Title: createQuestionDto.title,
+          Content: createQuestionDto.content,
+          Tag: createQuestionDto.tag,
+          ProgrammingLanguage: createQuestionDto.programmingLanguage,
+          OriginalLink: createQuestionDto.originalLink,
         },
-        Title: createQuestionDto.title,
-        Content: createQuestionDto.content,
-        Tag: createQuestionDto.tag,
-        ProgrammingLanguage: createQuestionDto.programmingLanguage,
-        OriginalLink: createQuestionDto.originalLink,
-      },
-    });
-    return question.Id;
+      });
+      return question.Id;
+    } catch (error) {
+      throw new Error('Failed to create question');
+    }
   }
 
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {

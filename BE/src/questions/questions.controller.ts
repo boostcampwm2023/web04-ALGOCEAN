@@ -27,10 +27,17 @@ export class QuestionsController {
         createQuestionDto,
         1,
       );
+
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'Question created successfully', id: questionId });
     } catch (error) {
+      if (error.message === 'Failed to create question') {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: 'Internal server error' });
+      }
+
       return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Bad request' });
     }
   }

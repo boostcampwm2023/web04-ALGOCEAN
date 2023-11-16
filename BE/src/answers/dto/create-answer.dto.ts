@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 export class CreateAnswerDto {
   @IsNotEmpty()
+  @IsString()
   content: string;
 
   @IsNotEmpty()

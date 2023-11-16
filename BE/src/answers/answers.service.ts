@@ -18,7 +18,7 @@ export class AnswersService {
   }
 
   async adopt(adoptAnswerDto: AdoptAnswerDto) {
-    const { questionId, answerId } = adoptAnswerDto;
+    const { answerId } = adoptAnswerDto;
     await this.prisma.$transaction(async (prisma) => {
       //TODO: check if user is the owner of the question
 
@@ -40,9 +40,9 @@ export class AnswersService {
         data: { IsAdopted: true },
       });
 
-      if (adoptedAnswer.Question.Id === questionId) {
+      if (adoptedAnswer.Question) {
         await prisma.question.update({
-          where: { Id: questionId },
+          where: { Id: adoptedAnswer.Question.Id },
           data: { IsAdopted: true },
         });
       } else {

@@ -1,10 +1,42 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
+import { CreateQuestionDto } from './dto/create-question.dto';
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Post()
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async createQuestion(
+    @Body() createQuestionDto: CreateQuestionDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const questionId = await this.questionsService.createOneQuestion(
+        createQuestionDto,
+        1,
+      );
+      return res
+        .status(HttpStatus.CREATED)
+        .json({ message: 'Question created successfully', id: questionId });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ error: 'Bad request' });
+    }
+  }
 
   @Get(':id')
   async readOneQuestion(@Param('id') id: number, @Res() res: Response) {

@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Res,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
@@ -20,7 +18,6 @@ export class QuestionsController {
 
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
     @Res() res: Response,

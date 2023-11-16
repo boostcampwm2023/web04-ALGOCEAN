@@ -1,6 +1,7 @@
 import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
+import { ReadQuestionListDto } from './dto/read-question-list.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -18,6 +19,25 @@ export class QuestionsController {
       }
 
       return res.status(HttpStatus.OK).json(question);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
+
+  @Get('lists/:page')
+  async getQuestionList(@Param('page') page: number, @Res() res: Response) {
+    try {
+      const questionList: ReadQuestionListDto[] =
+        await this.questionsService.readQuestionList(page);
+      if (questionList.length === 0) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ error: 'No questions found' });
+      }
+
+      return res.status(HttpStatus.OK).json(questionList);
     } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

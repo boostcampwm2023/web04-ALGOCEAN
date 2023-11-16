@@ -1,37 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ReadQuestionDto } from './dto/read-question.dto';
-import { CreateQuestionDto } from './dto/create-question.dto';
 
 @Injectable()
 export class QuestionsService {
   constructor(private prisma: PrismaService) {}
-
-  // TODO: Implement logic to associate the question with the user by including the user id
-  async createOneQuestion(
-    createQuestionDto: CreateQuestionDto,
-    userId: number,
-  ): Promise<number> {
-    try {
-      const question = await this.prisma.question.create({
-        data: {
-          User: {
-            connect: {
-              Id: userId,
-            },
-          },
-          Title: createQuestionDto.title,
-          Content: createQuestionDto.content,
-          Tag: createQuestionDto.tag,
-          ProgrammingLanguage: createQuestionDto.programmingLanguage,
-          OriginalLink: createQuestionDto.originalLink,
-        },
-      });
-      return question.Id;
-    } catch (error) {
-      throw new Error('Failed to create question');
-    }
-  }
 
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {
     const question = await this.prisma.question.findUnique({
@@ -66,7 +39,6 @@ export class QuestionsService {
     };
   }
 
-  // TODO: check if user is owner of the question
   async deleteOneQuestion(id: number, userId: number): Promise<boolean> {
     const question = await this.prisma.question.findUnique({
       where: {

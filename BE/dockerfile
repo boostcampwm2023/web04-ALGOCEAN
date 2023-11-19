@@ -16,10 +16,14 @@ ENV NODE_ENV production
 ENV DATABASE_URL mysql://root:1234@223.130.147.11:3306/algocean
 RUN apt-get update -y && apt-get install -y openssl
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./dist/node_modules
-COPY --from=builder /app/package.json ./dist/package.json
-COPY --from=builder /app/.yarn ./dist/.yarn
-
+COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/.yarn ./.yarn
+COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
+COPY --from=builder /app/prisma ./prisma
+RUN yarn set version berry
+RUN yarn workspaces focus --all --production
+COPY --from=builder /app/node_modules/.prisma/client ./node_modules/.prisma/client
 EXPOSE 3000
 
 CMD ["yarn","start:prod"]

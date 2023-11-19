@@ -1,0 +1,25 @@
+FROM node:20 AS builder
+
+WORKDIR /app
+ENV DATABASE_URL mysql://root:1234@223.130.147.11:3306/algocean
+COPY . .
+RUN yarn set version berry
+RUN yarn install
+RUN yarn prisma generate
+RUN yarn build
+
+FROM node:20-slim
+
+#TODO: 이미지 최적화 필요
+WORKDIR /app
+ENV NODE_ENV production
+ENV DATABASE_URL mysql://root:1234@223.130.147.11:3306/algocean
+RUN apt-get update -y && apt-get install -y openssl
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./dist/node_modules
+COPY --from=builder /app/package.json ./dist/package.json
+COPY --from=builder /app/.yarn ./dist/.yarn
+
+EXPOSE 3000
+
+CMD ["yarn","start:prod"]

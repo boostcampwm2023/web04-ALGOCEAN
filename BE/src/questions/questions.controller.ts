@@ -102,4 +102,21 @@ export class QuestionsController {
         .json({ error: 'Internal server error' });
     }
   }
+
+  @Get('finds/:title')
+  async getQuestionListByTitle(
+    @Param('title') title: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const questionList: ReadQuestionListDto[] =
+        await this.questionsService.findQuestionByTitle(title);
+
+      return res.status(HttpStatus.OK).json(questionList);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
 }

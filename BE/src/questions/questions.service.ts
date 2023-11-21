@@ -113,4 +113,45 @@ export class QuestionsService {
       likeCount: question.LikeCount,
     }));
   }
+
+  async findQuestionByTitle(title: string): Promise<ReadQuestionListDto[]> {
+    try {
+      const questions = await this.prisma.question.findMany({
+        where: {
+          Title: {
+            contains: title,
+          },
+        },
+        select: {
+          Id: true,
+          Title: true,
+          Tag: true,
+          CreatedAt: true,
+          ProgrammingLanguage: true,
+          IsAdopted: true,
+          ViewCount: true,
+          LikeCount: true,
+          User: {
+            select: {
+              Nickname: true,
+            },
+          },
+        },
+      });
+      return questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        nickname: question.User?.Nickname,
+        tag: question.Tag,
+        createdAt: question.CreatedAt,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      }));
+    } catch (error) {
+      console.log(error);
+      throw new Error('Failed to find question by title');
+    }
+  }
 }

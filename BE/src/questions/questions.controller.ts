@@ -111,7 +111,6 @@ export class QuestionsController {
     @Query('page', new DefaultValuePipe(1)) page: number,
     @Res() res: Response,
   ) {
-    console.log(page);
     try {
       const questionList: ReadQuestionListDto[] =
         await this.questionsService.findQuestionByTitle(title, page);

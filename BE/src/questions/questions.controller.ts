@@ -62,6 +62,28 @@ export class QuestionsController {
     }
   }
 
+  // TODO: use UserGuard to check if user is the owner of the question
+  @Delete(':id')
+  async deleteOneQuestion(@Param('id') id: number, @Res() res: Response) {
+    try {
+      const isDeleted = await this.questionsService.deleteOneQuestion(id, 1);
+
+      if (isDeleted) {
+        return res
+          .status(HttpStatus.OK)
+          .json({ message: 'Question deleted successfully' });
+      } else {
+        return res
+          .status(HttpStatus.FORBIDDEN)
+          .json({ error: 'Question is not able to deleted' });
+      }
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
+
   @Get('lists/:page')
   async getQuestionList(@Param('page') page: number, @Res() res: Response) {
     try {

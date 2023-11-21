@@ -1,4 +1,4 @@
-import { UniqueQuestionItem as Item } from '../../../types/type.d';
+import { UniqueQuestionItem as Item } from '../../types/type';
 import * as S from './UniqueQuestions.styles';
 
 const typeInfo = {

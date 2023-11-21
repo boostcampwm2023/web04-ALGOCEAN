@@ -3,7 +3,7 @@ import {
   QuestionList,
   QuestionProfile,
 } from '../../components';
-import { UniqueQuestionItem as Question } from '../../../types/type.d';
+import { UniqueQuestionItem as Question } from '../../types/type';
 import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
 import dummyQuestionList from '../../assets/questionlistMockdata.json';
 import { Main } from './MainPage.styles';

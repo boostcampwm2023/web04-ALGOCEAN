@@ -6,12 +6,14 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -74,6 +76,36 @@ export class QuestionsController {
       }
 
       return res.status(HttpStatus.OK).json(questionList);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
+
+  // TODO: use UserGuard to check if user is the owner of the question
+  @Put(':id')
+  async updateOneQuestion(
+    @Param('id') id: number,
+    @Body() updateQuestionDto: UpdateQuestionDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const isUpdated = await this.questionsService.updateOneQuestion(
+        id,
+        1,
+        updateQuestionDto,
+      );
+
+      if (isUpdated) {
+        return res
+          .status(HttpStatus.OK)
+          .json({ message: 'Question updated successfully' });
+      } else {
+        return res
+          .status(HttpStatus.FORBIDDEN)
+          .json({ error: 'Question is not able to be modified' });
+      }
     } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

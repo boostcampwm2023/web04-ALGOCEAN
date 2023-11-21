@@ -114,8 +114,13 @@ export class QuestionsService {
     }));
   }
 
-  async findQuestionByTitle(title: string): Promise<ReadQuestionListDto[]> {
+  async findQuestionByTitle(
+    title: string,
+    page: number,
+  ): Promise<ReadQuestionListDto[]> {
     try {
+      const pageSize = 10;
+      const skip = (page - 1) * pageSize;
       const questions = await this.prisma.question.findMany({
         where: {
           Title: {
@@ -137,6 +142,8 @@ export class QuestionsService {
             },
           },
         },
+        skip,
+        take: pageSize,
       });
       return questions.map((question) => ({
         id: question.Id,

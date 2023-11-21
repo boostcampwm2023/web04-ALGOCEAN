@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpStatus,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -106,11 +108,13 @@ export class QuestionsController {
   @Get('finds/:title')
   async getQuestionListByTitle(
     @Param('title') title: string,
+    @Query('page', new DefaultValuePipe(1)) page: number,
     @Res() res: Response,
   ) {
+    console.log(page);
     try {
       const questionList: ReadQuestionListDto[] =
-        await this.questionsService.findQuestionByTitle(title);
+        await this.questionsService.findQuestionByTitle(title, page);
 
       return res.status(HttpStatus.OK).json(questionList);
     } catch (error) {

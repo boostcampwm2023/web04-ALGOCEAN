@@ -1,10 +1,5 @@
+import { UniqueQuestionItem as Item } from '../../../types/type.d';
 import * as S from './UniqueQuestions.styles';
-
-interface Item {
-  type: 'today' | 'hot' | 'random';
-  title: string;
-  url: string;
-}
 
 const typeInfo = {
   hot: {

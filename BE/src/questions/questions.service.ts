@@ -67,36 +67,24 @@ export class QuestionsService {
   }
 
   async deleteOneQuestion(id: number, userId: number): Promise<boolean> {
-    const question = await this.prisma.question.findUnique({
-      where: {
-        Id: id,
-        IsAdopted: false,
-      },
-      include: {
-        User: {
-          select: {
-            Id: true,
-          },
+    try {
+      await this.prisma.question.update({
+        where: {
+          Id: id,
+          UserId: userId,
+          IsAdopted: false,
+          DeletedAt: null,
         },
-      },
-    });
-
-    if (!question) {
+        data: {
+          DeletedAt: new Date(),
+        },
+      });
+      return true;
+    } catch (error) {
       return false;
-    }
-
-    if (question.User.Id !== userId) {
-      throw new Error('User is not the owner of the question');
     }
   }
 
-    await this.prisma.question.delete({
-      where: {
-        Id: id,
-      },
-    });
-
-    return true;
   async readQuestionList(page: number): Promise<ReadQuestionListDto[]> {
     const pageSize = 10; // 한 페이지당 질문 개수는 10개
     const skip = (page - 1) * pageSize;

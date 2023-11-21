@@ -74,19 +74,14 @@ export class QuestionsController {
           .json({ message: 'Question deleted successfully' });
       } else {
         return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'Question not found or already adopted' });
+          .status(HttpStatus.FORBIDDEN)
+          .json({ error: 'Question is not able to deleted' });
       }
     } catch (error) {
-      if (error.message === 'User is not the owner of the question') {
-        return res
-          .status(HttpStatus.FORBIDDEN)
-          .json({ error: 'User is not the owner of the question' });
-      }
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
     }
-    return res
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error' });
   }
 
   @Get('lists/:page')

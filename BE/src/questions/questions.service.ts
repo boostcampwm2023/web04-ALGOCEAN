@@ -150,7 +150,6 @@ export class QuestionsService {
         likeCount: question.LikeCount,
       }));
     } catch (error) {
-      console.log(error);
       throw new Error('Failed to find question by title');
     }
   }

@@ -88,6 +88,7 @@ export class QuestionsService {
     if (question.User.Id !== userId) {
       throw new Error('User is not the owner of the question');
     }
+  }
 
     await this.prisma.question.delete({
       where: {

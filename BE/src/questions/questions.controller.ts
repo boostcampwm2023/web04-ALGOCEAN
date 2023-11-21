@@ -87,6 +87,7 @@ export class QuestionsController {
     return res
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .json({ error: 'Internal server error' });
+  }
 
   @Get('lists/:page')
   async getQuestionList(@Param('page') page: number, @Res() res: Response) {

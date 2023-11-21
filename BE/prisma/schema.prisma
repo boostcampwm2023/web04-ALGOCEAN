@@ -14,8 +14,8 @@ model Answer {
   Content    String?   @db.Text
   VideoLink  String?   @db.VarChar(255)
   IsAdopted  Boolean?  @default(false)
-  CreatedAt  DateTime? @db.DateTime(0)
-  UpdatedAt  DateTime? @db.DateTime(0)
+  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
+  UpdatedAt  DateTime? @default(now()) @db.DateTime(0)
   DeletedAt  DateTime? @db.DateTime(0)
   LikeCount  Int?      @default(0)
   User       User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Answer_ibfk_1")
@@ -61,7 +61,7 @@ model Point_History {
   UserId      Int?
   PointChange Int?
   Reason      String?   @db.VarChar(255)
-  ChangeDate  DateTime? @db.DateTime(0)
+  ChangeDate  DateTime? @default(now()) @db.DateTime(0)
   User        User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Point_History_ibfk_1")
 
   @@index([UserId], map: "UserId")
@@ -76,8 +76,8 @@ model Question {
   ProgrammingLanguage String?   @db.VarChar(255)
   OriginalLink        String?   @db.VarChar(255)
   IsAdopted           Boolean?  @default(false)
-  CreatedAt           DateTime? @db.DateTime(0)
-  UpdatedAt           DateTime? @db.DateTime(0)
+  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
+  UpdatedAt           DateTime? @default(now()) @db.DateTime(0)
   ViewCount           Int?      @default(0)
   LikeCount           Int?      @default(0)
   DeletedAt           DateTime? @db.DateTime(0)
@@ -94,9 +94,8 @@ model User {
   Nickname       String?          @db.VarChar(255)
   ProfileImage   String?          @db.VarChar(255)
   Points         Int?             @default(0)
-  IsAdopted      Boolean?         @default(false)
-  CreatedAt      DateTime?        @db.DateTime(0)
-  UpdatedAt      DateTime?        @db.DateTime(0)
+  CreatedAt      DateTime?        @default(now()) @db.DateTime(0)
+  UpdatedAt      DateTime?        @default(now()) @db.DateTime(0)
   DeletedAt      DateTime?        @db.DateTime(0)
   Answer         Answer[]
   Delete_History Delete_History[]

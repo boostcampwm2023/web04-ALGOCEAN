@@ -27,8 +27,10 @@ function SearchBar() {
 export function MainHeader() {
   return (
     <S.Container>
-      <Logo />
-      <SearchBar />
+      <div className="inner">
+        <Logo />
+        <SearchBar />
+      </div>
     </S.Container>
   );
 }

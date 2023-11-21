@@ -6,6 +6,7 @@ import {
   QuestionList,
 } from './QuestionList/QuestionList';
 import { QuestionProfile } from './QuestionProfile/QuestionProfile';
+import { Pagination } from './Pagination/Pagination';
 
 export {
   MainHeader,
@@ -14,4 +15,5 @@ export {
   QuestionItem,
   QuestionList,
   QuestionProfile,
+  Pagination,
 };

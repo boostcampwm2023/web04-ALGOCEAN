@@ -14,12 +14,20 @@ body {
 
 main {
   display: flex;
+  justify-content: center;
   gap: 2rem;
   width: 100%;
   padding: 2rem 3rem;
 }
 
-main > div {
+main > .inner {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: var(--max-width);
+}
+
+main > .inner > div {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -27,7 +35,7 @@ main > div {
   width: 1px;
 }
 
-main > aside {
+main > .inner > aside {
   display: flex;
   flex-direction: column;
   gap: 2rem;

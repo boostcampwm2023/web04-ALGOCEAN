@@ -49,6 +49,7 @@ export const Item = styled.li<ItemProps>`
       justify-content: left;
       gap: 0.2rem;
       width: 100%;
+      height: 1.3rem;
 
       h4 {
         flex-shrink: 1;

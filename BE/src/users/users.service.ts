@@ -8,7 +8,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<boolean> {
-    const { userId, password, nickname, profileImage } = createUserDto;
+    const { userId, password, nickname } = createUserDto;
     try {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -18,7 +18,6 @@ export class UsersService {
           UserId: userId,
           Password: hashedPassword,
           Nickname: nickname,
-          ProfileImage: profileImage,
         },
       });
 

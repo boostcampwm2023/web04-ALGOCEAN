@@ -12,7 +12,4 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly nickname: string;
-
-  @IsString()
-  readonly profileImage: string;
 }

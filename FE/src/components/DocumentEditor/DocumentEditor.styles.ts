@@ -5,14 +5,15 @@ export const EditorWrapper = styled.div`
     width: 85%;
     margin: 0 auto;
     margin-bottom: 4rem;
-    background-color: white;
+    background-color: ${({ theme }) => theme.color.grayscale.white};
   }
   .editor {
-    height: 31.25rem !important;
-    border: 1px solid #f1f1f1 !important;
-    padding: 5px !important;
-    border-radius: 2px !important;
+    height: 31.25rem;
+    border: 1px solid ${({ theme }) => theme.color.grayscale[50]};
+    padding: 5px;
+    border-radius: 2px;
   }
   .toolbar-class {
+    border: 1px solid ${({ theme }) => theme.color.grayscale[50]};
   }
 `;

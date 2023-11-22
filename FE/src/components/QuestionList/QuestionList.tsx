@@ -13,6 +13,7 @@ import {
   Details,
   AdoptBadge,
   Author,
+  Date,
   ItemAside,
   Tag,
   ProgrammingLanguage,

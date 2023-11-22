@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpStatus,
   Param,
   Post,
+  Query,
   Put,
   Res,
 } from '@nestjs/common';
@@ -105,6 +107,24 @@ export class QuestionsController {
     }
   }
 
+  @Get('finds/:title')
+  async getQuestionListByTitle(
+    @Param('title') title: string,
+    @Query('page', new DefaultValuePipe(1)) page: number,
+    @Res() res: Response,
+  ) {
+    try {
+      const questionList: ReadQuestionListDto[] =
+        await this.questionsService.findQuestionByTitle(title, page);
+
+      return res.status(HttpStatus.OK).json(questionList);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
+  
   // TODO: use UserGuard to check if user is the owner of the question
   @Put(':id')
   async updateOneQuestion(

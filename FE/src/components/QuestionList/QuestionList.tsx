@@ -75,7 +75,7 @@ export function Item({ itemData }: { itemData: ItemData }) {
         </Details>
       </ItemMain>
       <ItemAside>
-        <Tag tag={tag}>{tag}</Tag>
+        <Tag $tag={tag}>{tag}</Tag>
         <ProgrammingLanguage>{programmingLanguage}</ProgrammingLanguage>
         <ViewCount>
           <img src={eyeIcon} />

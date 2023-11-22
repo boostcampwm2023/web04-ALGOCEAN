@@ -83,6 +83,7 @@ export function Pagination({
       <ul className="page-list">
         {getCurrentNum(wholePageCount, currentPage, splitNumber).map((i) => (
           <span
+            key={i}
             className={i === currentPage + 1 ? 'current' : ''}
             onClick={() => handlePageItem(i - 1)}
           >

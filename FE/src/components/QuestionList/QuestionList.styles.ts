@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface TagProps {
-  tag: string;
+  $tag: string;
 }
 
 export const Header = styled.div`
@@ -91,8 +91,8 @@ export const ItemAside = styled.div`
 `;
 
 export const Tag = styled.div<TagProps>`
-  color: ${({ tag }) => {
-    switch (tag) {
+  color: ${({ $tag }) => {
+    switch ($tag) {
       case 'programemrs':
         return '';
       case 'leetcode':

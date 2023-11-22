@@ -5,7 +5,21 @@ import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
 import CheckIcon from '../../assets/icons/check-circle.svg?react';
 import { getFormalizedDate } from '../../hooks/index';
-import * as S from './QuestionList.styles';
+import {
+  Header as HeaderContainer,
+  Item as ItemContainer,
+  ItemMain,
+  Title,
+  Details,
+  AdoptBadge,
+  Author,
+  ItemAside,
+  Tag,
+  ProgrammingLanguage,
+  ViewCount,
+  LikeCount,
+  QuestionList as QuestionListContainer,
+} from './QuestionList.styles';
 
 const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
@@ -24,10 +38,10 @@ interface ItemData {
 
 export function Header() {
   return (
-    <S.Header>
+    <HeaderContainer>
       <div className="by-recent selected">✔️ 최신순</div>
       <div className="by-old">오래된순</div>
-    </S.Header>
+    </HeaderContainer>
   );
 }
 
@@ -45,33 +59,33 @@ export function Item({ itemData }: { itemData: ItemData }) {
   } = itemData;
 
   return (
-    <S.Item data-id={id}>
-      <S.ItemMain>
-        <S.Title>{title}</S.Title>
-        <S.Details>
+    <ItemContainer data-id={id}>
+      <ItemMain>
+        <Title>{title}</Title>
+        <Details>
           {isAdopted && (
-            <S.AdoptBadge>
+            <AdoptBadge>
               <CheckIcon />
               채택 완료
-            </S.AdoptBadge>
+            </AdoptBadge>
           )}
-          <S.Author>{nickname}</S.Author>
-          <S.Date>{getFormalizedDate(createdAt)}</S.Date>
-        </S.Details>
-      </S.ItemMain>
-      <S.ItemAside>
-        <S.Tag tag={tag}>{tag}</S.Tag>
-        <S.ProgrammingLanguage>{programmingLanguage}</S.ProgrammingLanguage>
-        <S.ViewCount>
+          <Author>{nickname}</Author>
+          <Date>{getFormalizedDate(createdAt)}</Date>
+        </Details>
+      </ItemMain>
+      <ItemAside>
+        <Tag tag={tag}>{tag}</Tag>
+        <ProgrammingLanguage>{programmingLanguage}</ProgrammingLanguage>
+        <ViewCount>
           <img src={eyeIcon} />
           <span>{viewCount}</span>
-        </S.ViewCount>
-        <S.LikeCount>
+        </ViewCount>
+        <LikeCount>
           <img src={likeIcon} alt="좋아요 수" />
           <span>{likeCount}</span>
-        </S.LikeCount>
-      </S.ItemAside>
-    </S.Item>
+        </LikeCount>
+      </ItemAside>
+    </ItemContainer>
   );
 }
 
@@ -95,7 +109,7 @@ export function QuestionList() {
   }, [currentPage]);
 
   return (
-    <S.QuestionList>
+    <QuestionListContainer>
       <ul>
         {!!questionListData &&
           questionListData.map((itemData, idx) => (
@@ -108,6 +122,6 @@ export function QuestionList() {
         handleCurrentPage={handleCurrentPage}
         splitNumber={PAGINATION_SPLIT_NUMBER}
       />
-    </S.QuestionList>
+    </QuestionListContainer>
   );
 }

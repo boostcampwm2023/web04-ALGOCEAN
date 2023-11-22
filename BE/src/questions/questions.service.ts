@@ -113,4 +113,26 @@ export class QuestionsService {
       likeCount: question.LikeCount,
     }));
   }
+  async updateOneQuestion(id: number, userId: number, updateQuestionDto) {
+    try {
+      await this.prisma.question.update({
+        where: {
+          Id: id,
+          UserId: userId,
+          IsAdopted: false,
+          DeletedAt: null,
+        },
+        data: {
+          Title: updateQuestionDto.title,
+          Content: updateQuestionDto.content,
+          Tag: updateQuestionDto.tag,
+          ProgrammingLanguage: updateQuestionDto.programmingLanguage,
+          OriginalLink: updateQuestionDto.originalLink,
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

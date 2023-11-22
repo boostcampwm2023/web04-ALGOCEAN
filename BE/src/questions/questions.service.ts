@@ -66,6 +66,25 @@ export class QuestionsService {
     };
   }
 
+  async deleteOneQuestion(id: number, userId: number): Promise<boolean> {
+    try {
+      await this.prisma.question.update({
+        where: {
+          Id: id,
+          UserId: userId,
+          IsAdopted: false,
+          DeletedAt: null,
+        },
+        data: {
+          DeletedAt: new Date(),
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async readQuestionList(page: number): Promise<ReadQuestionListDto[]> {
     const pageSize = 10; // 한 페이지당 질문 개수는 10개
     const skip = (page - 1) * pageSize;
@@ -93,5 +112,27 @@ export class QuestionsService {
       viewCount: question.ViewCount,
       likeCount: question.LikeCount,
     }));
+  }
+  async updateOneQuestion(id: number, userId: number, updateQuestionDto) {
+    try {
+      await this.prisma.question.update({
+        where: {
+          Id: id,
+          UserId: userId,
+          IsAdopted: false,
+          DeletedAt: null,
+        },
+        data: {
+          Title: updateQuestionDto.title,
+          Content: updateQuestionDto.content,
+          Tag: updateQuestionDto.tag,
+          ProgrammingLanguage: updateQuestionDto.programmingLanguage,
+          OriginalLink: updateQuestionDto.originalLink,
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

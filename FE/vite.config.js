@@ -13,4 +13,5 @@ export default defineConfig({
     },
   },
   plugins: [react(), svgr()],
+  build: { chunkSizeWarningLimit: 1600 },
 });

@@ -7,6 +7,7 @@ import {
 } from './QuestionList/QuestionList';
 import { QuestionProfile } from './QuestionProfile/QuestionProfile';
 import { Pagination } from './Pagination/Pagination';
+import DocumentEditor from './DocumentEditor/DocumentEditor';
 
 export {
   MainHeader,
@@ -16,4 +17,5 @@ export {
   QuestionList,
   QuestionProfile,
   Pagination,
+  DocumentEditor,
 };

@@ -10,15 +10,23 @@
     "preview": "vite preview --open"
   },
   "dependencies": {
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "lodash": "^4.17.21",
     "prettier": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-router-dom": "^6.18.0",
     "styled-components": "^6.1.1"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.11.16",
+    "@types/draftjs-to-html": "^0.8.4",
+    "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-draft-wysiwyg": "^1.13.7",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react-swc": "^3.3.2",

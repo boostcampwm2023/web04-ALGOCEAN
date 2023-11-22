@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpStatus,
   Param,
   Post,
+  Query,
   Put,
   Res,
 } from '@nestjs/common';
@@ -13,11 +15,28 @@ import { Response } from 'express';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
+  @Get('lists')
+  async getQuestionList(
+    @Query() options: QuestionListOptionsDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const questionList: ReadQuestionListDto[] =
+        await this.questionsService.readQuestionList(options);
+      return res.status(HttpStatus.OK).json(questionList);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
 
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post()
@@ -86,16 +105,15 @@ export class QuestionsController {
     }
   }
 
-  @Get('lists/:page')
-  async getQuestionList(@Param('page') page: number, @Res() res: Response) {
+  @Get('finds/:title')
+  async getQuestionListByTitle(
+    @Param('title') title: string,
+    @Query('page', new DefaultValuePipe(1)) page: number,
+    @Res() res: Response,
+  ) {
     try {
       const questionList: ReadQuestionListDto[] =
-        await this.questionsService.readQuestionList(page);
-      if (questionList.length === 0) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'No questions found' });
-      }
+        await this.questionsService.findQuestionByTitle(title, page);
 
       return res.status(HttpStatus.OK).json(questionList);
     } catch (error) {

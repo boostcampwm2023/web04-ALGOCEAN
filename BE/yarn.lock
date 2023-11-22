@@ -1499,46 +1499,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/oauth@npm:*":
-  version: 0.9.4
-  resolution: "@types/oauth@npm:0.9.4"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: fcf8f5db7756a3e4d406ce3520abf78fecaf5e14963ad75fe0057425bb8b754e98d09dcb2b73a70e8fbe1e345b7d972d8090cf8cf08247e80d6eaac3acbe3fc7
-  languageName: node
-  linkType: hard
-
-"@types/passport-github@npm:^1":
-  version: 1.1.12
-  resolution: "@types/passport-github@npm:1.1.12"
-  dependencies:
-    "@types/express": "npm:*"
-    "@types/passport": "npm:*"
-    "@types/passport-oauth2": "npm:*"
-  checksum: 85b3ac776bae991a1e4100fdce08a771d78185d638b575f273d7329477c44fd1e51fa6f1967ef62199ed0e7e2a01a600bf41b85cf1503514aad183d79bd7524c
-  languageName: node
-  linkType: hard
-
-"@types/passport-oauth2@npm:*":
-  version: 1.4.15
-  resolution: "@types/passport-oauth2@npm:1.4.15"
-  dependencies:
-    "@types/express": "npm:*"
-    "@types/oauth": "npm:*"
-    "@types/passport": "npm:*"
-  checksum: 3f2b1c5c96ce0a1af9d55c07b18d68e443adccd9c5d429c0b08c6e35f0ca259bf77c29cecf2b94c1a035ce7c1c84087a2528e5ecc5ecfa0fba543e158bab7427
-  languageName: node
-  linkType: hard
-
-"@types/passport@npm:*":
-  version: 1.0.16
-  resolution: "@types/passport@npm:1.0.16"
-  dependencies:
-    "@types/express": "npm:*"
-  checksum: 7120c1186c8c67e3818683b5b6a4439d102f67da93cc1c7d8f32484f7bf10e8438dd5de0bf571910b23d06caa43dd1ad501933b48618bfaf54e63219500993fe
-  languageName: node
-  linkType: hard
-
 "@types/passport@npm:^0":
   version: 0.4.7
   resolution: "@types/passport@npm:0.4.7"
@@ -2438,7 +2398,6 @@ __metadata:
     "@types/jest": "npm:^29.5.2"
     "@types/node": "npm:^20.3.1"
     "@types/passport": "npm:^0"
-    "@types/passport-github": "npm:^1"
     "@types/supertest": "npm:^2.0.12"
     "@typescript-eslint/eslint-plugin": "npm:^6.0.0"
     "@typescript-eslint/parser": "npm:^6.0.0"
@@ -2450,7 +2409,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.0.0"
     jest: "npm:^29.5.0"
     passport: "npm:^0.6.0"
-    passport-github: "npm:^1.1.0"
+    passport-github2: "npm:^0.1.12"
     passport-jwt: "npm:^4.0.1"
     prettier: "npm:^3.0.0"
     prisma: "npm:^5.5.2"
@@ -6294,12 +6253,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"passport-github@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "passport-github@npm:1.1.0"
+"passport-github2@npm:^0.1.12":
+  version: 0.1.12
+  resolution: "passport-github2@npm:0.1.12"
   dependencies:
     passport-oauth2: "npm:1.x.x"
-  checksum: 2d63e28151f6d00a3ca3a2207ef013e407a111326369b1ca89389f6b5ca22db6483bde15d4989734dd9808b1f603e0dd47f3c9bfff854ded308cfb764e89ab01
+  checksum: 70c763f40392f15509373d43014f4c32af8f4fa0a290c74f4b0125208c7aff5a0d55c16ead5663a964653622c759fa70adbc58e417577b206deb9a5a255b528c
   languageName: node
   linkType: hard
 

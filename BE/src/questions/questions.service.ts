@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { ReadQuestionDto } from './dto/read-question.dto';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -85,20 +86,55 @@ export class QuestionsService {
     }
   }
 
-  async readQuestionList(page: number): Promise<ReadQuestionListDto[]> {
-    const pageSize = 10; // 한 페이지당 질문 개수는 10개
-    const skip = (page - 1) * pageSize;
+  async readQuestionList(
+    options: QuestionListOptionsDto,
+  ): Promise<ReadQuestionListDto[]> {
+    const {
+      tag,
+      programmingLanguage,
+      isAdopted,
+      sortByCreatedAt,
+      sortByViewCount,
+      sortByLikeCount,
+      page,
+    } = options;
+
+    const pageSize = 10;
+
+    const whereConditions = [
+      tag && { Tag: tag },
+      programmingLanguage && { ProgrammingLanguage: programmingLanguage },
+      isAdopted && { IsAdopted: isAdopted },
+    ].filter(Boolean);
+
+    const orderByConditions = [
+      sortByCreatedAt && { CreatedAt: sortByCreatedAt },
+      sortByViewCount && { ViewCount: sortByViewCount },
+      sortByLikeCount && { LikeCount: sortByLikeCount },
+    ].filter(Boolean);
 
     const questions = await this.prisma.question.findMany({
-      skip,
-      take: pageSize,
-      include: {
+      where: {
+        OR: whereConditions.length > 0 ? whereConditions : undefined,
+      },
+      orderBy: orderByConditions,
+      select: {
+        Id: true,
+        Title: true,
         User: {
           select: {
             Nickname: true,
           },
         },
+        Tag: true,
+        CreatedAt: true,
+        ProgrammingLanguage: true,
+        IsAdopted: true,
+        ViewCount: true,
+        LikeCount: true,
       },
+      take: pageSize,
+      skip: (page - 1) * pageSize,
     });
 
     return questions.map((question) => ({

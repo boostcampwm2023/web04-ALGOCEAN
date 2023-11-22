@@ -6,16 +6,34 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
+  @Get('lists')
+  async getQuestionList(
+    @Query() options: QuestionListOptionsDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const questionList: ReadQuestionListDto[] =
+        await this.questionsService.readQuestionList(options);
+      return res.status(HttpStatus.OK).json(questionList);
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    }
+  }
 
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post()
@@ -77,25 +95,6 @@ export class QuestionsController {
           .status(HttpStatus.FORBIDDEN)
           .json({ error: 'Question is not able to deleted' });
       }
-    } catch (error) {
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: 'Internal server error' });
-    }
-  }
-
-  @Get('lists/:page')
-  async getQuestionList(@Param('page') page: number, @Res() res: Response) {
-    try {
-      const questionList: ReadQuestionListDto[] =
-        await this.questionsService.readQuestionList(page);
-      if (questionList.length === 0) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'No questions found' });
-      }
-
-      return res.status(HttpStatus.OK).json(questionList);
     } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

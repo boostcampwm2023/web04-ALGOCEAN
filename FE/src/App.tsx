@@ -6,7 +6,6 @@ import {
   QuestionList,
   QuestionProfile,
 } from './components';
-import dummyQuestionList from './assets/questionlistMockdata.json';
 import '../style/index.css';
 
 const dummyQuestions = [
@@ -33,7 +32,7 @@ function Main() {
       <div className="inner">
         <div>
           <UniqueQuestions questions={dummyQuestions} />
-          <QuestionList itemDatas={dummyQuestionList} />
+          <QuestionList />
         </div>
         <aside>
           <img

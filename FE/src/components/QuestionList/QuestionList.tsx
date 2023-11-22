@@ -3,6 +3,8 @@ import { Pagination } from '../index';
 import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
+import CheckIcon from '../../assets/icons/check-circle.svg?react';
+import { getFormalizedDate } from '../../hooks/index';
 import * as S from './QuestionList.styles';
 
 const LAST_PAGINATION_PAGE = 11;
@@ -19,17 +21,6 @@ interface ItemData {
   viewCount: number;
   likeCount: number;
 }
-
-const getColor = (programmingLanguage: string) => {
-  switch (programmingLanguage) {
-    case '프로그래머스':
-      return 'var(--color-programmers)';
-    case '리트코드':
-      return 'var(--color-leetcode)';
-    default:
-      return 'var(--color-baekjoon)';
-  }
-};
 
 export function Header() {
   return (
@@ -54,29 +45,32 @@ export function Item({ itemData }: { itemData: ItemData }) {
   } = itemData;
 
   return (
-    <S.Item data-id={id} color={getColor(tag)}>
-      <div className="main">
-        <div className="title">
-          <h4>{title}</h4>
-          {!!isAdopted && <div className="adopted">채택 완료</div>}
-        </div>
-        <div className="details">
-          <span className="tag">{tag}</span>
-          <span className="programming-language">{programmingLanguage}</span>
-          <span className="nickname">{nickname}</span>
-          <span className="created-at">{createdAt}</span>
-        </div>
-      </div>
-      <div className="aside">
-        <div className="view-count">
+    <S.Item data-id={id}>
+      <S.ItemMain>
+        <S.Title>{title}</S.Title>
+        <S.Details>
+          {!isAdopted && (
+            <S.AdoptBadge>
+              <CheckIcon />
+              채택 완료
+            </S.AdoptBadge>
+          )}
+          <S.Author>{nickname}</S.Author>
+          <S.Date>{getFormalizedDate(createdAt)}</S.Date>
+        </S.Details>
+      </S.ItemMain>
+      <S.ItemAside>
+        <S.Tag tag={tag}>{tag}</S.Tag>
+        <S.ProgrammingLanguage>{programmingLanguage}</S.ProgrammingLanguage>
+        <S.ViewCount>
           <img src={eyeIcon} />
           <span>{viewCount}</span>
-        </div>
-        <div className="like-count">
+        </S.ViewCount>
+        <S.LikeCount>
           <img src={likeIcon} alt="좋아요 수" />
           <span>{likeCount}</span>
-        </div>
-      </div>
+        </S.LikeCount>
+      </S.ItemAside>
     </S.Item>
   );
 }
@@ -102,7 +96,6 @@ export function QuestionList() {
 
   return (
     <S.QuestionList>
-      <Header />
       <ul>
         {!!questionListData &&
           questionListData.map((itemData, idx) => (

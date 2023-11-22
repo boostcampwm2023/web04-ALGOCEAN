@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-interface ItemProps {
-  color: string;
+interface TagProps {
+  tag: string;
 }
 
 export const Header = styled.div`
@@ -25,88 +25,104 @@ export const Header = styled.div`
   }
 `;
 
-export const Item = styled.li<ItemProps>`
+export const Item = styled.li`
   display: flex;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 2rem;
   width: 100%;
-  padding: 1.5rem 1rem;
+  padding: 1rem 0.5rem;
   border: 1px solid var(--color-grayscale-50);
-  color: var(--color-grayscale-200);
-  font-size: 0.8rem;
+  color: #6e8091;
   cursor: pointer;
 
   &:hover {
     background-color: var(--color-grayscale-50);
   }
+`;
 
-  .main {
-    flex: 1;
-    width: 1px;
+export const ItemMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  width: 1px;
+`;
 
-    .title {
-      display: flex;
-      justify-content: left;
-      gap: 0.2rem;
-      width: 100%;
-      height: 1.3rem;
+export const Title = styled.h4`
+  width: 100%;
+  color: #38424c;
+  font: 700 1rem 'Noto Sans KR';
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
 
-      h4 {
-        flex-shrink: 1;
+export const Details = styled.div`
+  display: flex;
+  gap: 1rem;
+  color: #879298;
+  font: 300 0.875rem 'Noto Sans KR';
+`;
 
-        font-size: 1rem;
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--color-grayscale-black);
-      }
+export const AdoptBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: #4f60ff;
+`;
 
-      .adopted {
-        flex-shrink: 0;
-        font-size: 0.7rem;
-        font-weight: 300;
-        padding: 0.3rem 0.5rem;
-        border-radius: 1rem;
-        color: var(--color-grayscale-white);
-        background-color: var(--color-blue-100);
-        position: relative;
-        top: -0.1rem;
-      }
-    }
+export const Author = styled.div``;
+export const Date = styled.div``;
 
-    .details {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.8rem;
+export const ItemAside = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-shrink: 0;
 
-      .tag {
-        color: ${({ color }) => color};
-      }
-    }
-  }
+  > * {
+    width: 6rem;
 
-  .aside {
-    display: flex;
-    gap: 0.5rem;
-
-    .view-count,
-    .like-count {
-      display: flex;
-      align-items: center;
-      width: 3rem;
-      flex-shrink: 0;
-
-      img {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
+    img {
+      margin-right: 0.2rem;
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 `;
 
+export const Tag = styled.div<TagProps>`
+  color: ${({ tag }) => {
+    switch (tag) {
+      case 'programemrs':
+        return '';
+      case 'leetcode':
+        return '';
+      default:
+        return '#2f77bb';
+    }
+  }};
+  font: 500 0.875rem 'Noto Sans KR';
+`;
+
+export const ProgrammingLanguage = styled.div`
+  font: 500 0.875rem 'Noto Sans KR';
+`;
+
+export const ViewCount = styled.div`
+  display: flex;
+  align-items: center;
+  width: 4rem;
+`;
+
+export const LikeCount = styled.div`
+  display: flex;
+  align-items: center;
+  width: 4rem;
+`;
+
 export const QuestionList = styled.section`
   width: 100%;
+  min-width: 45rem;
   background-color: var(--color-grayscale-white);
-  border-radius: 1rem;
 `;

@@ -31,7 +31,6 @@ export const Item = styled.li`
   gap: 2rem;
   width: 100%;
   padding: 1rem 0.5rem;
-  border: 1px solid var(--color-grayscale-50);
   color: #6e8091;
   cursor: pointer;
 

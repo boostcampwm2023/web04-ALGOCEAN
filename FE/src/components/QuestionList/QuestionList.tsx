@@ -49,7 +49,7 @@ export function Item({ itemData }: { itemData: ItemData }) {
       <S.ItemMain>
         <S.Title>{title}</S.Title>
         <S.Details>
-          {!isAdopted && (
+          {isAdopted && (
             <S.AdoptBadge>
               <CheckIcon />
               채택 완료

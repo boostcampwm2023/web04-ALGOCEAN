@@ -149,4 +149,74 @@ export class QuestionsService {
       likeCount: question.LikeCount,
     }));
   }
+
+  async findQuestionByTitle(
+    title: string,
+    page: number,
+  ): Promise<ReadQuestionListDto[]> {
+    try {
+      const pageSize = 10;
+      const skip = (page - 1) * pageSize;
+      const questions = await this.prisma.question.findMany({
+        where: {
+          Title: {
+            contains: title,
+          },
+        },
+        select: {
+          Id: true,
+          Title: true,
+          Tag: true,
+          CreatedAt: true,
+          ProgrammingLanguage: true,
+          IsAdopted: true,
+          ViewCount: true,
+          LikeCount: true,
+          User: {
+            select: {
+              Nickname: true,
+            },
+          },
+        },
+        skip,
+        take: pageSize,
+      });
+      return questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        nickname: question.User?.Nickname,
+        tag: question.Tag,
+        createdAt: question.CreatedAt,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      }));
+    } catch (error) {
+      throw new Error('Failed to find question by title');
+    }
+  }
+
+  async updateOneQuestion(id: number, userId: number, updateQuestionDto) {
+    try {
+      await this.prisma.question.update({
+        where: {
+          Id: id,
+          UserId: userId,
+          IsAdopted: false,
+          DeletedAt: null,
+        },
+        data: {
+          Title: updateQuestionDto.title,
+          Content: updateQuestionDto.content,
+          Tag: updateQuestionDto.tag,
+          ProgrammingLanguage: updateQuestionDto.programmingLanguage,
+          OriginalLink: updateQuestionDto.originalLink,
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

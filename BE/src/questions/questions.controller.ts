@@ -105,25 +105,6 @@ export class QuestionsController {
     }
   }
 
-  @Get('lists/:page')
-  async getQuestionList(@Param('page') page: number, @Res() res: Response) {
-    try {
-      const questionList: ReadQuestionListDto[] =
-        await this.questionsService.readQuestionList(page);
-      if (questionList.length === 0) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ error: 'No questions found' });
-      }
-
-      return res.status(HttpStatus.OK).json(questionList);
-    } catch (error) {
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: 'Internal server error' });
-    }
-  }
-
   @Get('finds/:title')
   async getQuestionListByTitle(
     @Param('title') title: string,
@@ -141,7 +122,7 @@ export class QuestionsController {
         .json({ error: 'Internal server error' });
     }
   }
-  
+
   // TODO: use UserGuard to check if user is the owner of the question
   @Put(':id')
   async updateOneQuestion(

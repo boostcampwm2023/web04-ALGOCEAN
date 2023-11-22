@@ -5,11 +5,11 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('check-username/:userId')
+  @Get('check/:userId')
   async checkUserId(
     @Param('userId') userId: string,
-  ): Promise<{ isTaken: boolean }> {
-    const isTaken = await this.usersService.isUserIdTaken(userId);
-    return { isTaken };
+  ): Promise<{ isDuplicated: boolean }> {
+    const isDuplicated = await this.usersService.isUserIdTaken(userId);
+    return { isDuplicated };
   }
 }

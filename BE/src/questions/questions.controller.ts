@@ -153,4 +153,5 @@ export class QuestionsController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
     }
+  }
 }

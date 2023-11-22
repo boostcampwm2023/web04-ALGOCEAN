@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Pagination } from '../index';
+import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
 import * as S from './QuestionList.styles';
+
+const LAST_PAGINATION_PAGE = 11;
+const PAGINATION_SPLIT_NUMBER = 10;
 
 interface ItemData {
   id: number;
@@ -25,10 +29,6 @@ const getColor = (programmingLanguage: string) => {
     default:
       return 'var(--color-baekjoon)';
   }
-};
-
-const getCurrentItems = (itemDatas: ItemData[], currentPage: number) => {
-  return itemDatas.slice(currentPage * 10, currentPage * 10 + 10);
 };
 
 export function Header() {
@@ -81,25 +81,39 @@ export function Item({ itemData }: { itemData: ItemData }) {
   );
 }
 
-export function QuestionList({ itemDatas }: { itemDatas: ItemData[] }) {
+export function QuestionList() {
   const [currentPage, setCurrentPage] = useState(0);
-  const wholePage = Math.ceil(itemDatas.length / 10);
+  const [questionListData, setQuestionListData] = useState<ItemData[] | null>(
+    null,
+  );
+
+  const getCurrentQuestionListData = async () => {
+    const data = await getQuestionList(currentPage + 1);
+    setQuestionListData(data);
+  };
+
+  const handleCurrentPage = (nextPage: number) => {
+    setCurrentPage(nextPage);
+  };
+
+  useLayoutEffect(() => {
+    getCurrentQuestionListData();
+  }, [currentPage]);
 
   return (
     <S.QuestionList>
       <Header />
       <ul>
-        {getCurrentItems(itemDatas, currentPage).map((itemData, idx) => (
-          <Item key={idx} itemData={itemData} />
-        ))}
+        {!!questionListData &&
+          questionListData.map((itemData, idx) => (
+            <Item key={idx} itemData={itemData} />
+          ))}
       </ul>
       <Pagination
-        wholePageCount={wholePage}
+        wholePageCount={LAST_PAGINATION_PAGE}
         currentPage={currentPage}
-        handleCurrentPage={(i) => {
-          setCurrentPage(i);
-        }}
-        splitNumber={10}
+        handleCurrentPage={handleCurrentPage}
+        splitNumber={PAGINATION_SPLIT_NUMBER}
       />
     </S.QuestionList>
   );

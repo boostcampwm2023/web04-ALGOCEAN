@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<boolean> {
+  async createUser(createUserDto: CreateUserDto): Promise<void> {
     const { userId, password, nickname } = createUserDto;
     try {
       const salt = await bcrypt.genSalt();
@@ -20,8 +20,6 @@ export class UsersService {
           Nickname: nickname,
         },
       });
-
-      return true;
     } catch (error) {
       if (
         error.code === 'P2002' ||

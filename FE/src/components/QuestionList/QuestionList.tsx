@@ -24,9 +24,6 @@ import {
 const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
 
-const LAST_PAGINATION_PAGE = 11;
-const PAGINATION_SPLIT_NUMBER = 10;
-
 interface ItemData {
   id: number;
   title: string;

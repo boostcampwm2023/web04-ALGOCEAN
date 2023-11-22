@@ -3,7 +3,26 @@ import { Pagination } from '../index';
 import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
-import * as S from './QuestionList.styles';
+import CheckIcon from '../../assets/icons/check-circle.svg?react';
+import { getFormalizedDate } from '../../hooks/index';
+import {
+  Header as HeaderContainer,
+  Item as ItemContainer,
+  ItemMain,
+  Title,
+  Details,
+  AdoptBadge,
+  Author,
+  ItemAside,
+  Tag,
+  ProgrammingLanguage,
+  ViewCount,
+  LikeCount,
+  QuestionList as QuestionListContainer,
+} from './QuestionList.styles';
+
+const LAST_PAGINATION_PAGE = 11;
+const PAGINATION_SPLIT_NUMBER = 10;
 
 const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
@@ -20,23 +39,12 @@ interface ItemData {
   likeCount: number;
 }
 
-const getColor = (programmingLanguage: string) => {
-  switch (programmingLanguage) {
-    case '프로그래머스':
-      return 'var(--color-programmers)';
-    case '리트코드':
-      return 'var(--color-leetcode)';
-    default:
-      return 'var(--color-baekjoon)';
-  }
-};
-
 export function Header() {
   return (
-    <S.Header>
+    <HeaderContainer>
       <div className="by-recent selected">✔️ 최신순</div>
       <div className="by-old">오래된순</div>
-    </S.Header>
+    </HeaderContainer>
   );
 }
 
@@ -54,30 +62,33 @@ export function Item({ itemData }: { itemData: ItemData }) {
   } = itemData;
 
   return (
-    <S.Item data-id={id} color={getColor(tag)}>
-      <div className="main">
-        <div className="title">
-          <h4>{title}</h4>
-          {!!isAdopted && <div className="adopted">채택 완료</div>}
-        </div>
-        <div className="details">
-          <span className="tag">{tag}</span>
-          <span className="programming-language">{programmingLanguage}</span>
-          <span className="nickname">{nickname}</span>
-          <span className="created-at">{createdAt}</span>
-        </div>
-      </div>
-      <div className="aside">
-        <div className="view-count">
+    <ItemContainer data-id={id}>
+      <ItemMain>
+        <Title>{title}</Title>
+        <Details>
+          {isAdopted && (
+            <AdoptBadge>
+              <CheckIcon />
+              채택 완료
+            </AdoptBadge>
+          )}
+          <Author>{nickname}</Author>
+          <Date>{getFormalizedDate(createdAt)}</Date>
+        </Details>
+      </ItemMain>
+      <ItemAside>
+        <Tag tag={tag}>{tag}</Tag>
+        <ProgrammingLanguage>{programmingLanguage}</ProgrammingLanguage>
+        <ViewCount>
           <img src={eyeIcon} />
           <span>{viewCount}</span>
-        </div>
-        <div className="like-count">
+        </ViewCount>
+        <LikeCount>
           <img src={likeIcon} alt="좋아요 수" />
           <span>{likeCount}</span>
-        </div>
-      </div>
-    </S.Item>
+        </LikeCount>
+      </ItemAside>
+    </ItemContainer>
   );
 }
 
@@ -101,8 +112,7 @@ export function QuestionList() {
   }, [currentPage]);
 
   return (
-    <S.QuestionList>
-      <Header />
+    <QuestionListContainer>
       <ul>
         {!!questionListData &&
           questionListData.map((itemData, idx) => (
@@ -115,6 +125,6 @@ export function QuestionList() {
         handleCurrentPage={handleCurrentPage}
         splitNumber={PAGINATION_SPLIT_NUMBER}
       />
-    </S.QuestionList>
+    </QuestionListContainer>
   );
 }

@@ -4,6 +4,7 @@ import { ReadQuestionDto } from './dto/read-question.dto';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
+import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -217,6 +218,60 @@ export class QuestionsService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  async createOneQuestionDraft(userId: number): Promise<number> {
+    try {
+      const draft = await this.prisma.question_Temporary.create({
+        data: {
+          User: {
+            connect: {
+              Id: userId,
+            },
+          },
+        },
+      });
+      return draft.Id;
+    } catch (error) {
+      throw new Error('Failed to create question draft');
+    }
+  }
+
+  async updateOneQuestionDraft(
+    id: number,
+    userId: number,
+    updateQuestionDraftDto: UpdateQuestionDraftDto,
+  ): Promise<void> {
+    try {
+      await this.prisma.question_Temporary.update({
+        where: {
+          Id: id,
+          UserId: userId,
+        },
+        data: {
+          Title: updateQuestionDraftDto.title,
+          Content: updateQuestionDraftDto.content,
+          Tag: updateQuestionDraftDto.tag,
+          ProgrammingLanguage: updateQuestionDraftDto.programmingLanguage,
+          OriginalLink: updateQuestionDraftDto.originalLink,
+        },
+      });
+    } catch (error) {
+      throw new Error('Failed to update question draft');
+    }
+  }
+
+  async deleteOneQuestionDraft(id: number, userId: number): Promise<void> {
+    try {
+      await this.prisma.question_Temporary.delete({
+        where: {
+          Id: id,
+          UserId: userId,
+        },
+      });
+    } catch (error) {
+      throw new Error('Failed to delete question draft');
     }
   }
 }

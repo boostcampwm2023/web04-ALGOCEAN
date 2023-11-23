@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface ItemProps {
-  bgColor: string;
+  $bgcolor: string;
 }
 
 export const Item = styled.div<ItemProps>`
@@ -13,7 +13,7 @@ export const Item = styled.div<ItemProps>`
   padding: 1.2rem 1rem;
   border-radius: 0.5rem;
   box-shadow: -0.2rem 0.2rem 0.2rem #00000025;
-  background-color: ${({ bgColor }) => bgColor};
+  background-color: ${({ $bgcolor }) => $bgcolor};
   color: var(--color-grayscale-white);
   transition: all 0.2s ease-in;
   cursor: pointer;

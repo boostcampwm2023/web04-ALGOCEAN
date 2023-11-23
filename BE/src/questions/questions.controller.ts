@@ -26,9 +26,9 @@ export class QuestionsController {
   @Get('/random')
   async readRandomQuestion(@Res() res: Response) {
     try {
-      const question = await this.questionsService.getRandomQuestion();
+      const question = await this.questionsService.getRandomQuestionId();
 
-      return res.status(HttpStatus.OK).json(question);
+      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

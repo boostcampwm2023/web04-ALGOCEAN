@@ -220,56 +220,21 @@ export class QuestionsService {
     }
   }
 
-  async getRandomQuestion(): Promise<ReadQuestionDto> {
+  async getRandomQuestionId(): Promise<number> {
     try {
-      const randomQuestion = await this.prisma.$queryRaw`
-      SELECT
-        Q.Id,
-        Q.Title,
-        Q.Tag,
-        Q.ProgrammingLanguage,
-        Q.IsAdopted,
-        Q.CreatedAt,
-        Q.ViewCount,
-        Q.LikeCount,
-        U.Nickname,
-        LI.IsLiked
-      FROM
-        Question Q
-      JOIN
-        User U ON Q.UserId = U.Id
-      LEFT JOIN
-        LikeInfo LI ON LI.LikedEntityId = Q.Id AND LI.UserId = U.Id
-      ORDER BY
-        RAND()
-      LIMIT 1;
-    `;
+      const totalRows = await this.prisma.question.count();
+      const randomIndex = Math.floor(Math.random() * totalRows);
 
-      await this.prisma.question.update({
-        where: {
-          Id: randomQuestion[0].Id,
+      const randomQuestion = await this.prisma.question.findFirst({
+        select: {
+          Id: true,
         },
-        data: {
-          ViewCount: {
-            increment: 1,
-          },
-        },
+        skip: randomIndex,
       });
 
-      return {
-        id: randomQuestion[0].Id,
-        title: randomQuestion[0].Title,
-        nickname: randomQuestion[0].Nickname,
-        tag: randomQuestion[0].Tag,
-        createdAt: randomQuestion[0].CreatedAt,
-        programmingLanguage: randomQuestion[0].ProgrammingLanguage,
-        isAdopted: randomQuestion[0].IsAdopted,
-        viewCount: randomQuestion[0].ViewCount,
-        likeCount: randomQuestion[0].LikeCount,
-        isLiked: randomQuestion[0].IsLiked || false,
-      };
+      return randomQuestion.Id;
     } catch (error) {
-      throw new Error('Failed to get a random question');
+      throw new Error('Failed to get a random question id');
     }
   }
 }

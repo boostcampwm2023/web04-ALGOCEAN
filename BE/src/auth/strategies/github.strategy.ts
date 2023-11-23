@@ -9,7 +9,7 @@ import { Profile } from 'passport';
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
     super({
       clientID: configService.get('GITHUB_CLIENT_ID'),

@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { LoginDTO } from './DTO/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -10,6 +11,12 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async whoami(@Req() req) {
     return req.user;
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDTO) {
+    const { userId, password } = loginDto;
+    return await this.authService.login(userId, password);
   }
 
   @Get('github')

@@ -88,21 +88,22 @@ model Question {
 }
 
 model User {
-  Id             Int              @id @default(autoincrement())
-  UserId         String?          @unique(map: "UserId") @db.VarChar(255)
-  Password       String?          @db.VarChar(255)
-  Nickname       String?          @db.VarChar(255)
-  ProfileImage   String?          @db.VarChar(255)
-  Points         Int?             @default(0)
-  CreatedAt      DateTime?        @default(now()) @db.DateTime(0)
-  UpdatedAt      DateTime?        @default(now()) @db.DateTime(0)
-  DeletedAt      DateTime?        @db.DateTime(0)
-  Answer         Answer[]
-  Delete_History Delete_History[]
-  LikeInfo       LikeInfo[]
-  Point_History  Point_History[]
-  Question       Question[]
-  User_Item      User_Item[]
+  Id                 Int                  @id @default(autoincrement())
+  UserId             String?              @unique(map: "UserId") @db.VarChar(255)
+  Password           String?              @db.VarChar(255)
+  Nickname           String?              @db.VarChar(255)
+  ProfileImage       String?              @db.VarChar(255)
+  Points             Int?                 @default(0)
+  CreatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  UpdatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  DeletedAt          DateTime?            @db.DateTime(0)
+  Answer             Answer[]
+  Delete_History     Delete_History[]
+  LikeInfo           LikeInfo[]
+  Point_History      Point_History[]
+  Question           Question[]
+  Question_Temporary Question_Temporary[]
+  User_Item          User_Item[]
 }
 
 model User_Item {
@@ -114,5 +115,19 @@ model User_Item {
   Item         Item?     @relation(fields: [ItemId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "User_Item_ibfk_2")
 
   @@index([ItemId], map: "ItemId")
+  @@index([UserId], map: "UserId")
+}
+
+model Question_Temporary {
+  Id                  Int       @id @default(autoincrement())
+  UserId              Int?
+  Title               String?   @db.VarChar(255)
+  Content             String?   @db.Text
+  Tag                 String?   @db.VarChar(255)
+  ProgrammingLanguage String?   @db.VarChar(255)
+  OriginalLink        String?   @db.VarChar(255)
+  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
+  User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_Temporary_ibfk_1")
+
   @@index([UserId], map: "UserId")
 }

@@ -219,4 +219,57 @@ export class QuestionsService {
       return false;
     }
   }
+
+  async getRandomQuestion(): Promise<ReadQuestionDto> {
+    try {
+      const randomQuestion = await this.prisma.$queryRaw`
+      SELECT
+        Q.Id,
+        Q.Title,
+        Q.Tag,
+        Q.ProgrammingLanguage,
+        Q.IsAdopted,
+        Q.CreatedAt,
+        Q.ViewCount,
+        Q.LikeCount,
+        U.Nickname,
+        LI.IsLiked
+      FROM
+        Question Q
+      JOIN
+        User U ON Q.UserId = U.Id
+      LEFT JOIN
+        LikeInfo LI ON LI.LikedEntityId = Q.Id AND LI.UserId = U.Id
+      ORDER BY
+        RAND()
+      LIMIT 1;
+    `;
+
+      await this.prisma.question.update({
+        where: {
+          Id: randomQuestion[0].Id,
+        },
+        data: {
+          ViewCount: {
+            increment: 1,
+          },
+        },
+      });
+
+      return {
+        id: randomQuestion[0].Id,
+        title: randomQuestion[0].Title,
+        nickname: randomQuestion[0].Nickname,
+        tag: randomQuestion[0].Tag,
+        createdAt: randomQuestion[0].CreatedAt,
+        programmingLanguage: randomQuestion[0].ProgrammingLanguage,
+        isAdopted: randomQuestion[0].IsAdopted,
+        viewCount: randomQuestion[0].ViewCount,
+        likeCount: randomQuestion[0].LikeCount,
+        isLiked: randomQuestion[0].IsLiked || false,
+      };
+    } catch (error) {
+      throw new Error('Failed to get a random question');
+    }
+  }
 }

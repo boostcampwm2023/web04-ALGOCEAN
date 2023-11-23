@@ -23,7 +23,7 @@ function Item({ type, title: questionTime, url }: Item) {
   const { title, emoji, color } = typeInfo[type];
 
   return (
-    <S.Item bgColor={color} data-url={url}>
+    <S.Item $bgcolor={color} data-url={url}>
       <h3>{title}</h3>
       <div>{questionTime}</div>
       <span>{emoji}</span>
@@ -34,8 +34,8 @@ function Item({ type, title: questionTime, url }: Item) {
 export function UniqueQuestions({ questions }: { questions: Item[] }) {
   return (
     <S.UniqueQuestions>
-      {questions.map(({ type, title, url }) => (
-        <Item type={type} title={title} url={url} />
+      {questions.map(({ type, title, url }, idx) => (
+        <Item key={idx} type={type} title={title} url={url} />
       ))}
     </S.UniqueQuestions>
   );

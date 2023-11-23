@@ -13,6 +13,7 @@ import {
   Details,
   AdoptBadge,
   Author,
+  Date,
   ItemAside,
   Tag,
   ProgrammingLanguage,
@@ -20,9 +21,6 @@ import {
   LikeCount,
   QuestionList as QuestionListContainer,
 } from './QuestionList.styles';
-
-const LAST_PAGINATION_PAGE = 11;
-const PAGINATION_SPLIT_NUMBER = 10;
 
 const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
@@ -77,7 +75,7 @@ export function Item({ itemData }: { itemData: ItemData }) {
         </Details>
       </ItemMain>
       <ItemAside>
-        <Tag tag={tag}>{tag}</Tag>
+        <Tag $tag={tag}>{tag}</Tag>
         <ProgrammingLanguage>{programmingLanguage}</ProgrammingLanguage>
         <ViewCount>
           <img src={eyeIcon} />

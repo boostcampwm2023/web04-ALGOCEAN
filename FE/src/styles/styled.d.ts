@@ -23,6 +23,7 @@ interface Color {
     200: string;
     300: string;
     400: string;
+    500: string;
     black: string;
   };
   mainColor: {
@@ -52,5 +53,6 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     color: Color;
     font: Font;
+    maxWidth: string;
   }
 }

@@ -75,7 +75,8 @@ const color = {
     100: '#D2DAE0',
     200: '#879298',
     300: '#6E8091',
-    400: '#5F63',
+    400: '#5F6E76',
+    500: '#393F44',
     black: '#14212B',
   },
   mainColor: {
@@ -104,4 +105,5 @@ const color = {
 export const theme = {
   font,
   color,
+  maxWidth: '1300px',
 };

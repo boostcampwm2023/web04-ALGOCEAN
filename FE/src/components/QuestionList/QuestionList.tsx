@@ -97,7 +97,7 @@ export function QuestionList() {
   );
 
   const getCurrentQuestionListData = async () => {
-    const data = await getQuestionList(currentPage + 1);
+    const data = await getQuestionList({ page: currentPage + 1 });
     setQuestionListData(data);
   };
 

@@ -13,6 +13,9 @@
 
 <br/>
 
+## 개발 위키
+[개발 위키](https://github.com/boostcampwm2023/web04-ALGOCEAN/wiki)
+
 ## ⛳️ 그라운드 룰
 
 ### 정규 일정
@@ -45,3 +48,6 @@ git-flow 방식의 일부만 차용하여 적용. release, hotfix 브랜치는 �
 
 ### 코드 컨벤션
 Airbnb 스타일 (임시 지정)
+
+## 젠킨스 서버
+[젠킨스 서버](http://223.130.147.11:8080)

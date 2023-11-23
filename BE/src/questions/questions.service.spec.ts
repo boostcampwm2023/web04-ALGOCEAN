@@ -3,6 +3,7 @@ import { QuestionsService } from './questions.service';
 import { PrismaService } from '../prisma.service';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 
 describe('QuestionsService', () => {
   let service: QuestionsService;
@@ -170,5 +171,64 @@ describe('QuestionsService', () => {
 
     const result = await service.readQuestionList(options);
     expect(result).toEqual(filteredQuestions);
+  });
+
+  describe('createOneQuestionDraft', () => {
+    it('should create a question draft', async () => {
+      const mockUserId = 1;
+      const mockDraftId = 1;
+
+      jest
+        .spyOn(service, 'createOneQuestionDraft')
+        .mockResolvedValue(mockDraftId);
+
+      const result = await service.createOneQuestionDraft(mockUserId);
+
+      expect(result).toEqual(mockDraftId);
+    });
+  });
+
+  describe('updateOneQuestionDraft', () => {
+    it('should update a question draft', async () => {
+      const mockDraftId = 1;
+      const mockUserId = 1;
+      const mockUpdateQuestionDraftDto: UpdateQuestionDraftDto = {
+        title: 'Updated Title',
+        content: 'Updated Content',
+        tag: 'Updated Tag',
+        programmingLanguage: 'Updated Language',
+        originalLink: 'Updated Link',
+      };
+
+      jest.spyOn(service, 'updateOneQuestionDraft').mockResolvedValue();
+
+      await service.updateOneQuestionDraft(
+        mockDraftId,
+        mockUserId,
+        mockUpdateQuestionDraftDto,
+      );
+
+      expect(service.updateOneQuestionDraft).toHaveBeenCalledWith(
+        mockDraftId,
+        mockUserId,
+        mockUpdateQuestionDraftDto,
+      );
+    });
+  });
+
+  describe('deleteOneQuestionDraft', () => {
+    it('should delete a question draft', async () => {
+      const mockDraftId = 1;
+      const mockUserId = 1;
+
+      jest.spyOn(service, 'deleteOneQuestionDraft').mockResolvedValue();
+
+      await service.deleteOneQuestionDraft(mockDraftId, mockUserId);
+
+      expect(service.deleteOneQuestionDraft).toHaveBeenCalledWith(
+        mockDraftId,
+        mockUserId,
+      );
+    });
   });
 });

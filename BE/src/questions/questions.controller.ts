@@ -10,6 +10,7 @@ import {
   Query,
   Put,
   Res,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
@@ -17,6 +18,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -150,6 +152,74 @@ export class QuestionsController {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
+    }
+  }
+
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Post('drafts')
+  async createDraft(@Res() res: Response) {
+    try {
+      const questionId = await this.questionsService.createOneQuestionDraft(1);
+
+      return res
+        .status(HttpStatus.CREATED)
+        .json({ message: 'Draft created successfully', id: questionId });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Put('drafts/:id')
+  async updateDraft(
+    @Param('id') id: number,
+    @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
+    @Res() res: Response,
+  ) {
+    try {
+      await this.questionsService.updateOneQuestionDraft(
+        id,
+        1,
+        updateQuestionDraftDto,
+      );
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft updated successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Delete('drafts/:id')
+  async deleteDraft(@Param('id') id: number, @Res() res: Response) {
+    try {
+      await this.questionsService.deleteOneQuestionDraft(id, 1);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft deleted successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

@@ -7,6 +7,10 @@
   font-family: 'Noto Sans KR', serif;
 }
 
+body {
+  width: 100%;
+}
+
 #root {
   display: flex;
   flex-direction: column;

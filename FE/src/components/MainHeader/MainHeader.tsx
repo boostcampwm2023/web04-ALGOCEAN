@@ -1,36 +1,42 @@
-import logoIcon from '/icons/logo.svg';
 import searchIcon from '/icons/search.svg';
-
-import * as S from './MainHeader.styles';
+import logoIcon from '/images/logo.png';
+import {
+  Logo as LogoContainer,
+  Searchbar,
+  SearchbarButton,
+  SearchbarInput,
+  SearchbarLabel,
+  MainHeaderContainer,
+} from './MainHeader.styles';
 
 const PAGE_TITLE = 'ALGOCEAN';
 function Logo() {
   return (
-    <S.Logo>
-      <img src={logoIcon} alt="" />
+    <LogoContainer>
+      <img src={logoIcon} alt="ALGOCEAN" />
       <h1>{PAGE_TITLE}</h1>
-    </S.Logo>
+    </LogoContainer>
   );
 }
 
 function SearchBar() {
   return (
-    <S.Searchbar>
-      <label htmlFor="searchInput"></label>
-      <input id="searchInput" placeholder="검색어를 입력해 주세요" />
-      <button onClick={(e) => e.preventDefault()}>
+    <Searchbar>
+      <SearchbarLabel htmlFor="searchInput"></SearchbarLabel>
+      <SearchbarInput id="searchInput" placeholder="검색어를 입력해 주세요" />
+      <SearchbarButton onClick={(e) => e.preventDefault()}>
         <img src={searchIcon} alt="searchbar button" />
-      </button>
-    </S.Searchbar>
+      </SearchbarButton>
+    </Searchbar>
   );
 }
 export function MainHeader() {
   return (
-    <S.Container>
+    <MainHeaderContainer>
       <div className="inner">
         <Logo />
         <SearchBar />
       </div>
-    </S.Container>
+    </MainHeaderContainer>
   );
 }

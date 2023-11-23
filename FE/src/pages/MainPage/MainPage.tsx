@@ -5,7 +5,6 @@ import {
 } from '../../components';
 import { UniqueQuestionItem as Question } from '../../types/type';
 import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
-import dummyQuestionList from '../../assets/questionlistMockdata.json';
 import { Main } from './MainPage.styles';
 
 export default function MainPage() {
@@ -14,7 +13,7 @@ export default function MainPage() {
       <div className="inner">
         <div>
           <UniqueQuestions questions={dummyUniqueQuestions as Question[]} />
-          <QuestionList itemDatas={dummyQuestionList} />
+          <QuestionList />
         </div>
         <aside>
           <img

@@ -7,7 +7,11 @@
   font-family: 'Noto Sans KR', serif;
 }
 
-body {
-  width: 100%;
-  background-color: var(--color-grayscale-50);
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  min-width: 900px;
+  line-height: 150%;
 }

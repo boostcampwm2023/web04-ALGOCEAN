@@ -85,6 +85,7 @@ const color = {
     blueLight: '#8798FF',
     blueOutline: '#C7DCFF',
     blueFocus: '#EFF8FF',
+    blueGradient: 'linear-gradient(135deg, #924FFF 17.03%, #3848E6 79.69%)',
   },
   system: {
     success: '#06C755',
@@ -105,5 +106,5 @@ const color = {
 export const theme = {
   font,
   color,
-  maxWidth: '1300px',
+  maxWidth: '1100px',
 };

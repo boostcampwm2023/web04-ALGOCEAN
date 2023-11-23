@@ -15,11 +15,11 @@ export const Header = styled.div`
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   font-size: 0.8rem;
-  color: var(--color-grayscale-200);
+  color: ${({ theme }) => theme.color.grayscale[200]};
 
   .selected,
   div:hover {
-    color: var(--color-grayscale-black);
+    color: ${({ theme }) => theme.color.grayscale.black};
     font-weight: 500;
     cursor: default;
   }
@@ -31,26 +31,28 @@ export const Item = styled.li`
   gap: 2rem;
   width: 100%;
   padding: 1rem 0.5rem;
-  color: #6e8091;
+  color: ${({ theme }) => theme.color.grayscale[200]};
+  border-radius: 0.5rem;
   cursor: pointer;
+  transition: 0.1s ease-in all;
 
   &:hover {
-    background-color: var(--color-grayscale-50);
+    background-color: ${({ theme }) => theme.color.grayscale[50]};
   }
 `;
 
 export const ItemMain = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   flex: 1;
   width: 1px;
 `;
 
 export const Title = styled.h4`
   width: 100%;
-  color: #38424c;
-  font: 700 1rem 'Noto Sans KR';
+  color: ${({ theme }) => theme.color.grayscale[500]};
+  ${({ theme }) => theme.font.bold16}
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -59,15 +61,16 @@ export const Title = styled.h4`
 export const Details = styled.div`
   display: flex;
   gap: 1rem;
-  color: #879298;
-  font: 300 0.875rem 'Noto Sans KR';
+  color: ${({ theme }) => theme.color.grayscale[200]};
+  ${({ theme }) => theme.font.light14}
 `;
 
 export const AdoptBadge = styled.div`
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  color: #4f60ff;
+  color: ${({ theme }) => theme.color.mainColor.blueMain};
+  ${({ theme }) => theme.font.medium14}
 `;
 
 export const Author = styled.div``;
@@ -81,6 +84,7 @@ export const ItemAside = styled.div`
 
   > * {
     width: 6rem;
+    ${({ theme }) => theme.font.medium14}
 
     img {
       margin-right: 0.2rem;
@@ -91,22 +95,10 @@ export const ItemAside = styled.div`
 `;
 
 export const Tag = styled.div<TagProps>`
-  color: ${({ $tag }) => {
-    switch ($tag) {
-      case 'programemrs':
-        return '';
-      case 'leetcode':
-        return '';
-      default:
-        return '#2f77bb';
-    }
-  }};
-  font: 500 0.875rem 'Noto Sans KR';
+  color: ${({ $tag, theme }) => theme.color.rainbow[$tag] || 'inherit'};
 `;
 
-export const ProgrammingLanguage = styled.div`
-  font: 500 0.875rem 'Noto Sans KR';
-`;
+export const ProgrammingLanguage = styled.div``;
 
 export const ViewCount = styled.div`
   display: flex;
@@ -123,5 +115,4 @@ export const LikeCount = styled.div`
 export const QuestionList = styled.section`
   width: 100%;
   min-width: 45rem;
-  background-color: var(--color-grayscale-white);
 `;

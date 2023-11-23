@@ -71,9 +71,8 @@ export class QuestionsService {
       throw new Error('Failed to create question');
     }
   }
-
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {
-    const question = await this.prisma.question.findUnique({
+    const readQuestion = this.prisma.question.findUnique({
       where: {
         Id: id,
       },
@@ -90,6 +89,24 @@ export class QuestionsService {
         },
       },
     });
+
+    const updateViewCount = this.prisma.question.update({
+      where: {
+        Id: id,
+      },
+      data: {
+        ViewCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    const queryResult = await this.prisma.$transaction([
+      readQuestion,
+      updateViewCount,
+    ]);
+
+    const question = queryResult[0];
 
     return {
       id: question.Id,

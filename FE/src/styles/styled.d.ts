@@ -32,6 +32,7 @@ interface Color {
     blueLight: string;
     blueOutline: string;
     blueFocus: string;
+    blueGradient: string;
   };
   system: {
     success: string;
@@ -46,6 +47,7 @@ interface Color {
     rainbowLilac: string;
     rainbowViolet: string;
     rainbowCornFlower: string;
+    [key: string]: string;
   };
 }
 
@@ -53,5 +55,6 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     color: Color;
     font: Font;
+    maxWidth: string;
   }
 }

@@ -5,25 +5,20 @@ import {
 } from '../../components';
 import { UniqueQuestionItem as Question } from '../../types/type';
 import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
-import { Main } from './MainPage.styles';
+import { Container, Inner, HeroBanner, Main } from './MainPage.styles';
 
 export default function MainPage() {
   return (
-    <Main>
-      <div className="inner">
-        <div>
+    <Container>
+      <Inner>
+        <HeroBanner>
           <UniqueQuestions questions={dummyUniqueQuestions as Question[]} />
-          <QuestionList />
-        </div>
-        <aside>
-          <img
-            className="banner"
-            src="https://i.pinimg.com/originals/b0/df/95/b0df95cfc6f31293d002d4d6daac253c.jpg"
-            alt="포인트 정보가 들어갈 배너"
-          />
           <QuestionProfile />
-        </aside>
-      </div>
-    </Main>
+        </HeroBanner>
+        <Main>
+          <QuestionList />
+        </Main>
+      </Inner>
+    </Container>
   );
 }

@@ -46,9 +46,14 @@ export class UsersService {
 
   async getPoints(userId: string): Promise<number> {
     const user = await this.prisma.user.findUnique({
-      where: { UserId: userId },
+      where: { UserId: userId, DeletedAt: null },
       select: { Points: true },
     });
+
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
+    }
+
     return user.Points;
   }
 }

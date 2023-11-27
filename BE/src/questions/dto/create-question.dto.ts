@@ -1,5 +1,11 @@
 // { title, content, tag, programmingLanguage, originalLink }
-import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()
@@ -21,4 +27,8 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsUrl()
   originalLink: string;
+
+  @IsOptional()
+  @IsNumber()
+  draftId: number;
 }

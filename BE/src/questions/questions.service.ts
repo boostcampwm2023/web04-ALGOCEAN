@@ -15,7 +15,7 @@ export class QuestionsService {
     userId: number,
   ): Promise<number> {
     try {
-      const question = await this.prisma.question.create({
+      const question = this.prisma.question.create({
         data: {
           User: {
             connect: {
@@ -29,14 +29,50 @@ export class QuestionsService {
           OriginalLink: createQuestionDto.originalLink,
         },
       });
-      return question.Id;
+
+      const updatePoint = this.prisma.user.update({
+        where: {
+          Id: userId,
+        },
+        data: {
+          Points: {
+            increment: 10,
+          },
+        },
+      });
+
+      const updatePointHistory = this.prisma.point_History.create({
+        data: {
+          User: {
+            connect: {
+              Id: userId,
+            },
+          },
+          PointChange: 10,
+          Reason: 'create question',
+        },
+      });
+
+      const deleteDraft = this.prisma.question_Temporary.delete({
+        where: {
+          Id: createQuestionDto.draftId,
+        },
+      });
+
+      const queryResult = await this.prisma.$transaction([
+        question,
+        updatePoint,
+        updatePointHistory,
+        deleteDraft,
+      ]);
+
+      return queryResult[0].Id;
     } catch (error) {
       throw new Error('Failed to create question');
     }
   }
-
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {
-    const question = await this.prisma.question.findUnique({
+    const readQuestion = this.prisma.question.findUnique({
       where: {
         Id: id,
       },
@@ -53,6 +89,24 @@ export class QuestionsService {
         },
       },
     });
+
+    const updateViewCount = this.prisma.question.update({
+      where: {
+        Id: id,
+      },
+      data: {
+        ViewCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    const queryResult = await this.prisma.$transaction([
+      readQuestion,
+      updateViewCount,
+    ]);
+
+    const question = queryResult[0];
 
     return {
       id: question.Id,

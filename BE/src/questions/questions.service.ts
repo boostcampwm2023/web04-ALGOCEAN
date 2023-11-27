@@ -75,6 +75,7 @@ export class QuestionsService {
     const readQuestion = this.prisma.question.findUnique({
       where: {
         Id: id,
+        DeletedAt: null,
       },
       include: {
         User: {
@@ -171,6 +172,7 @@ export class QuestionsService {
     const questions = await this.prisma.question.findMany({
       where: {
         OR: whereConditions.length > 0 ? whereConditions : undefined,
+        DeletedAt: null,
       },
       orderBy: orderByConditions,
       select: {
@@ -217,6 +219,7 @@ export class QuestionsService {
           Title: {
             contains: title,
           },
+          DeletedAt: null,
         },
         select: {
           Id: true,
@@ -283,6 +286,9 @@ export class QuestionsService {
       const randomQuestion = await this.prisma.question.findFirst({
         select: {
           Id: true,
+        },
+        where: {
+          DeletedAt: null,
         },
         skip: randomIndex,
       });

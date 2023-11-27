@@ -5,6 +5,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
+import { ReadQuestionDraftDto } from './dto/read-question-draft.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -301,6 +302,16 @@ export class QuestionsService {
 
   async createOneQuestionDraft(userId: number): Promise<number> {
     try {
+      const existingDraft = await this.prisma.question_Temporary.findFirst({
+        where: {
+          UserId: userId,
+        },
+      });
+
+      if (existingDraft) {
+        return existingDraft.Id;
+      }
+
       const draft = await this.prisma.question_Temporary.create({
         data: {
           User: {
@@ -313,6 +324,25 @@ export class QuestionsService {
       return draft.Id;
     } catch (error) {
       throw new Error('Failed to create question draft');
+    }
+  }
+
+  async readOneQuestionDraft(userId: number): Promise<ReadQuestionDraftDto> {
+    try {
+      const draft = await this.prisma.question_Temporary.findFirstOrThrow({
+        where: {
+          UserId: userId,
+        },
+      });
+      return {
+        title: draft?.Title,
+        content: draft?.Content,
+        tag: draft?.Tag,
+        programmingLanguage: draft?.ProgrammingLanguage,
+        originalLink: draft?.OriginalLink,
+      };
+    } catch (error) {
+      throw new Error('Failed to read question draft');
     }
   }
 

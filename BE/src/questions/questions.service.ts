@@ -173,6 +173,11 @@ export class QuestionsService {
       where: {
         OR: whereConditions.length > 0 ? whereConditions : undefined,
         DeletedAt: null,
+        Title: options.title
+          ? {
+              contains: options.title,
+            }
+          : undefined,
       },
       orderBy: orderByConditions,
       select: {

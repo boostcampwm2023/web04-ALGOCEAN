@@ -43,4 +43,12 @@ export class UsersService {
     });
     return !!user;
   }
+
+  async getPoints(userId: string): Promise<number> {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+      select: { Points: true },
+    });
+    return user.Points;
+  }
 }

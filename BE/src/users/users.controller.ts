@@ -36,4 +36,9 @@ export class UsersController {
     const isDuplicated = await this.usersService.isUserIdTaken(userId);
     return { isDuplicated };
   }
+
+  @Get('/grade/:userId')
+  getUserGrade(@Param('userId') userId: string) {
+    return this.usersService.getUserGrade(userId);
+  }
 }

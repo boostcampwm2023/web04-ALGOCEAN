@@ -43,4 +43,42 @@ export class UsersService {
     });
     return !!user;
   }
+
+  async getUserGrade(userId: string): Promise<string> {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const userPosition = await this.prisma.user.count({
+      where: {
+        Points: {
+          gt: user.Points,
+        },
+        DeletedAt: null,
+      },
+    });
+
+    const totalUsers = await this.prisma.user.count({
+      where: { DeletedAt: null },
+    });
+
+    const percentile = ((userPosition + 1) / totalUsers) * 100;
+
+    let grade: string;
+    if (percentile >= 90) {
+      grade = 'Platinum';
+    } else if (percentile >= 70) {
+      grade = 'Gold';
+    } else if (percentile >= 50) {
+      grade = 'Silver';
+    } else {
+      grade = 'Bronze';
+    }
+
+    return grade;
+  }
 }

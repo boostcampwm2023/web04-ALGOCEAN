@@ -65,8 +65,7 @@ const QuestionCreationPage = () => {
   };
 
   // 폼 제출 핸들러
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     // 문서에디터 내용 html 형식으로 변환
     const contentState = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),

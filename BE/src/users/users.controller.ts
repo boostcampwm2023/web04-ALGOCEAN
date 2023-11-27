@@ -36,4 +36,10 @@ export class UsersController {
     const isDuplicated = await this.usersService.isUserIdTaken(userId);
     return { isDuplicated };
   }
+
+  @Get('nickname/:userId')
+  async getNickname(@Param('userId') userId: string): Promise<string> {
+    const user = await this.usersService.getUserByUserId(userId);
+    return user.Nickname;
+  }
 }

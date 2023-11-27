@@ -117,6 +117,7 @@ export class QuestionsService {
       tag: question.Tag,
       createdAt: question.CreatedAt,
       programmingLanguage: question.ProgrammingLanguage,
+      originalLink: question.OriginalLink,
       isAdopted: question.IsAdopted,
       viewCount: question.ViewCount,
       likeCount: question.LikeCount,

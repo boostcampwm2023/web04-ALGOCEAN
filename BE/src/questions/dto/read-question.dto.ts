@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUrl,
 } from 'class-validator';
 
 export class ReadQuestionDto {
@@ -45,4 +46,7 @@ export class ReadQuestionDto {
 
   @IsBoolean()
   isLiked: boolean;
+
+  @IsUrl()
+  originalLink: string;
 }

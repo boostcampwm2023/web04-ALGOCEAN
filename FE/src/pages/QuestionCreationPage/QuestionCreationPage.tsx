@@ -14,6 +14,8 @@ import {
 } from './QuestionCreationPage.style';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import { createQuestionAPI } from '../../api/questionService';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
 const PROGRAMMING_LANGUAGE_LIST = [
@@ -31,6 +33,18 @@ const PROGRAMMING_LANGUAGE_LIST = [
   'etc',
 ];
 const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
+
+const BUTTON_ONCLICK_HANDLER = [
+  () => {
+    console.log('질문 등록하기');
+  },
+  () => {
+    console.log('임시 등록');
+  },
+  () => {
+    console.log('작성 취소하기');
+  },
+];
 
 const QuestionCreationPage = () => {
   // 서버에 제출할 데이터
@@ -51,20 +65,19 @@ const QuestionCreationPage = () => {
   };
 
   // 폼 제출 핸들러
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // 문서에디터 내용 html 형식으로 변환
     const contentState = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
     handleInputChange('content', contentState);
-    // formData를 서버로 전송하는 로직 추가할 예정.
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러
   const [activeButton, setActiveButton] = useState({
-    TagActiveButton: 0 as number,
-    ProgrammingLanguageActiveButton: 0 as number,
+    tagActiveButton: 0 as number,
+    programmingLanguageActiveButton: 0 as number,
   });
 
   const handleButtonClick = (buttonType: string, buttonId: number) => {
@@ -76,6 +89,13 @@ const QuestionCreationPage = () => {
 
   // 문서에디터 state
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  useDidMountEffect(() => {
+    const fetchData = async () => {
+      return await createQuestionAPI(formData);
+    };
+    fetchData();
+  }, [formData.content]);
 
   return (
     <Main>
@@ -101,10 +121,10 @@ const QuestionCreationPage = () => {
                 <TagButton
                   key={idx}
                   type="button"
-                  $isactive={activeButton.TagActiveButton === idx}
+                  $isactive={activeButton.tagActiveButton === idx}
                   onClick={() => {
                     handleInputChange('tag', val);
-                    handleButtonClick('TagActiveButton', idx);
+                    handleButtonClick('tagActiveButton', idx);
                   }}
                 >
                   {val}
@@ -127,11 +147,11 @@ const QuestionCreationPage = () => {
                   key={idx}
                   type="button"
                   $isactive={
-                    activeButton.ProgrammingLanguageActiveButton === idx
+                    activeButton.programmingLanguageActiveButton === idx
                   }
                   onClick={() => {
                     handleInputChange('programmingLanguage', val);
-                    handleButtonClick('ProgrammingLanguageActiveButton', idx);
+                    handleButtonClick('programmingLanguageActiveButton', idx);
                   }}
                 >
                   {val}
@@ -141,7 +161,11 @@ const QuestionCreationPage = () => {
           </ContentDiv>
           <Aside>
             {BUTTON_LABEL_LIST.map((val, idx) => (
-              <button key={idx} type={idx === 0 ? 'submit' : 'button'}>
+              <button
+                key={idx}
+                type={idx === 0 ? 'submit' : 'button'}
+                onClick={BUTTON_ONCLICK_HANDLER[idx]}
+              >
                 {val}
               </button>
             ))}

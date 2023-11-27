@@ -231,6 +231,7 @@ export class QuestionsService {
           gte: today,
           lt: tomorrow,
         },
+        DeletedAt: null,
       },
       select: {
         Id: true,
@@ -240,7 +241,7 @@ export class QuestionsService {
       const randomIndex = Math.floor(Math.random() * questions.length);
       return questions[randomIndex].Id;
     } else {
-      return getRandomQuestionId();
+      return this.getRandomQuestionId();
     }
   }
 }

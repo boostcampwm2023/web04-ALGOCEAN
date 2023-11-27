@@ -37,6 +37,11 @@ export class UsersController {
     return { isDuplicated };
   }
 
+  @Get('points/:userId')
+  async getPoints(@Param('userId') userId: string): Promise<number> {
+    return await this.usersService.getPoints(userId);
+  }
+
   @Get('nickname/:userId')
   async getNickname(@Param('userId') userId: string): Promise<string> {
     const user = await this.usersService.getUserByUserId(userId);

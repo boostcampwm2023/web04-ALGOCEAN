@@ -47,9 +47,10 @@ export class QuestionsController {
     @Res() res: Response,
   ) {
     try {
-      const questionList: ReadQuestionListDto[] =
+      const { questions, totalQuestions } =
         await this.questionsService.readQuestionList(options);
-      return res.status(HttpStatus.OK).json(questionList);
+      const totalPage = Math.ceil(totalQuestions / 10);
+      return res.status(HttpStatus.OK).json({ questions, totalPage });
     } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

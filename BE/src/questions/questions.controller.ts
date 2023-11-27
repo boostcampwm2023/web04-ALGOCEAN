@@ -33,6 +33,11 @@ export class QuestionsController {
       if (error instanceof HttpException) {
         throw error;
       }
+
+      if (error.message === 'Failed to get today question id') {
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+      }
+
       throw new HttpException(
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,

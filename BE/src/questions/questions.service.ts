@@ -225,23 +225,25 @@ export class QuestionsService {
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const questions = await this.prisma.question.findMany({
-      where: {
-        CreatedAt: {
-          gte: today,
-          lt: tomorrow,
+
+    try {
+      const question = await this.prisma.question.findFirstOrThrow({
+        where: {
+          CreatedAt: {
+            gte: today,
+            lt: tomorrow,
+          },
         },
-        DeletedAt: null,
-      },
-      select: {
-        Id: true,
-      },
-    });
-    if (questions.length !== 0) {
-      const randomIndex = Math.floor(Math.random() * questions.length);
-      return questions[randomIndex].Id;
-    } else {
-      return this.getRandomQuestionId();
+        orderBy: {
+          ViewCount: 'desc',
+        },
+        select: {
+          Id: true,
+        },
+      });
+      return question.Id;
+    } catch (error) {
+      throw new Error('Failed to get today question id');
     }
   }
 }

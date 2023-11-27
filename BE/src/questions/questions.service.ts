@@ -221,6 +221,24 @@ export class QuestionsService {
     }
   }
 
+  async getRandomQuestionId(): Promise<number> {
+    try {
+      const totalRows = await this.prisma.question.count();
+      const randomIndex = Math.floor(Math.random() * totalRows);
+
+      const randomQuestion = await this.prisma.question.findFirst({
+        select: {
+          Id: true,
+        },
+        skip: randomIndex,
+      });
+
+      return randomQuestion.Id;
+    } catch (error) {
+      throw new Error('Failed to get a random question id');
+    }
+  }
+
   async createOneQuestionDraft(userId: number): Promise<number> {
     try {
       const draft = await this.prisma.question_Temporary.create({

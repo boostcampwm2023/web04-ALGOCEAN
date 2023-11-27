@@ -1,22 +1,22 @@
-import * as S from './QuestionProfile.styles';
+import {
+  LoginContainer,
+  LoginButton,
+  QuestionProfileContainer,
+} from './QuestionProfile.styles';
 
 export function Login() {
   return (
-    <S.Login>
-      <div>프로필이 보고 싶다면?</div>
-      <button className="login-button">로그인</button>
-      <div>
-        <span>아직 회원이 아니라면?</span>
-        <button className="signup-button">회원 가입</button>
-      </div>
-    </S.Login>
+    <LoginContainer>
+      <div>로그인을 하면 나의 등급을 알 수 있어요!</div>
+      <LoginButton>로그인 하러 가기</LoginButton>
+    </LoginContainer>
   );
 }
 
 export function QuestionProfile() {
   return (
-    <S.UserQuestion>
+    <QuestionProfileContainer>
       <Login />
-    </S.UserQuestion>
+    </QuestionProfileContainer>
   );
 }

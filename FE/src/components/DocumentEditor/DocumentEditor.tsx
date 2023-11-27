@@ -1,16 +1,17 @@
-import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import { useState } from 'react';
+import { EditorState } from 'draft-js';
 import { EditorWrapper } from './DocumentEditor.styles';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const DocumentEditor = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+interface EditorProps {
+  editorState: EditorState;
+  setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
+}
 
+const DocumentEditor = ({ editorState, setEditorState }: EditorProps) => {
   const onEditorStateChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
   };
-
   return (
     <EditorWrapper>
       <Editor

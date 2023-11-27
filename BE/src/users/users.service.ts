@@ -58,10 +58,13 @@ export class UsersService {
         Points: {
           gt: user.Points,
         },
+        DeletedAt: null,
       },
     });
 
-    const totalUsers = await this.prisma.user.count();
+    const totalUsers = await this.prisma.user.count({
+      where: { DeletedAt: null },
+    });
 
     const percentile = ((userPosition + 1) / totalUsers) * 100;
 

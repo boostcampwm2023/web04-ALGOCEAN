@@ -219,4 +219,28 @@ export class QuestionsService {
       return false;
     }
   }
+
+  async getTodayQuestionId(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const questions = await this.prisma.question.findMany({
+      where: {
+        CreatedAt: {
+          gte: today,
+          lt: tomorrow,
+        },
+      },
+      select: {
+        Id: true,
+      },
+    });
+    if (questions.length !== 0) {
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      return questions[randomIndex].Id;
+    } else {
+      return getRandomQuestionId();
+    }
+  }
 }

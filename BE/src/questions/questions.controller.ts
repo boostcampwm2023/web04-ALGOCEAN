@@ -10,6 +10,7 @@ import {
   Query,
   Put,
   Res,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
@@ -21,6 +22,23 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
+
+  @Get('today')
+  async readTodayQuestion(@Res() res: Response) {
+    try {
+      const question = await this.questionsService.getTodayQuestionId();
+
+      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   @Get('lists')
   async getQuestionList(

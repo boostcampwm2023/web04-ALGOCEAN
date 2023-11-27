@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Res,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res } from '@nestjs/common';
 import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { AdoptAnswerDto } from './dto/adopt-answer.dto';

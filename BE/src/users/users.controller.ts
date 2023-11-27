@@ -42,4 +42,9 @@ export class UsersController {
     const user = await this.usersService.getUserByUserId(userId);
     return user.Nickname;
   }
+
+  @Get('/grade/:userId')
+  getUserGrade(@Param('userId') userId: string) {
+    return this.usersService.getUserGrade(userId);
+  }
 }

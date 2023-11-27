@@ -41,4 +41,15 @@ export class UsersController {
   async getPoints(@Param('userId') userId: string): Promise<number> {
     return await this.usersService.getPoints(userId);
   }
+
+  @Get('nickname/:userId')
+  async getNickname(@Param('userId') userId: string): Promise<string> {
+    const user = await this.usersService.getUserByUserId(userId);
+    return user.Nickname;
+  }
+
+  @Get('/grade/:userId')
+  getUserGrade(@Param('userId') userId: string) {
+    return this.usersService.getUserGrade(userId);
+  }
 }

@@ -24,6 +24,23 @@ import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
+  @Get('/random')
+  async readRandomQuestion(@Res() res: Response) {
+    try {
+      const question = await this.questionsService.getRandomQuestionId();
+
+      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Get('lists')
   async getQuestionList(
     @Query() options: QuestionListOptionsDto,

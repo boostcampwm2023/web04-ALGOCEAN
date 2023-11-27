@@ -44,6 +44,19 @@ export class UsersService {
     return !!user;
   }
 
+  async getUserByUserId(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId, DeletedAt: null },
+      select: { Nickname: true },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    return user;
+  }
+
   async getUserGrade(userId: string): Promise<string> {
     const user = await this.prisma.user.findUnique({
       where: { UserId: userId },

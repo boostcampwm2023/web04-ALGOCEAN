@@ -113,6 +113,7 @@ export class QuestionsService {
       id: question.Id,
       title: question.Title,
       nickname: question.User.Nickname,
+      content: question.Content,
       tag: question.Tag,
       createdAt: question.CreatedAt,
       programmingLanguage: question.ProgrammingLanguage,

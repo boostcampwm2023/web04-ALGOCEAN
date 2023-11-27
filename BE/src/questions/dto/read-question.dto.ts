@@ -20,6 +20,10 @@ export class ReadQuestionDto {
 
   @IsNotEmpty()
   @IsString()
+  content: string;
+
+  @IsNotEmpty()
+  @IsString()
   tag: string;
 
   @IsNotEmpty()

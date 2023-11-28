@@ -26,6 +26,116 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
+  @ApiOperation({
+    summary: '질문 초안 생성',
+    description:
+      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
+  })
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Post('drafts')
+  async createDraft(@Res() res: Response) {
+    try {
+      const questionId = await this.questionsService.createOneQuestionDraft(1);
+
+      return res
+        .status(HttpStatus.CREATED)
+        .json({ message: 'Draft created successfully', id: questionId });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({
+    summary: '질문 초안 읽기',
+    description: '질문 초안을 읽어옵니다.',
+  })
+  @Get('drafts')
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  async readDraft(@Res() res: Response) {
+    try {
+      const draft = await this.questionsService.readOneQuestionDraft(1);
+
+      if (!draft) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ error: 'Draft not found' });
+      }
+
+      return res.status(HttpStatus.OK).json(draft);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({
+    summary: '질문 초안 수정',
+    description: '질문 초안을 수정합니다.',
+  })
+
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Put('drafts/:id')
+  async updateDraft(
+    @Param('id') id: number,
+    @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
+    @Res() res: Response,
+  ) {
+    try {
+      await this.questionsService.updateOneQuestionDraft(
+        id,
+        1,
+        updateQuestionDraftDto,
+      );
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft updated successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  
+  @ApiOperation({
+    summary: '질문 초안 삭제',
+    description: '질문 초안을 삭제합니다.',
+  })
+  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @Delete('drafts/:id')
+  async deleteDraft(@Param('id') id: number, @Res() res: Response) {
+    try {
+      await this.questionsService.deleteOneQuestionDraft(id, 1);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft deleted successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Get('/random')
   async readRandomQuestion(@Res() res: Response) {
     try {
@@ -198,87 +308,6 @@ export class QuestionsController {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
-    }
-  }
-
-  @ApiOperation({
-    summary: '질문 초안 생성',
-    description:
-      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
-  })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  @Post('drafts')
-  async createDraft(@Res() res: Response) {
-    try {
-      const questionId = await this.questionsService.createOneQuestionDraft(1);
-
-      return res
-        .status(HttpStatus.CREATED)
-        .json({ message: 'Draft created successfully', id: questionId });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @ApiOperation({
-    summary: '질문 초안 수정',
-    description: '질문 초안을 수정합니다.',
-  })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  @Put('drafts/:id')
-  async updateDraft(
-    @Param('id') id: number,
-    @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
-    @Res() res: Response,
-  ) {
-    try {
-      await this.questionsService.updateOneQuestionDraft(
-        id,
-        1,
-        updateQuestionDraftDto,
-      );
-
-      return res
-        .status(HttpStatus.OK)
-        .json({ message: 'Draft updated successfully' });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @ApiOperation({
-    summary: '질문 초안 삭제',
-    description: '질문 초안을 삭제합니다.',
-  })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  @Delete('drafts/:id')
-  async deleteDraft(@Param('id') id: number, @Res() res: Response) {
-    try {
-      await this.questionsService.deleteOneQuestionDraft(id, 1);
-
-      return res
-        .status(HttpStatus.OK)
-        .json({ message: 'Draft deleted successfully' });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 }

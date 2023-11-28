@@ -5,6 +5,7 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateQuestionDto {
   @ApiProperty({

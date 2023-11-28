@@ -404,4 +404,31 @@ export class QuestionsService {
       throw new Error('Failed to delete question draft');
     }
   }
+
+  async getTodayQuestionId(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    try {
+      const question = await this.prisma.question.findFirstOrThrow({
+        where: {
+          CreatedAt: {
+            gte: today,
+            lt: tomorrow,
+          },
+        },
+        orderBy: {
+          ViewCount: 'desc',
+        },
+        select: {
+          Id: true,
+        },
+      });
+      return question.Id;
+    } catch (error) {
+      throw new Error('Failed to get today question id');
+    }
+  }
 }

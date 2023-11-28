@@ -30,7 +30,6 @@ export interface TagbuttonProps {
 }
 
 export interface QuestionAnswerRequestCardProps {
-  nickname: string;
   onAnswerButtonClick: () => void;
 }
 

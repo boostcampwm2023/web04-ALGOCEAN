@@ -15,7 +15,7 @@ import {
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { createQuestionAPI } from '../../api/questionService';
-import useDidMountEffect from '../../hooks/useDidMountEffect';
+import { useLocation } from 'react-router-dom';
 
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
 const PROGRAMMING_LANGUAGE_LIST = [
@@ -47,13 +47,17 @@ const BUTTON_ONCLICK_HANDLER = [
 ];
 
 const QuestionCreationPage = () => {
+  // draft ID 가져오기
+  const location = useLocation();
+  const locationData = location.state?.id || null;
+
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
     tag: 'baekjoon',
     programmingLanguage: 'C',
     originalLink: '',
+    draftId: locationData,
   });
 
   // 폼 필드 값 변경 이벤트 핸들러
@@ -65,12 +69,19 @@ const QuestionCreationPage = () => {
   };
 
   // 폼 제출 핸들러
-  const handleSubmit = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     // 문서에디터 내용 html 형식으로 변환
     const contentState = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
-    handleInputChange('content', contentState);
+    // 서버로 보낼 데이터 가공
+    const createQuestionData = {
+      ...formData,
+      content: contentState,
+    };
+    const res = await createQuestionAPI(createQuestionData);
+    // 후속 처리할 예정
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러
@@ -88,13 +99,6 @@ const QuestionCreationPage = () => {
 
   // 문서에디터 state
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
-  useDidMountEffect(() => {
-    const fetchData = async () => {
-      return await createQuestionAPI(formData);
-    };
-    fetchData();
-  }, [formData.content]);
 
   return (
     <Main>

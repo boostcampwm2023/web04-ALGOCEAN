@@ -8,6 +8,8 @@ import {
 import { QuestionProfile } from './QuestionProfile/QuestionProfile';
 import { Pagination } from './Pagination/Pagination';
 import DocumentEditor from './DocumentEditor/DocumentEditor';
+import QuestionDetailContent from './QuestionDetailContent/QuestionDetailContent';
+import TagButton from './TagButton/TagButton';
 
 export {
   MainHeader,
@@ -18,4 +20,6 @@ export {
   QuestionProfile,
   Pagination,
   DocumentEditor,
+  QuestionDetailContent,
+  TagButton,
 };

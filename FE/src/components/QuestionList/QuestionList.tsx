@@ -22,7 +22,6 @@ import {
   QuestionList as QuestionListContainer,
 } from './QuestionList.styles';
 
-const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
 
 interface ItemData {
@@ -91,14 +90,18 @@ export function Item({ itemData }: { itemData: ItemData }) {
 }
 
 export function QuestionList() {
+  const [wholePageCount, setwholePageCount] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [questionListData, setQuestionListData] = useState<ItemData[] | null>(
     null,
   );
 
   const getCurrentQuestionListData = async () => {
-    const data = await getQuestionList({ page: currentPage + 1 });
-    setQuestionListData(data);
+    const { questions, totalPage: totalPageNum } = await getQuestionList({
+      page: currentPage + 1,
+    });
+    setQuestionListData(questions);
+    setwholePageCount(totalPageNum);
   };
 
   const handleCurrentPage = (nextPage: number) => {
@@ -117,12 +120,14 @@ export function QuestionList() {
             <Item key={idx} itemData={itemData} />
           ))}
       </ul>
-      <Pagination
-        wholePageCount={LAST_PAGINATION_PAGE}
-        currentPage={currentPage}
-        handleCurrentPage={handleCurrentPage}
-        splitNumber={PAGINATION_SPLIT_NUMBER}
-      />
+      {!!wholePageCount && (
+        <Pagination
+          wholePageCount={wholePageCount}
+          currentPage={currentPage}
+          handleCurrentPage={handleCurrentPage}
+          splitNumber={PAGINATION_SPLIT_NUMBER}
+        />
+      )}
     </QuestionListContainer>
   );
 }

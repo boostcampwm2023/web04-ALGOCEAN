@@ -80,7 +80,10 @@ const QuestionCreationPage = () => {
       ...formData,
       content: contentState,
     };
-    const res = await createQuestionAPI(createQuestionData);
+    console.log('서버로 보낼 데이터 :', createQuestionData);
+    return alert('현재 구현중인 기능입니다');
+
+    await createQuestionAPI(createQuestionData);
     // 후속 처리할 예정
   };
 

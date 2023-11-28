@@ -10,6 +10,8 @@ import { Pagination } from './Pagination/Pagination';
 import DocumentEditor from './DocumentEditor/DocumentEditor';
 import QuestionDetailContent from './QuestionDetailContent/QuestionDetailContent';
 import TagButton from './TagButton/TagButton';
+import QuestionAnswerRequestCard from './QuestionAnswerRequestCard/QuestionAnswerRequestCard';
+import SquareButton from './SquareButton/SquareButton';
 
 export {
   MainHeader,
@@ -22,4 +24,6 @@ export {
   DocumentEditor,
   QuestionDetailContent,
   TagButton,
+  QuestionAnswerRequestCard,
+  SquareButton,
 };

@@ -23,4 +23,7 @@ module.exports = {
     'no-duplicate-imports': 'error',
     'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
   },
+  globals: {
+    process: true,
+  },
 };

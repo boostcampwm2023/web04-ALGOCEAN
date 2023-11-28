@@ -15,8 +15,7 @@ ENV NODE_ENV production
 RUN apt-get update -y && apt-get install -y openssl
 COPY --from=builder /app/. .
 RUN yarn set version berry
-RUN yarn workspaces focus --all --production
-COPY --from=builder /app/node_modules/.prisma/client ./node_modules/.prisma/client
+RUN yarn install
 EXPOSE 3000
 
 CMD ["yarn","start:prod"]

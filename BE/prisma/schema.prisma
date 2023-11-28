@@ -97,6 +97,7 @@ model User {
   CreatedAt          DateTime?            @default(now()) @db.DateTime(0)
   UpdatedAt          DateTime?            @default(now()) @db.DateTime(0)
   DeletedAt          DateTime?            @db.DateTime(0)
+  GithubId           String?              @unique(map: "githubId") @db.VarChar(255)
   Answer             Answer[]
   Delete_History     Delete_History[]
   LikeInfo           LikeInfo[]

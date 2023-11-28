@@ -8,23 +8,23 @@ const TagButton = ({
   isInteractive = true,
   handleToggle,
 }: TagbuttonProps) => {
-  const [isSelect, setIsSelect] = useState(initialState === 'select');
+  const [isSelected, setIsSelected] = useState(initialState === 'select');
 
   const handleButtonState = () => {
     if (!isInteractive) {
       return;
     }
 
-    setIsSelect((v) => !v);
+    setIsSelected((prevIsSelectedValue) => !prevIsSelectedValue);
 
     if (handleToggle) {
-      handleToggle(!isSelect);
+      handleToggle(!isSelected);
     }
   };
 
   return (
     <Container
-      isSelect={isSelect}
+      isSelected={isSelected}
       isInteractive={isInteractive}
       onClick={handleButtonState}
     >

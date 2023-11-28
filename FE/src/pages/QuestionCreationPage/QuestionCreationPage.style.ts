@@ -14,12 +14,12 @@ export const Main = styled.main`
 
 export const InnerDiv = styled.div`
   width: 100%;
-  max-width: var(--max-width);
+  max-width: ${({ theme }) => theme.maxWidth};
 `;
 
 export const Header = styled.header`
   ${({ theme }) => theme.font.bold24};
-  ${({ theme }) => theme.color.grayscale.black};
+  color: ${({ theme }) => theme.color.grayscale.black};
   margin-bottom: 2rem;
 `;
 
@@ -70,7 +70,7 @@ export const ContentDiv = styled.div`
 export const Label = styled.label`
   margin-top: 1rem;
   ${({ theme }) => theme.font.bold16};
-  ${({ theme }) => theme.color.grayscale[500]};
+  color: ${({ theme }) => theme.color.grayscale[500]};
 `;
 
 export const Input = styled.input`
@@ -96,7 +96,9 @@ export const TagButton = styled.button<TagButtonProps>`
   padding: 0 0.8rem;
   cursor: pointer;
   border: ${({ $isactive, theme }) =>
-    $isactive ? `1px ${theme}.color.grayscale.black` : '1px solid transparent'};
+    $isactive
+      ? `1px solid ${theme}.color.grayscale.black`
+      : '1px solid transparent'};
   border-radius: 1rem;
   background-color: ${({ $isactive, theme }) =>
     $isactive ? theme.color.grayscale.white : theme.color.grayscale[50]};

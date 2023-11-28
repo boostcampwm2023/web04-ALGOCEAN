@@ -27,5 +27,6 @@
     "composite": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "svg.d.ts", "./src/**/*.json"]
+  "include": ["src", "svg.d.ts", "./src/**/*.json"],
+  "types": ["node"] // importMeta 객체 타입 선언
 }

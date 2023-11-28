@@ -13,6 +13,7 @@ import TagButton from './TagButton/TagButton';
 import QuestionAnswerRequestCard from './QuestionAnswerRequestCard/QuestionAnswerRequestCard';
 import SquareButton from './SquareButton/SquareButton';
 import QuestionAnswerCard from './QuestionAnswerCard/QuestionAnswerCard';
+import QuestionAnswerFormCard from './QuestionAnswerFormCard/QuestionAnswerFormCard';
 
 export {
   MainHeader,
@@ -28,4 +29,5 @@ export {
   QuestionAnswerRequestCard,
   SquareButton,
   QuestionAnswerCard,
+  QuestionAnswerFormCard,
 };

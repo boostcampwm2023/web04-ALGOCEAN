@@ -52,3 +52,8 @@ export interface QuestionAnswerCardProps {
     isLiked: boolean;
   };
 }
+
+export interface QuestionAnswerFormCardProps {
+  handleCancel: () => void;
+  handleSubmit: (content: string) => void;
+}

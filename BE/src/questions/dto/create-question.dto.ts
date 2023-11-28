@@ -1,6 +1,10 @@
-// { title, content, tag, programmingLanguage, originalLink }
-import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class CreateQuestionDto {
   @ApiProperty({
@@ -43,4 +47,8 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsUrl()
   originalLink: string;
+
+  @IsOptional()
+  @IsNumber()
+  draftId: number;
 }

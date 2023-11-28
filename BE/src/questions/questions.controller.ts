@@ -26,6 +26,23 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
+  @Get('/random')
+  async readRandomQuestion(@Res() res: Response) {
+    try {
+      const question = await this.questionsService.getRandomQuestionId();
+
+      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @ApiOperation({
     summary: '질문 목록 조회',
     description:

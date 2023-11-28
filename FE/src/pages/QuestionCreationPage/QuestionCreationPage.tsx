@@ -18,7 +18,7 @@ import {
   createQuestionAPI,
   putDraftQuestionAPI,
 } from '../../api/questionService';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -51,6 +51,7 @@ const BUTTON_ONCLICK_HANDLER = [
 ];
 
 const QuestionCreationPage = () => {
+  const navigate = useNavigate();
   // draft ID 가져오기
   const location = useLocation();
   const locationData = location.state?.id || null;
@@ -88,8 +89,23 @@ const QuestionCreationPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const createQuestionData = preprocessData();
-    await createQuestionAPI(createQuestionData);
-    // 후속 처리할 예정
+    try {
+      await createQuestionAPI(createQuestionData);
+      navigate('/');
+    } catch (error: any) {
+      if (error.response) {
+        // 서버 응답이 있는 경우 (오류 상태 코드 처리)
+        if (error.response.status === 400) {
+          console.error('Bad Request:', error.response.data);
+        } else {
+          console.error('Server Error:', error.response.data);
+        }
+      } else {
+        // 서버 응답이 없는 경우 (네트워크 오류 등)
+        console.error('Error creating question:', error.message);
+      }
+      throw error;
+    }
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러

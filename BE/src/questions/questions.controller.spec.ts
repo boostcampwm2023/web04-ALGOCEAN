@@ -3,6 +3,7 @@ import { QuestionsController } from './questions.controller';
 import { PrismaService } from '../prisma.service';
 import { QuestionsService } from './questions.service';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
+import { HttpStatus } from '@nestjs/common';
 
 describe('QuestionsController', () => {
   let controller: QuestionsController;
@@ -71,7 +72,7 @@ describe('QuestionsController', () => {
         response as any, // Type casting for simplicity
       );
 
-      expect(response.status).toHaveBeenCalledWith(200);
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(response.json).toHaveBeenCalledWith(mockQuestionList);
     });
 
@@ -87,9 +88,71 @@ describe('QuestionsController', () => {
 
       await controller.getQuestionList({}, response as any);
 
-      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
       expect(response.json).toHaveBeenCalledWith({
         error: 'Internal server error',
+      });
+    });
+  });
+
+  describe('createDraft', () => {
+    it('should create a draft', async () => {
+      const mockDraftId = 1;
+      jest
+        .spyOn(service, 'createOneQuestionDraft')
+        .mockResolvedValue(mockDraftId);
+
+      const response = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      await controller.createDraft(response as any);
+
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.CREATED);
+      expect(response.json).toHaveBeenCalledWith({
+        message: 'Draft created successfully',
+        id: mockDraftId,
+      });
+    });
+  });
+
+  describe('updateDraft', () => {
+    it('should update a draft', async () => {
+      const mockDraftId = 1;
+      jest.spyOn(service, 'updateOneQuestionDraft').mockResolvedValue();
+
+      const response = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      await controller.updateDraft(mockDraftId, {}, response as any);
+
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
+      expect(response.json).toHaveBeenCalledWith({
+        message: 'Draft updated successfully',
+      });
+    });
+  });
+
+  describe('deleteDraft', () => {
+    it('should delete a draft', async () => {
+      const mockDraftId = 1;
+      jest.spyOn(service, 'deleteOneQuestionDraft').mockResolvedValue();
+
+      const response = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      await controller.deleteDraft(mockDraftId, response as any);
+
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
+      expect(response.json).toHaveBeenCalledWith({
+        message: 'Draft deleted successfully',
       });
     });
   });

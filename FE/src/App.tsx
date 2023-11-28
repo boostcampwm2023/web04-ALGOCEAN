@@ -8,15 +8,12 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <MainHeader />
-        <MainNav />
         <Router>
+          <MainHeader />
+          <MainNav />
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route
-              path="/question/create/:id"
-              element={<QuestionCreationPage />}
-            />
+            <Route path="/question/create" element={<QuestionCreationPage />} />
           </Routes>
         </Router>
       </ThemeProvider>

@@ -23,6 +23,7 @@ interface Color {
     200: string;
     300: string;
     400: string;
+    500: string;
     black: string;
   };
   mainColor: {
@@ -31,6 +32,7 @@ interface Color {
     blueLight: string;
     blueOutline: string;
     blueFocus: string;
+    blueGradient: string;
   };
   system: {
     success: string;
@@ -45,6 +47,7 @@ interface Color {
     rainbowLilac: string;
     rainbowViolet: string;
     rainbowCornFlower: string;
+    [key: string]: string;
   };
 }
 
@@ -52,5 +55,6 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     color: Color;
     font: Font;
+    maxWidth: string;
   }
 }

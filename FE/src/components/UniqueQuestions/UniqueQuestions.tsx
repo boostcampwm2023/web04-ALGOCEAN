@@ -1,42 +1,45 @@
 import { UniqueQuestionItem as Item } from '../../types/type';
-import * as S from './UniqueQuestions.styles';
+import {
+  ItemContainer,
+  ItemTitle,
+  ItemContent,
+  ItemIcon,
+  UniqueQuestionsContainer,
+} from './UniqueQuestions.styles';
 
-const typeInfo = {
+const itemTypeInfo = {
   hot: {
     title: '조회수 급상승 질문',
-    emoji: '🔥',
-    color: '#4B91FF',
+    imageUrl: '/images/fire.png',
   },
   today: {
     title: '오늘의 질문',
-    emoji: '🕔',
-    color: '#7572FF',
+    imageUrl: '/images/clock.png',
   },
   random: {
     title: '랜덤 질문',
-    emoji: '🔗',
-    color: '#A160FF',
+    imageUrl: '/images/link.png',
   },
 };
 
-function Item({ type, title: questionTime, url }: Item) {
-  const { title, emoji, color } = typeInfo[type];
+function Item({ type, title: content, url }: Item) {
+  const { title, imageUrl } = itemTypeInfo[type];
 
   return (
-    <S.Item bgColor={color} data-url={url}>
-      <h3>{title}</h3>
-      <div>{questionTime}</div>
-      <span>{emoji}</span>
-    </S.Item>
+    <ItemContainer $type={type} data-url={url}>
+      <ItemTitle>{title}</ItemTitle>
+      <ItemContent>{content}</ItemContent>
+      <ItemIcon src={imageUrl} alt={title} />
+    </ItemContainer>
   );
 }
 
 export function UniqueQuestions({ questions }: { questions: Item[] }) {
   return (
-    <S.UniqueQuestions>
-      {questions.map(({ type, title, url }) => (
-        <Item type={type} title={title} url={url} />
+    <UniqueQuestionsContainer>
+      {questions.map(({ type, title, url }, idx) => (
+        <Item key={idx} type={type} title={title} url={url} />
       ))}
-    </S.UniqueQuestions>
+    </UniqueQuestionsContainer>
   );
 }

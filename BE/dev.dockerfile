@@ -13,16 +13,10 @@ FROM node:20-slim
 WORKDIR /app
 ENV NODE_ENV production
 RUN apt-get update -y && apt-get install -y openssl
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/yarn.lock ./yarn.lock
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/. .
 RUN yarn set version berry
-RUN yarn install
+RUN yarn workspaces focus --all --production
 COPY --from=builder /app/node_modules/.prisma/client ./node_modules/.prisma/client
 EXPOSE 3000
 
-CMD ["yarn","start:debug"]
+CMD ["yarn","start:prod"]

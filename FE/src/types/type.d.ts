@@ -28,3 +28,12 @@ export interface TagbuttonProps {
   isInteractive?: boolean;
   handleToggle?: (isSelected: boolean) => void;
 }
+
+export interface QuestionData {
+  title: string;
+  content: string;
+  tag: string;
+  programmingLanguage: string;
+  originalLink: string;
+  draftId: number;
+}

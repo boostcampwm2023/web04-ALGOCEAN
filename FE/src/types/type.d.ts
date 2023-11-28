@@ -39,3 +39,16 @@ export interface SquareButtonProps {
   type?: 'fill' | 'stroke';
   handleClick?: () => void;
 }
+
+export interface QuestionAnswerCardProps {
+  cardData: {
+    userId: number;
+    nickname: string;
+    answerId: number;
+    content: string;
+    videoLink: unknown;
+    isAdopted: boolean;
+    createdAt: string;
+    isLiked: boolean;
+  };
+}

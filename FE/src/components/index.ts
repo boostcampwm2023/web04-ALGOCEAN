@@ -12,6 +12,7 @@ import QuestionDetailContent from './QuestionDetailContent/QuestionDetailContent
 import TagButton from './TagButton/TagButton';
 import QuestionAnswerRequestCard from './QuestionAnswerRequestCard/QuestionAnswerRequestCard';
 import SquareButton from './SquareButton/SquareButton';
+import QuestionAnswerCard from './QuestionAnswerCard/QuestionAnswerCard';
 
 export {
   MainHeader,
@@ -26,4 +27,5 @@ export {
   TagButton,
   QuestionAnswerRequestCard,
   SquareButton,
+  QuestionAnswerCard,
 };

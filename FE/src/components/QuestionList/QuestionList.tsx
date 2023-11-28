@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Pagination } from '../index';
 import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
@@ -22,7 +23,6 @@ import {
   QuestionList as QuestionListContainer,
 } from './QuestionList.styles';
 
-const LAST_PAGINATION_PAGE = 11;
 const PAGINATION_SPLIT_NUMBER = 10;
 
 interface ItemData {
@@ -47,6 +47,7 @@ export function Header() {
 }
 
 export function Item({ itemData }: { itemData: ItemData }) {
+  const navigate = useNavigate();
   const {
     id,
     title,
@@ -59,8 +60,12 @@ export function Item({ itemData }: { itemData: ItemData }) {
     likeCount,
   } = itemData;
 
+  const handleItemClick = () => {
+    navigate(`/question/${id}`);
+  };
+
   return (
-    <ItemContainer data-id={id}>
+    <ItemContainer data-id={id} onClick={handleItemClick}>
       <ItemMain>
         <Title>{title}</Title>
         <Details>
@@ -91,14 +96,18 @@ export function Item({ itemData }: { itemData: ItemData }) {
 }
 
 export function QuestionList() {
+  const [wholePageCount, setwholePageCount] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [questionListData, setQuestionListData] = useState<ItemData[] | null>(
     null,
   );
 
   const getCurrentQuestionListData = async () => {
-    const data = await getQuestionList({ page: currentPage + 1 });
-    setQuestionListData(data);
+    const { questions, totalPage: totalPageNum } = await getQuestionList({
+      page: currentPage + 1,
+    });
+    setQuestionListData(questions);
+    setwholePageCount(totalPageNum);
   };
 
   const handleCurrentPage = (nextPage: number) => {
@@ -107,6 +116,7 @@ export function QuestionList() {
 
   useLayoutEffect(() => {
     getCurrentQuestionListData();
+    window.scrollTo(0, 0);
   }, [currentPage]);
 
   return (
@@ -117,12 +127,14 @@ export function QuestionList() {
             <Item key={idx} itemData={itemData} />
           ))}
       </ul>
-      <Pagination
-        wholePageCount={LAST_PAGINATION_PAGE}
-        currentPage={currentPage}
-        handleCurrentPage={handleCurrentPage}
-        splitNumber={PAGINATION_SPLIT_NUMBER}
-      />
+      {!!wholePageCount && (
+        <Pagination
+          wholePageCount={wholePageCount}
+          currentPage={currentPage}
+          handleCurrentPage={handleCurrentPage}
+          splitNumber={PAGINATION_SPLIT_NUMBER}
+        />
+      )}
     </QuestionListContainer>
   );
 }

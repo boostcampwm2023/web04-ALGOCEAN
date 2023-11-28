@@ -147,7 +147,7 @@ export class QuestionsService {
 
   async readQuestionList(
     options: QuestionListOptionsDto,
-  ): Promise<ReadQuestionListDto[]> {
+  ): Promise<{ questions: ReadQuestionListDto[]; totalQuestions: number }> {
     const {
       tag,
       programmingLanguage,
@@ -176,6 +176,11 @@ export class QuestionsService {
       where: {
         OR: whereConditions.length > 0 ? whereConditions : undefined,
         DeletedAt: null,
+        Title: options.title
+          ? {
+              contains: options.title,
+            }
+          : undefined,
       },
       orderBy: orderByConditions,
       select: {
@@ -197,17 +202,32 @@ export class QuestionsService {
       skip: (page - 1) * pageSize,
     });
 
-    return questions.map((question) => ({
-      id: question.Id,
-      title: question.Title,
-      nickname: question.User.Nickname,
-      tag: question.Tag,
-      createdAt: question.CreatedAt,
-      programmingLanguage: question.ProgrammingLanguage,
-      isAdopted: question.IsAdopted,
-      viewCount: question.ViewCount,
-      likeCount: question.LikeCount,
-    }));
+    const total = await this.prisma.question.count({
+      where: {
+        OR: whereConditions.length > 0 ? whereConditions : undefined,
+        DeletedAt: null,
+        Title: options.title
+          ? {
+              contains: options.title,
+            }
+          : undefined,
+      },
+    });
+
+    return {
+      questions: questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        nickname: question.User.Nickname,
+        tag: question.Tag,
+        createdAt: question.CreatedAt,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      })),
+      totalQuestions: total,
+    };
   }
 
   async findQuestionByTitle(

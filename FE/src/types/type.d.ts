@@ -28,3 +28,14 @@ export interface TagbuttonProps {
   isInteractive?: boolean;
   handleToggle?: (isSelected: boolean) => void;
 }
+
+export interface QuestionAnswerRequestCardProps {
+  nickname: string;
+  onAnswerButtonClick: () => void;
+}
+
+export interface SquareButtonProps {
+  content: string;
+  type?: 'fill' | 'stroke';
+  handleClick?: () => void;
+}

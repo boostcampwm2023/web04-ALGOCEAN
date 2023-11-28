@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUrl,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -35,6 +36,10 @@ export class ReadQuestionDto {
     example: 'Baekjoon',
     description: '질문의 태그',
   })
+  @IsNotEmpty()
+  @IsString()
+  content: string;
+
   @IsNotEmpty()
   @IsString()
   tag: string;
@@ -82,4 +87,7 @@ export class ReadQuestionDto {
   })
   @IsBoolean()
   isLiked: boolean;
+
+  @IsUrl()
+  originalLink: string;
 }

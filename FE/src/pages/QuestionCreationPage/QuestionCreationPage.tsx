@@ -14,9 +14,13 @@ import {
 } from './QuestionCreationPage.style';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { createQuestionAPI } from '../../api/questionService';
+import {
+  createQuestionAPI,
+  putDraftQuestionAPI,
+} from '../../api/questionService';
 import { useLocation } from 'react-router-dom';
 
+const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
 const PROGRAMMING_LANGUAGE_LIST = [
   'C',
@@ -68,21 +72,22 @@ const QuestionCreationPage = () => {
     }));
   };
 
-  // 폼 제출 핸들러
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // 서버로 보낼 데이터 가공
+  const preprocessData = () => {
     // 문서에디터 내용 html 형식으로 변환
     const contentState = draftToHtml(
       convertToRaw(editorState.getCurrentContent()),
     );
-    // 서버로 보낼 데이터 가공
-    const createQuestionData = {
+    return {
       ...formData,
       content: contentState,
     };
-    console.log('서버로 보낼 데이터 :', createQuestionData);
-    return alert('현재 구현중인 기능입니다');
+  };
 
+  // 폼 제출 핸들러
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const createQuestionData = preprocessData();
     await createQuestionAPI(createQuestionData);
     // 후속 처리할 예정
   };
@@ -103,6 +108,25 @@ const QuestionCreationPage = () => {
   // 문서에디터 state
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
+  // 임시글 저장 처리
+  const [pollingIntervalId, setPollingIntervalId] = useState<
+    number | undefined
+  >(undefined);
+
+  const handleFocus = () => {
+    // 폴링 시작
+    const intervalId = setInterval(async () => {
+      const putQuestionData = preprocessData();
+      await putDraftQuestionAPI(putQuestionData);
+    }, POLLING_INTERVAL);
+    setPollingIntervalId(intervalId);
+  };
+  const handleBlur = () => {
+    // 폴링 취소
+    clearInterval(pollingIntervalId);
+    setPollingIntervalId(undefined);
+  };
+
   return (
     <Main>
       <InnerDiv className="inner">
@@ -114,10 +138,13 @@ const QuestionCreationPage = () => {
               type="text"
               value={formData.title}
               placeholder="내용을 입력해 주세요."
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               onChange={(e) => handleInputChange('title', e.target.value)}
             />
             <Label>내용</Label>
             <DocumentEditor
+              handleFocusCallback={preprocessData}
               editorState={editorState}
               setEditorState={setEditorState}
             />

@@ -26,7 +26,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @ApiOperation({
     summary: '질문 초안 생성',
     description:

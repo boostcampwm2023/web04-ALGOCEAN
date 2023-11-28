@@ -19,11 +19,18 @@ import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('questions')
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
+  @ApiOperation({
+    summary: '질문 초안 생성',
+    description:
+      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
+  })
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post('drafts')
   async createDraft(@Res() res: Response) {
@@ -44,6 +51,10 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 초안 읽기',
+    description: '질문 초안을 읽어옵니다.',
+  })
   @Get('drafts')
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   async readDraft(@Res() res: Response) {
@@ -67,6 +78,11 @@ export class QuestionsController {
       );
     }
   }
+
+  @ApiOperation({
+    summary: '질문 초안 수정',
+    description: '질문 초안을 수정합니다.',
+  })
 
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Put('drafts/:id')
@@ -95,7 +111,11 @@ export class QuestionsController {
       );
     }
   }
-
+  
+  @ApiOperation({
+    summary: '질문 초안 삭제',
+    description: '질문 초안을 삭제합니다.',
+  })
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Delete('drafts/:id')
   async deleteDraft(@Param('id') id: number, @Res() res: Response) {
@@ -133,6 +153,12 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 목록 조회',
+    description:
+      '질문 목록을 조회합니다.\n 쿼리스트링으로 옵션을 줄 수 있습니다.\n 옵션은 read-question-list-options.dto.ts를 ' +
+      '참고해주세요.\n page의 기본값은 1이며 sortByCreatedAt의 기본값은 desc입니다.',
+  })
   @Get('lists')
   async getQuestionList(
     @Query() options: QuestionListOptionsDto,
@@ -148,6 +174,11 @@ export class QuestionsController {
         .json({ error: 'Internal server error' });
     }
   }
+
+  @ApiOperation({
+    summary: '질문 생성',
+    description: '질문을 생성합니다.',
+  })
 
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post()
@@ -175,6 +206,10 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 조회',
+    description: '질문을 조회합니다.',
+  })
   @Get(':id')
   async readOneQuestion(@Param('id') id: number, @Res() res: Response) {
     try {
@@ -194,6 +229,10 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 삭제',
+    description: '질문을 삭제합니다.',
+  })
   // TODO: use UserGuard to check if user is the owner of the question
   @Delete(':id')
   async deleteOneQuestion(@Param('id') id: number, @Res() res: Response) {
@@ -216,6 +255,10 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 검색',
+    description: '질문을 검색합니다.',
+  })
   @Get('finds/:title')
   async getQuestionListByTitle(
     @Param('title') title: string,
@@ -234,6 +277,10 @@ export class QuestionsController {
     }
   }
 
+  @ApiOperation({
+    summary: '질문 수정',
+    description: '질문을 수정합니다.',
+  })
   // TODO: use UserGuard to check if user is the owner of the question
   @Put(':id')
   async updateOneQuestion(

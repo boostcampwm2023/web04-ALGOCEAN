@@ -31,7 +31,7 @@ export function Pagination({
 }: PaginationProps) {
   const [isFirstPage, setIsFirstPage] = useState<boolean>(currentPage === 0);
   const [isLastPage, setIsLastPage] = useState<boolean>(
-    currentPage === wholePageCount,
+    currentPage === wholePageCount - 1,
   );
 
   const handleLeftButton = () => {

@@ -31,5 +31,5 @@ export {
   SquareButton,
   QuestionAnswerCard,
   QuestionAnswerFormCard,
-  Scroller,
+  Scroller
 };

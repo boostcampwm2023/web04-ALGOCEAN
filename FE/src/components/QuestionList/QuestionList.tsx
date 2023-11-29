@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Pagination } from '../index';
 import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
@@ -46,6 +47,7 @@ export function Header() {
 }
 
 export function Item({ itemData }: { itemData: ItemData }) {
+  const navigate = useNavigate();
   const {
     id,
     title,
@@ -58,8 +60,12 @@ export function Item({ itemData }: { itemData: ItemData }) {
     likeCount,
   } = itemData;
 
+  const handleItemClick = () => {
+    navigate(`/question/${id}`);
+  };
+
   return (
-    <ItemContainer data-id={id}>
+    <ItemContainer data-id={id} onClick={handleItemClick}>
       <ItemMain>
         <Title>{title}</Title>
         <Details>
@@ -110,6 +116,7 @@ export function QuestionList() {
 
   useLayoutEffect(() => {
     getCurrentQuestionListData();
+    window.scrollTo(0, 0);
   }, [currentPage]);
 
   return (

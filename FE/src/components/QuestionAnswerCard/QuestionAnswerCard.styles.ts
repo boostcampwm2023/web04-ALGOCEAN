@@ -19,7 +19,7 @@ export const Inner = styled.div`
 `;
 
 interface HeaderProps {
-  isadopted: boolean;
+  isadopted: string;
 }
 
 export const Header = styled.div<HeaderProps>`
@@ -30,7 +30,8 @@ export const Header = styled.div<HeaderProps>`
   height: 100%;
   align-items: center;
   color: ${({ theme }) => theme.color.mainColor.blueMain};
-  border-bottom: ${({ isadopted }) => (isadopted ? '0.25rem solid' : 'none')};
+  border-bottom: ${({ isadopted }) =>
+    isadopted === 'false' ? '0.25rem solid' : 'none'};
 
   > div {
     font-weight: 900;

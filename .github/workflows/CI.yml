@@ -14,6 +14,7 @@ jobs:
     name: 'build FE'
     defaults:
       run:
+        shell: bash
         working-directory: ./FE
     runs-on: ubuntu-latest
     
@@ -36,6 +37,7 @@ jobs:
     name: 'lint FE'
     defaults:
       run:
+        shell: bash
         working-directory: ./FE
     runs-on: ubuntu-latest
     needs: FE_build
@@ -66,6 +68,7 @@ jobs:
     name: 'build BE'
     defaults:
       run:
+        shell: bash
         working-directory: ./BE
     runs-on: ubuntu-latest
     
@@ -93,6 +96,7 @@ jobs:
     name: 'lint BE'
     defaults:
       run:
+        shell: bash
         working-directory: ./BE
     runs-on: ubuntu-latest
     needs: BE_build

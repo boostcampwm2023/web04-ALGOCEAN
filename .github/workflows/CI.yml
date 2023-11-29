@@ -24,15 +24,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: ls -al
-    - run: pwd
-    - run: cd BE
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './FE'
 
     - run: npm ci
     - run: npm run build
@@ -55,6 +53,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 20.x
+        cache: 'npm'
+        cache-dependency-path: './FE'
 
     - name: Install dependencies
       run: npm install
@@ -92,6 +92,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+        cache-dependency-path: './BE'
         
     - name: Install dependencies
       run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
@@ -115,6 +116,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+        cache-dependency-path: './BE'
         
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3

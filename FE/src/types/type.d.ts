@@ -65,3 +65,15 @@ export interface QuestionAnswerFormCardProps {
   handleCancel: () => void;
   handleSubmit: (content: string) => void;
 }
+
+export interface ItemData {
+  id: number;
+  title: string;
+  nickname: string;
+  tag: string;
+  createdAt: string;
+  programmingLanguage: string;
+  isAdopted: number;
+  viewCount: number;
+  likeCount: number;
+}

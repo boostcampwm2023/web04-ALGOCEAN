@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import * as S from './Pagination.styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PaginationProps {
   wholePageCount: number;
@@ -14,7 +14,10 @@ const getCurrentNum = (
   currentPage: number,
   splitNumber: number,
 ) => {
-  const idx = Math.floor(currentPage / splitNumber);
+  const idx =
+    currentPage % splitNumber === 0
+      ? currentPage / splitNumber - 1
+      : Math.floor(currentPage / splitNumber);
   const result = Array.from({ length: wholePageCount }, (_, i) => i + 1).slice(
     idx * splitNumber,
     (idx + 1) * splitNumber,
@@ -29,11 +32,10 @@ export function Pagination({
   handleCurrentPage,
   splitNumber,
 }: PaginationProps) {
-  const [isFirstPage, setIsFirstPage] = useState<boolean>(currentPage === 0);
+  const [isFirstPage, setIsFirstPage] = useState<boolean>(currentPage === 1);
   const [isLastPage, setIsLastPage] = useState<boolean>(
-    currentPage === wholePageCount - 1,
+    currentPage === wholePageCount,
   );
-
   const handleLeftButton = () => {
     if (isFirstPage) {
       return;
@@ -42,7 +44,7 @@ export function Pagination({
     const nextPage = currentPage - 1;
     handleCurrentPage(nextPage);
 
-    if (nextPage === 0) {
+    if (nextPage === 1) {
       setIsFirstPage(true);
     }
     if (isLastPage) {
@@ -58,7 +60,7 @@ export function Pagination({
     const nextPage = currentPage + 1;
     handleCurrentPage(nextPage);
 
-    if (nextPage === wholePageCount - 1) {
+    if (nextPage === wholePageCount) {
       setIsLastPage(true);
     }
     if (isFirstPage) {
@@ -67,10 +69,15 @@ export function Pagination({
   };
 
   const handlePageItem = (i: number) => {
-    setIsFirstPage(i === 0);
-    setIsLastPage(i === wholePageCount - 1);
+    setIsFirstPage(i === 1);
+    setIsLastPage(i === wholePageCount);
     handleCurrentPage(i);
   };
+
+  useEffect(() => {
+    setIsFirstPage(currentPage === 1);
+    setIsLastPage(currentPage === wholePageCount);
+  }, [currentPage]);
 
   return (
     <S.Pagination>
@@ -84,8 +91,8 @@ export function Pagination({
         {getCurrentNum(wholePageCount, currentPage, splitNumber).map((i) => (
           <span
             key={i}
-            className={i === currentPage + 1 ? 'current' : ''}
-            onClick={() => handlePageItem(i - 1)}
+            className={i === currentPage ? 'current' : ''}
+            onClick={() => handlePageItem(i)}
           >
             {i}
           </span>

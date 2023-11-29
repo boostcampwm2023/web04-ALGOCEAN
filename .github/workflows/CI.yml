@@ -1,0 +1,126 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: CI
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  FE_build:
+    name: 'build FE'
+    defaults:
+      run:
+        working-directory: ./FE
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run start
+    
+  FE_lint:
+    name: 'lint FE'
+    defaults:
+      run:
+        working-directory: ./FE
+    runs-on: ubuntu-latest
+    needs: FE_build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Send Slack Message on Lint Failure
+      if: failure()
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data '{
+          "text": ":exclamation: Linting FE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
+        }' https://hooks.slack.com/services/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
+    
+  BE_build:
+    name: 'build BE'
+    defaults:
+      run:
+        working-directory: ./BE
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+        
+    - name: Install dependencies
+      run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
+      
+    - name: Build nest.js
+      run: yarn build
+
+  BE_lint:
+    name: 'lint BE'
+    defaults:
+      run:
+        working-directory: ./BE
+    runs-on: ubuntu-latest
+    needs: BE_build
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+        
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+        
+    - name: Install dependencies
+      run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
+      
+    - name: Lint nest.js
+      run: yarn lint
+
+    - name: Send Slack Message on Lint Failure
+      if: failure()
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data '{
+          "text": ":exclamation: Linting BE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
+        }' https://hooks.slack.com/services/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
+

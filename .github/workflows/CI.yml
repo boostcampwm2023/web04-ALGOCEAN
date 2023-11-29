@@ -34,6 +34,13 @@ jobs:
 
     - run: npm ci
     - run: npm run build
+
+    - name: Send Slack Message on Lint Failure
+      if: failure()
+      run: |
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+          "text": ":exclamation: Building FE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
+        }'
     
   FE_lint:
     name: 'lint FE'
@@ -64,9 +71,9 @@ jobs:
     - name: Send Slack Message on Lint Failure
       if: failure()
       run: |
-        curl -X POST -H 'Content-type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Linting FE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
-        }' https://hooks.slack.com/services/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
+        }'
     
   BE_build:
     name: 'build BE'
@@ -97,6 +104,13 @@ jobs:
     - name: Build nest.js
       run: yarn build
 
+    - name: Send Slack Message on Build Failure
+      if: failure()
+      run: |
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+          "text": ":exclamation: Building BE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
+        }'
+
   BE_lint:
     name: 'lint BE'
     defaults:
@@ -108,19 +122,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
         cache-dependency-path: './BE'
-        
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-        
+
     - name: Install dependencies
       run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
       
@@ -130,7 +139,7 @@ jobs:
     - name: Send Slack Message on Lint Failure
       if: failure()
       run: |
-        curl -X POST -H 'Content-type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Linting BE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
-        }' https://hooks.slack.com/services/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
+        }'
 

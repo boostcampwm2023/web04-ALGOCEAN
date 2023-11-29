@@ -22,7 +22,7 @@ export class QuestionListOptionsDto {
   programmingLanguage?: string;
 
   @ApiProperty({
-    example: '1',
+    example: '1 또는 0 을 넣어야합니다 true or false가 아닙니다.',
     description: '질문의 채택 여부',
     type: Boolean,
   })
@@ -60,9 +60,9 @@ export class QuestionListOptionsDto {
   sortByLikeCount?: 'asc' | 'desc';
 
   @ApiProperty({
-    example: 'asc',
+    example: 1,
     description: '질문리스트의 페이지 번호',
-    type: String,
+    type: Number,
   })
   @IsOptional()
   @Type(() => Number)

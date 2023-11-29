@@ -45,7 +45,6 @@ jobs:
         shell: bash
         working-directory: ./FE
     runs-on: ubuntu-latest
-    needs: FE_build
 
     steps:
     - name: Checkout code
@@ -100,7 +99,6 @@ jobs:
         shell: bash
         working-directory: ./BE
     runs-on: ubuntu-latest
-    needs: BE_build
 
     steps:
     - uses: actions/checkout@v3

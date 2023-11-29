@@ -59,7 +59,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
     };
   };
 
-  const onSubmit: SubmitHandler<FormData> = (formData: any) => {
+  const onSubmit: SubmitHandler<FormData> = (formData: FormData) => {
     if (!isIdValified) {
       return alert('Id를 확인해 주세요');
     }

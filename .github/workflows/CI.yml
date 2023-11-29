@@ -38,7 +38,7 @@ jobs:
     - name: Send Slack Message on Lint Failure
       if: failure()
       run: |
-        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Building FE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
         }'
     
@@ -71,7 +71,7 @@ jobs:
     - name: Send Slack Message on Lint Failure
       if: failure()
       run: |
-        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Linting FE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
         }'
     
@@ -107,7 +107,7 @@ jobs:
     - name: Send Slack Message on Build Failure
       if: failure()
       run: |
-        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Building BE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
         }'
 
@@ -139,7 +139,7 @@ jobs:
     - name: Send Slack Message on Lint Failure
       if: failure()
       run: |
-        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
+        curl --location 'https://hooks.slack.com/services/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' --header 'Content-Type: application/json' --data '{
           "text": ":exclamation: Linting BE has failed for the main branch in the repository '"$GITHUB_REPOSITORY"'. Please investigate."
         }'
 

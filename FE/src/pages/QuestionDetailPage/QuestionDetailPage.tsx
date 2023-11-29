@@ -1,29 +1,24 @@
 import { useState, useLayoutEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
   QuestionAnswerCard,
   QuestionAnswerFormCard,
+  Loading,
 } from '../../components';
-import { QuestionAnswerCardProps } from 'src/types/type';
+import {
+  getQuestionDetailContentData,
+  getQuestionAnswerListData,
+  postAnswer,
+} from '../../api';
+import {
+  QuestionDetailData as QuestionData,
+  QuestionAnswerCardProps,
+} from 'src/types/type';
+
 import { Container } from './QuestionDetailPage.styles';
 
-const QuestionDetailContentProps = {
-  questionData: {
-    id: 123,
-    title: 'Voluptas consequatur iure ea cupiditate.',
-    nickname: '닉네임',
-    tag: 'baekjoon',
-    createdAt: '2023-11-27T13:17:31.000Z',
-    programmingLanguage: 'C',
-    isAdopted: false,
-    viewCount: 123,
-    likeCount: 12,
-    isLiked: true,
-    content:
-      'Molestiae vel fugit vitae ut consequuntur minima sunt eaque ut. Dolor aut incidunt. Ut fugit possimus sequi voluptatem. Qui quas reprehenderit ut repellendus sint aut voluptatibus. Veniam vel ut dolorum voluptas. Culpa deleniti rerum inventore enim asperiores eius neque eveniet.',
-  },
-} as const;
 const dummyQuestionAnswerCardProps = {
   cardData: {
     userId: 122,
@@ -57,8 +52,11 @@ const dummyQuestionAnswerList = [
 const GLOBAL_USER_ID = 123;
 
 const QuestionDetailPage = () => {
+  const { state } = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
   const [isUserAnswering, setIsUserAnswering] = useState(false);
   const [isUserAnswered, setIsUserAnswered] = useState(false);
+  const [questionData, setQuestionData] = useState<QuestionData | null>(null);
   const [answerList, setAnswerList] = useState<
     QuestionAnswerCardProps[] | null
   >(null);
@@ -71,10 +69,12 @@ const QuestionDetailPage = () => {
     setIsUserAnswering(false);
   };
 
-  const submitUserAnswer = (content: string) => {
+  const submitUserAnswer = async (content: string) => {
     setIsUserAnswered(true);
-    // ⚠️ 서버로의 POST 로직
-    initAnswerList();
+
+    const newAnswerData = await postAnswer(content);
+    setAnswerList((prevList) => [...prevList!, newAnswerData]);
+
     alert(`${content} 추가 완료`);
     deactivateUserAnswering();
   };
@@ -86,9 +86,30 @@ const QuestionDetailPage = () => {
   };
 
   const initAnswerList = async () => {
-    const answerList = dummyQuestionAnswerList;
-    setAnswerList(answerList);
+    const { questionId } = state;
+    try {
+      const answerList = await getQuestionAnswerListData(questionId);
+      setAnswerList(answerList);
+    } catch (e) {
+      setAnswerList(dummyQuestionAnswerList);
+    }
   };
+
+  const initQuestionDetailContentData = async () => {
+    const { questionId } = state;
+    const questionData = await getQuestionDetailContentData(questionId);
+    setQuestionData(questionData);
+  };
+
+  const initFetchData = async () => {
+    await initQuestionDetailContentData();
+    await initAnswerList();
+    setIsLoading(false);
+  };
+
+  useLayoutEffect(() => {
+    initFetchData();
+  }, []);
 
   useLayoutEffect(() => {
     if (answerList && isAnswerListContainsUserAnswer()) {
@@ -98,28 +119,31 @@ const QuestionDetailPage = () => {
     }
   }, [answerList]);
 
-  useLayoutEffect(() => {
-    initAnswerList();
-  }, []);
-
   return (
     <Container>
-      <QuestionDetailContent {...QuestionDetailContentProps} />
-      {!isUserAnswered && !isUserAnswering && (
-        <QuestionAnswerRequestCard
-          onAnswerButtonClick={activateUserAnswering}
-        />
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <>
+          {questionData && (
+            <QuestionDetailContent questionData={questionData} />
+          )}
+          {!isUserAnswered && !isUserAnswering && (
+            <QuestionAnswerRequestCard
+              onAnswerButtonClick={activateUserAnswering}
+            />
+          )}
+          {isUserAnswering && (
+            <QuestionAnswerFormCard
+              handleCancel={deactivateUserAnswering}
+              handleSubmit={submitUserAnswer}
+            />
+          )}
+          {!!answerList &&
+            answerList.map(({ cardData }) => (
+              <QuestionAnswerCard cardData={cardData} />
+            ))}
+        </>
       )}
-      {isUserAnswering && (
-        <QuestionAnswerFormCard
-          handleCancel={deactivateUserAnswering}
-          handleSubmit={submitUserAnswer}
-        />
-      )}
-      {!!answerList &&
-        answerList.map(({ cardData }) => (
-          <QuestionAnswerCard cardData={cardData} />
-        ))}
     </Container>
   );
 };

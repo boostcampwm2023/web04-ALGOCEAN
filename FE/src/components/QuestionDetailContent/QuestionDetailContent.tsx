@@ -53,7 +53,7 @@ const QuestionDetailContent = ({
           <div>Q</div>
           {title}
         </Title>
-        <Content>{content}</Content>
+        <Content dangerouslySetInnerHTML={{ __html: content }}></Content>
         <TagInfo>
           <TagButton content={programmingLanguage} isInteractive={false} />
           <TagButton content={tag} isInteractive={false} />

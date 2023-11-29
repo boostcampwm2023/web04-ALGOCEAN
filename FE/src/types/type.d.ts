@@ -4,7 +4,7 @@ export interface UniqueQuestionItem {
   url: string;
 }
 
-interface QuestionDetailData {
+export interface QuestionDetailData {
   id: number;
   title: string;
   nickname: string;

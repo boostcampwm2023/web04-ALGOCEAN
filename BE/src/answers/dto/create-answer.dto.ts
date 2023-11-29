@@ -2,6 +2,15 @@ import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateAnswerDto {
   @ApiProperty({
+    example: '1',
+    description: '질문 id',
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
+  questionId: string;
+
+  @ApiProperty({
     example: '이것은 답변입니다',
     description: '답변 내용',
     type: 'string',

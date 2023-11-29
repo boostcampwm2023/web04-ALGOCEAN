@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as S from './Pagination.styles';
 import { useState } from 'react';
 

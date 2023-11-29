@@ -33,8 +33,8 @@ const DocumentEditor = ({
     if (!handleFocusCallback) {
       return;
     }
-    const putQuestionData = handleFocusCallback();
     const intervalId = setInterval(async () => {
+      const putQuestionData = handleFocusCallback();
       await putDraftQuestionAPI(putQuestionData);
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);

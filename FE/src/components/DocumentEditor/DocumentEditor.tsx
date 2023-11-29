@@ -9,7 +9,7 @@ import { QuestionData } from '../../types/type';
 interface EditorProps {
   editorState: EditorState;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
-  handleFocusCallback: () => QuestionData;
+  handleFocusCallback?: () => QuestionData;
 }
 
 const POLLING_INTERVAL = 30000;
@@ -30,8 +30,11 @@ const DocumentEditor = ({
 
   const handleFocus = () => {
     // 폴링 시작
+    if (!handleFocusCallback) {
+      return;
+    }
+    const putQuestionData = handleFocusCallback();
     const intervalId = setInterval(async () => {
-      const putQuestionData = handleFocusCallback();
       await putDraftQuestionAPI(putQuestionData);
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);

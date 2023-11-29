@@ -3,6 +3,7 @@ import { MainHeader, MainNav, Scroller } from './components';
 import { MainPage, QuestionCreationPage, QuestionDetailPage } from './pages';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
+import QuestionSearchPage from './pages/QuestionSearchPage/QuestionSearchPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<MainPage />} />
             <Route path="/question/create" element={<QuestionCreationPage />} />
             <Route path="/question/:id" element={<QuestionDetailPage />} />
+            <Route path="/search" element={<QuestionSearchPage />} />
           </Routes>
           <Scroller />
         </Router>

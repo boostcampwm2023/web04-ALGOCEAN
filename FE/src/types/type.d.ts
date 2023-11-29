@@ -41,14 +41,16 @@ export interface SquareButtonProps {
 
 export interface QuestionAnswerCardProps {
   cardData: {
-    userId: number;
-    nickname: string;
-    answerId: number;
-    content: string;
-    videoLink: unknown;
-    isAdopted: boolean;
-    createdAt: string;
-    isLiked: boolean;
+    Id: number;
+    User: {
+      Id: number;
+      Nickname: string;
+      ProfileImage: string;
+    };
+    Content: string;
+    VideoLink: string;
+    IsAdopted: boolean;
+    CreatedAt: string;
   };
 }
 

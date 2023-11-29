@@ -47,13 +47,19 @@ export const getQuestionDetailContentData = async (questionId: number) => {
 export const getQuestionAnswerListData = async (questionId: number) => {
   try {
     const url = `/api/answers/${questionId}`;
-    const { status, data } = await instance.get(url);
-    if (status !== 200) {
-      throw new Error();
+    const { data } = await instance.get(url);
+    const { answers } = data;
+    return answers;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 404) {
+        return null;
+      }
+    } else {
+      console.error('Error from get answer list data:', error.message);
     }
-    return data;
-  } catch (e) {
-    console.error(e);
+    throw error;
   }
 };
 

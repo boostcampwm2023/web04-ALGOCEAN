@@ -37,3 +37,31 @@ export interface QuestionData {
   originalLink: string;
   draftId: number;
 }
+
+export interface QuestionAnswerRequestCardProps {
+  onAnswerButtonClick: () => void;
+}
+
+export interface SquareButtonProps {
+  content: string;
+  type?: 'fill' | 'stroke';
+  handleClick?: () => void;
+}
+
+export interface QuestionAnswerCardProps {
+  cardData: {
+    userId: number;
+    nickname: string;
+    answerId: number;
+    content: string;
+    videoLink: unknown;
+    isAdopted: boolean;
+    createdAt: string;
+    isLiked: boolean;
+  };
+}
+
+export interface QuestionAnswerFormCardProps {
+  handleCancel: () => void;
+  handleSubmit: (content: string) => void;
+}

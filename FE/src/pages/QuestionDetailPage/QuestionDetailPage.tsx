@@ -39,7 +39,8 @@ const QuestionDetailPage = () => {
   };
 
   const submitUserAnswer = async (content: string) => {
-    await postAnswer(content);
+    const { questionId } = state;
+    await postAnswer(content, questionId);
     setIsUserAnswered(true);
     initAnswerList();
 

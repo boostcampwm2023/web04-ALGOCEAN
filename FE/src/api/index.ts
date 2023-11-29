@@ -63,10 +63,11 @@ export const getQuestionAnswerListData = async (questionId: number) => {
   }
 };
 
-export const postAnswer = async (content: string) => {
+export const postAnswer = async (content: string, questionId: number) => {
   try {
     const url = '/api/answers';
     const { status, data } = await instance.post(url, {
+      questionId,
       content,
       videoLink: 'https://localhost.com',
     });

@@ -15,6 +15,7 @@ function App() {
             <Route path="/" element={<MainPage />} />
             <Route path="/question/create" element={<QuestionCreationPage />} />
             <Route path="/question/:id" element={<QuestionDetailPage />} />
+            <Route path="/signup" element={<></>} />
           </Routes>
           <Scroller />
         </Router>

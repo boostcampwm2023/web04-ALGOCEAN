@@ -77,7 +77,7 @@ export function Pagination({
   useEffect(() => {
     setIsFirstPage(currentPage === 1);
     setIsLastPage(currentPage === wholePageCount);
-  }, [currentPage]);
+  }, [currentPage, wholePageCount]);
 
   return (
     <S.Pagination>

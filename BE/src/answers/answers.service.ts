@@ -10,7 +10,7 @@ export class AnswersService {
     const { questionId, content, videoLink } = createAnswerDto;
     return this.prisma.answer.create({
       data: {
-        QuestionId: parseInt(questionId, 10),
+        QuestionId: questionId,
         Content: content,
         VideoLink: videoLink,
         UserId: 1, // TODO: get user id from request

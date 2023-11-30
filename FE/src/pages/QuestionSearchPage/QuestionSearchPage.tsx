@@ -11,7 +11,7 @@ const QuestionSearchPage = () => {
     <Main>
       <InnerDiv className="inner">
         <Header>검색 결과</Header>
-        <QuestionList isSearching={true} />
+        {/* <QuestionList isSearching={true} /> */}
       </InnerDiv>
     </Main>
   );

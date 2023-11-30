@@ -30,14 +30,12 @@ function SearchBar() {
     setSearchValue(e.target.value);
   };
   const handleSearch = (e: any) => {
+    e.preventDefault();
     // 검색어가 비어있으면 navigate를 하지 않음
     if (!searchValue.trim()) {
-      alert('검색어를 입력해주세요.');
-      e.preventDefault();
-      return;
+      return alert('검색어를 입력해주세요.');
     }
     navigate(`/search?query=${encodeURIComponent(searchValue)}`);
-    e.preventDefault();
   };
   return (
     <Searchbar>

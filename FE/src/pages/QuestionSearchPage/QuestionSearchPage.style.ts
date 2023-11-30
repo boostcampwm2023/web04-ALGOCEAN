@@ -21,6 +21,6 @@ export const Header = styled.header`
 
 export const Label = styled.label`
   margin-top: 1rem;
-  ${({ theme }) => theme.font.bold16};
+  ${({ theme }) => theme.font.bold16}
   color: ${({ theme }) => theme.color.grayscale[500]};
 `;

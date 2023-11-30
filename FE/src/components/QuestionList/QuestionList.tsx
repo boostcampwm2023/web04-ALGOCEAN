@@ -101,7 +101,6 @@ export function Item({ itemData }: { itemData: ItemData }) {
 
 export function QuestionList({ isSearching }: QuestionListProps) {
   console.log(isSearching);
-
   const [wholePageCount, setwholePageCount] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [questionListData, setQuestionListData] = useState<ItemData[] | null>(

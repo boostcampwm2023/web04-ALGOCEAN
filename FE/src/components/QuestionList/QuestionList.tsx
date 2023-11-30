@@ -1,7 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pagination } from '../index';
-import { getQuestionList } from '../../api';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
 import CheckIcon from '../../assets/icons/check-circle.svg?react';
@@ -23,7 +20,18 @@ import {
   QuestionList as QuestionListContainer,
 } from './QuestionList.styles';
 
-const PAGINATION_SPLIT_NUMBER = 10;
+interface QuestionListProps {
+  questionListData?: Array<ItemData> | undefined;
+}
+
+export function Header() {
+  return (
+    <HeaderContainer>
+      <div className="by-recent selected">✔️ 최신순</div>
+      <div className="by-old">오래된순</div>
+    </HeaderContainer>
+  );
+}
 
 interface ItemData {
   id: number;
@@ -35,15 +43,6 @@ interface ItemData {
   isAdopted: number;
   viewCount: number;
   likeCount: number;
-}
-
-export function Header() {
-  return (
-    <HeaderContainer>
-      <div className="by-recent selected">✔️ 최신순</div>
-      <div className="by-old">오래된순</div>
-    </HeaderContainer>
-  );
 }
 
 export function Item({ itemData }: { itemData: ItemData }) {
@@ -95,46 +94,16 @@ export function Item({ itemData }: { itemData: ItemData }) {
   );
 }
 
-export function QuestionList() {
-  const [wholePageCount, setwholePageCount] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [questionListData, setQuestionListData] = useState<ItemData[] | null>(
-    null,
-  );
-
-  const getCurrentQuestionListData = async () => {
-    const { questions, totalPage: totalPageNum } = await getQuestionList({
-      page: currentPage + 1,
-    });
-    setQuestionListData(questions);
-    setwholePageCount(totalPageNum);
-  };
-
-  const handleCurrentPage = (nextPage: number) => {
-    setCurrentPage(nextPage);
-  };
-
-  useLayoutEffect(() => {
-    getCurrentQuestionListData();
-    window.scrollTo(0, 0);
-  }, [currentPage]);
-
+export function QuestionList({ questionListData }: QuestionListProps) {
   return (
     <QuestionListContainer>
       <ul>
-        {!!questionListData &&
+        {!questionListData?.length && <div>결과가 존재하지 않습니다</div>}
+        {!!questionListData?.length &&
           questionListData.map((itemData, idx) => (
             <Item key={idx} itemData={itemData} />
           ))}
       </ul>
-      {!!wholePageCount && (
-        <Pagination
-          wholePageCount={wholePageCount}
-          currentPage={currentPage}
-          handleCurrentPage={handleCurrentPage}
-          splitNumber={PAGINATION_SPLIT_NUMBER}
-        />
-      )}
     </QuestionListContainer>
   );
 }

@@ -7,6 +7,7 @@ export class QuestionListOptionsDto {
     example: 'Baekjoon',
     description: '질문의 태그',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -16,6 +17,7 @@ export class QuestionListOptionsDto {
     example: 'C++',
     description: '질문의 프로그래밍 언어',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -24,7 +26,8 @@ export class QuestionListOptionsDto {
   @ApiProperty({
     example: '1 또는 0 을 넣어야합니다 true or false가 아닙니다.',
     description: '질문의 채택 여부',
-    type: Boolean,
+    type: Number,
+    required: false,
   })
   @IsOptional()
   @Transform(({ value }) =>
@@ -36,6 +39,7 @@ export class QuestionListOptionsDto {
     example: 'asc',
     description: '질문의 정렬 기준 by createdAt',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsIn(['asc', 'desc'])
@@ -45,6 +49,7 @@ export class QuestionListOptionsDto {
     example: 'asc',
     description: '질문의 정렬 기준 by viewCount',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsIn(['asc', 'desc'])
@@ -54,6 +59,7 @@ export class QuestionListOptionsDto {
     example: 'asc',
     description: '질문의 정렬 기준 by likeCount',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsIn(['asc', 'desc'])
@@ -63,6 +69,7 @@ export class QuestionListOptionsDto {
     example: 1,
     description: '질문리스트의 페이지 번호',
     type: Number,
+    required: false,
   })
   @IsOptional()
   @Type(() => Number)
@@ -74,6 +81,7 @@ export class QuestionListOptionsDto {
     example: 'asc',
     description: '찾으려는 질문의 제목',
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsString()

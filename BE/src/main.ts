@@ -10,7 +10,12 @@ async function bootstrap() {
     .setDescription('API Documentation')
     .setVersion('0.4.1')
     .addTag('ALGOCEAN')
+    .addServer('https://algocean.site/api')
+    .addServer('https://algocean.site')
+    .addServer('http://algocean.site/api')
+    .addServer('http://algocean.site')
     .addServer('api')
+    .addServer('')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

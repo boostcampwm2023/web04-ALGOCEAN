@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDTO } from './DTO/login.dto';
@@ -24,9 +32,19 @@ export class AuthController {
     description: '로그인합니다.',
   })
   @Post('login')
-  async login(@Body() loginDto: LoginDTO) {
+  async login(@Body() loginDto: LoginDTO, @Res() res) {
     const { userId, password } = loginDto;
-    return await this.authService.login(userId, password);
+    const { access_token, refresh_token } = await this.authService.login(
+      userId,
+      password,
+    );
+
+    res.cookie('refreshToken', refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.send({ accessToken: access_token });
   }
 
   @Get('github')
@@ -35,14 +53,23 @@ export class AuthController {
 
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
-  async githubAuthRedirect(@Req() req) {
+  async githubAuthRedirect(@Req() req, @Res() res) {
     const user = await this.authService.findOrCreateGithubUser(req.user);
 
-    return this.authService.createTokens({
-      sub: user.GithubId,
-      username: user.Nickname,
-      provider: 'github',
+    const { access_token, refresh_token } = await this.authService.createTokens(
+      {
+        sub: user.GithubId,
+        username: user.Nickname,
+        provider: 'github',
+      },
+    );
+
+    res.cookie('refreshToken', refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
     });
+    res.send({ accessToken: access_token });
   }
 
   @Post('refresh')

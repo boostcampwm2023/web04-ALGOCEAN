@@ -50,7 +50,6 @@ export const getQuestionAnswerListData = async (questionId: number) => {
     const { data } = await instance.get(url);
     const { answers } = data;
     return answers;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.response) {
       if (error.response.status === 404) {

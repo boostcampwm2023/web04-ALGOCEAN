@@ -75,8 +75,7 @@ const color = {
     100: '#D2DAE0',
     200: '#879298',
     300: '#6E8091',
-    400: '#5F6E76',
-    500: '#4B5966',
+    400: '#5F63',
     black: '#14212B',
   },
   mainColor: {
@@ -85,7 +84,6 @@ const color = {
     blueLight: '#8798FF',
     blueOutline: '#C7DCFF',
     blueFocus: '#EFF8FF',
-    blueGradient: 'linear-gradient(135deg, #924FFF 17.03%, #3848E6 79.69%)',
   },
   system: {
     success: '#06C755',
@@ -106,5 +104,4 @@ const color = {
 export const theme = {
   font,
   color,
-  maxWidth: '1100px',
 };

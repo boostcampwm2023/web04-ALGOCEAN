@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import writeIcon from '/icons/write.svg';
 import * as S from './MainNav.styles';
 
@@ -10,7 +9,6 @@ const getCurrentNavItem = () => {
 
 export function MainNav() {
   const currentNavItem = getCurrentNavItem();
-  const navigate = useNavigate();
 
   return (
     <S.MainNav>
@@ -26,7 +24,7 @@ export function MainNav() {
             포인트 상점
           </li>
         </ol>
-        <button onClick={() => navigate('/question/create')}>
+        <button>
           <img src={writeIcon} alt="질문하기" />
           <span>질문하기</span>
         </button>

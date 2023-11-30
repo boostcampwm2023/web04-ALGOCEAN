@@ -18,12 +18,11 @@ export const Pagination = styled.div`
     font-weight: 300;
 
     span {
-      width: 1.7rem;
-      height: 1.7rem;
+      width: 1.5rem;
+      height: 1.5rem;
       border-radius: 50%;
-      line-height: 100%;
       text-align: center;
-      padding-top: 0.25rem;
+      padding-top: 0.2rem;
       transition: 0.1s ease-in all;
     }
     .current,

@@ -9,13 +9,5 @@
 
 body {
   width: 100%;
-}
-
-#root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #ffffff;
-  min-width: 900px;
-  line-height: 150%;
+  background-color: var(--color-grayscale-50);
 }

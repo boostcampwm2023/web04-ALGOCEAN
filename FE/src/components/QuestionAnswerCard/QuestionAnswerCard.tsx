@@ -15,13 +15,13 @@ import {
 
 const QuestionAnswerCard = ({ cardData }: QuestionAnswerCardProps) => {
   const {
-    content,
-    nickname,
-    createdAt,
-    isAdopted,
-    isLiked: isLikedInitial,
+    Content: content,
+    CreatedAt: createdAt,
+    IsAdopted: isAdopted,
+    User,
   } = cardData;
-  const [isLiked, setIsLiked] = useState(isLikedInitial);
+  const { Nickname: nickname } = User;
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     // useDidMoundEffect로 변경 & API 로직 구현
@@ -30,7 +30,7 @@ const QuestionAnswerCard = ({ cardData }: QuestionAnswerCardProps) => {
   return (
     <Container>
       <Inner>
-        <Header isadopted={isAdopted}>
+        <Header isadopted={String(isAdopted)}>
           <div>A</div>
           {isAdopted && (
             <AdoptedBadge>
@@ -40,7 +40,7 @@ const QuestionAnswerCard = ({ cardData }: QuestionAnswerCardProps) => {
           )}
           <KebabIcon />
         </Header>
-        <Content>{content}</Content>
+        <Content dangerouslySetInnerHTML={{ __html: content }}></Content>
         <QuestionInfo>
           <CreateInfo>
             {nickname} {getFormalizedDate(createdAt)}

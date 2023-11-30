@@ -6,6 +6,7 @@ import {
   QuestionDetailPage,
   LoginPage,
   SignupPage,
+  QuestionSearchPage,
 } from './pages';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/question/:id" element={<QuestionDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/search" element={<QuestionSearchPage />} />
           </Routes>
           <Scroller />
         </Router>

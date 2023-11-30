@@ -98,7 +98,8 @@ export function QuestionList({ questionListData }: QuestionListProps) {
   return (
     <QuestionListContainer>
       <ul>
-        {!!questionListData &&
+        {!questionListData?.length && <div>결과가 존재하지 않습니다</div>}
+        {!!questionListData?.length &&
           questionListData.map((itemData, idx) => (
             <Item key={idx} itemData={itemData} />
           ))}

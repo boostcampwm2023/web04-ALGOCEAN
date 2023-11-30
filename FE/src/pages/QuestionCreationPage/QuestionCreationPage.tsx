@@ -40,13 +40,13 @@ const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취�
 
 const BUTTON_ONCLICK_HANDLER = [
   () => {
-    console.log('질문 등록하기');
+    //console.log('질문 등록하기');
   },
   () => {
-    console.log('임시 등록');
+    //console.log('임시 등록');
   },
   () => {
-    console.log('작성 취소하기');
+    //console.log('작성 취소하기');
   },
 ];
 

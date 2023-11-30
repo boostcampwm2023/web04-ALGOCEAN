@@ -8,7 +8,6 @@ import {
 } from './pages';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
-import QuestionSearchPage from './pages/QuestionSearchPage/QuestionSearchPage';
 
 function App() {
   return (

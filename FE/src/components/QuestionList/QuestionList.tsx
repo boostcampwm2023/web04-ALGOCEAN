@@ -1,6 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
-import { Pagination } from '../index';
-import { getQuestionList } from '../../api';
+import { useNavigate } from 'react-router-dom';
 import eyeIcon from '/icons/eye.svg';
 import likeIcon from '/icons/like.svg';
 import CheckIcon from '../../assets/icons/check-circle.svg?react';
@@ -22,8 +20,18 @@ import {
   QuestionList as QuestionListContainer,
 } from './QuestionList.styles';
 
-const LAST_PAGINATION_PAGE = 11;
-const PAGINATION_SPLIT_NUMBER = 10;
+interface QuestionListProps {
+  questionListData?: Array<ItemData> | undefined;
+}
+
+export function Header() {
+  return (
+    <HeaderContainer>
+      <div className="by-recent selected">✔️ 최신순</div>
+      <div className="by-old">오래된순</div>
+    </HeaderContainer>
+  );
+}
 
 interface ItemData {
   id: number;
@@ -37,16 +45,8 @@ interface ItemData {
   likeCount: number;
 }
 
-export function Header() {
-  return (
-    <HeaderContainer>
-      <div className="by-recent selected">✔️ 최신순</div>
-      <div className="by-old">오래된순</div>
-    </HeaderContainer>
-  );
-}
-
 export function Item({ itemData }: { itemData: ItemData }) {
+  const navigate = useNavigate();
   const {
     id,
     title,
@@ -59,8 +59,12 @@ export function Item({ itemData }: { itemData: ItemData }) {
     likeCount,
   } = itemData;
 
+  const handleItemClick = () => {
+    navigate(`/question/${id}`, { state: { questionId: id } });
+  };
+
   return (
-    <ItemContainer data-id={id}>
+    <ItemContainer data-id={id} onClick={handleItemClick}>
       <ItemMain>
         <Title>{title}</Title>
         <Details>
@@ -90,39 +94,16 @@ export function Item({ itemData }: { itemData: ItemData }) {
   );
 }
 
-export function QuestionList() {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [questionListData, setQuestionListData] = useState<ItemData[] | null>(
-    null,
-  );
-
-  const getCurrentQuestionListData = async () => {
-    const data = await getQuestionList(currentPage + 1);
-    setQuestionListData(data);
-  };
-
-  const handleCurrentPage = (nextPage: number) => {
-    setCurrentPage(nextPage);
-  };
-
-  useLayoutEffect(() => {
-    getCurrentQuestionListData();
-  }, [currentPage]);
-
+export function QuestionList({ questionListData }: QuestionListProps) {
   return (
     <QuestionListContainer>
       <ul>
-        {!!questionListData &&
+        {!questionListData?.length && <div>결과가 존재하지 않습니다</div>}
+        {!!questionListData?.length &&
           questionListData.map((itemData, idx) => (
             <Item key={idx} itemData={itemData} />
           ))}
       </ul>
-      <Pagination
-        wholePageCount={LAST_PAGINATION_PAGE}
-        currentPage={currentPage}
-        handleCurrentPage={handleCurrentPage}
-        splitNumber={PAGINATION_SPLIT_NUMBER}
-      />
     </QuestionListContainer>
   );
 }

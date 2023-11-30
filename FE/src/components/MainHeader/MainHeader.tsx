@@ -1,36 +1,64 @@
-import logoIcon from '/icons/logo.svg';
 import searchIcon from '/icons/search.svg';
-
-import * as S from './MainHeader.styles';
+import logoIcon from '/images/logo.png';
+import {
+  Logo as LogoContainer,
+  Searchbar,
+  SearchbarButton,
+  SearchbarInput,
+  SearchbarLabel,
+  MainHeaderContainer,
+} from './MainHeader.styles';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const PAGE_TITLE = 'ALGOCEAN';
+
 function Logo() {
+  const navigate = useNavigate();
   return (
-    <S.Logo>
-      <img src={logoIcon} alt="" />
+    <LogoContainer onClick={() => navigate('/')}>
+      <img src={logoIcon} alt="ALGOCEAN" />
       <h1>{PAGE_TITLE}</h1>
-    </S.Logo>
+    </LogoContainer>
   );
 }
 
 function SearchBar() {
+  const [searchValue, setSearchValue] = useState('');
+  const navigate = useNavigate();
+  const handleInputChange = (e: any) => {
+    setSearchValue(e.target.value);
+  };
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    // 검색어가 비어있으면 navigate를 하지 않음
+    if (!searchValue.trim()) {
+      return alert('검색어를 입력해주세요.');
+    }
+    navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+  };
   return (
-    <S.Searchbar>
-      <label htmlFor="searchInput"></label>
-      <input id="searchInput" placeholder="검색어를 입력해 주세요" />
-      <button onClick={(e) => e.preventDefault()}>
+    <Searchbar>
+      <SearchbarLabel htmlFor="searchInput"></SearchbarLabel>
+      <SearchbarInput
+        id="searchInput"
+        placeholder="검색어를 입력해 주세요"
+        value={searchValue}
+        onChange={handleInputChange}
+      />
+      <SearchbarButton onClick={handleSearch}>
         <img src={searchIcon} alt="searchbar button" />
-      </button>
-    </S.Searchbar>
+      </SearchbarButton>
+    </Searchbar>
   );
 }
 export function MainHeader() {
   return (
-    <S.Container>
+    <MainHeaderContainer>
       <div className="inner">
         <Logo />
         <SearchBar />
       </div>
-    </S.Container>
+    </MainHeaderContainer>
   );
 }

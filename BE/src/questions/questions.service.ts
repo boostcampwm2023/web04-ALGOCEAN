@@ -5,6 +5,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
+import { ReadQuestionDraftDto } from './dto/read-question-draft.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -15,7 +16,7 @@ export class QuestionsService {
     userId: number,
   ): Promise<number> {
     try {
-      const question = await this.prisma.question.create({
+      const question = this.prisma.question.create({
         data: {
           User: {
             connect: {
@@ -29,16 +30,53 @@ export class QuestionsService {
           OriginalLink: createQuestionDto.originalLink,
         },
       });
-      return question.Id;
+
+      const updatePoint = this.prisma.user.update({
+        where: {
+          Id: userId,
+        },
+        data: {
+          Points: {
+            increment: 10,
+          },
+        },
+      });
+
+      const updatePointHistory = this.prisma.point_History.create({
+        data: {
+          User: {
+            connect: {
+              Id: userId,
+            },
+          },
+          PointChange: 10,
+          Reason: 'create question',
+        },
+      });
+
+      const deleteDraft = this.prisma.question_Temporary.delete({
+        where: {
+          Id: createQuestionDto.draftId,
+        },
+      });
+
+      const queryResult = await this.prisma.$transaction([
+        question,
+        updatePoint,
+        updatePointHistory,
+        deleteDraft,
+      ]);
+
+      return queryResult[0].Id;
     } catch (error) {
       throw new Error('Failed to create question');
     }
   }
-
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {
-    const question = await this.prisma.question.findUnique({
+    const readQuestion = this.prisma.question.findUnique({
       where: {
         Id: id,
+        DeletedAt: null,
       },
       include: {
         User: {
@@ -54,13 +92,33 @@ export class QuestionsService {
       },
     });
 
+    const updateViewCount = this.prisma.question.update({
+      where: {
+        Id: id,
+      },
+      data: {
+        ViewCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    const queryResult = await this.prisma.$transaction([
+      readQuestion,
+      updateViewCount,
+    ]);
+
+    const question = queryResult[0];
+
     return {
       id: question.Id,
       title: question.Title,
       nickname: question.User.Nickname,
+      content: question.Content,
       tag: question.Tag,
       createdAt: question.CreatedAt,
       programmingLanguage: question.ProgrammingLanguage,
+      originalLink: question.OriginalLink,
       isAdopted: question.IsAdopted,
       viewCount: question.ViewCount,
       likeCount: question.LikeCount,
@@ -89,7 +147,7 @@ export class QuestionsService {
 
   async readQuestionList(
     options: QuestionListOptionsDto,
-  ): Promise<ReadQuestionListDto[]> {
+  ): Promise<{ questions: ReadQuestionListDto[]; totalQuestions: number }> {
     const {
       tag,
       programmingLanguage,
@@ -117,6 +175,12 @@ export class QuestionsService {
     const questions = await this.prisma.question.findMany({
       where: {
         OR: whereConditions.length > 0 ? whereConditions : undefined,
+        DeletedAt: null,
+        Title: options.title
+          ? {
+              contains: options.title,
+            }
+          : undefined,
       },
       orderBy: orderByConditions,
       select: {
@@ -138,17 +202,32 @@ export class QuestionsService {
       skip: (page - 1) * pageSize,
     });
 
-    return questions.map((question) => ({
-      id: question.Id,
-      title: question.Title,
-      nickname: question.User.Nickname,
-      tag: question.Tag,
-      createdAt: question.CreatedAt,
-      programmingLanguage: question.ProgrammingLanguage,
-      isAdopted: question.IsAdopted,
-      viewCount: question.ViewCount,
-      likeCount: question.LikeCount,
-    }));
+    const total = await this.prisma.question.count({
+      where: {
+        OR: whereConditions.length > 0 ? whereConditions : undefined,
+        DeletedAt: null,
+        Title: options.title
+          ? {
+              contains: options.title,
+            }
+          : undefined,
+      },
+    });
+
+    return {
+      questions: questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        nickname: question.User.Nickname,
+        tag: question.Tag,
+        createdAt: question.CreatedAt,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      })),
+      totalQuestions: total,
+    };
   }
 
   async findQuestionByTitle(
@@ -163,6 +242,7 @@ export class QuestionsService {
           Title: {
             contains: title,
           },
+          DeletedAt: null,
         },
         select: {
           Id: true,
@@ -221,8 +301,39 @@ export class QuestionsService {
     }
   }
 
+  async getRandomQuestionId(): Promise<number> {
+    try {
+      const totalRows = await this.prisma.question.count();
+      const randomIndex = Math.floor(Math.random() * totalRows);
+
+      const randomQuestion = await this.prisma.question.findFirst({
+        select: {
+          Id: true,
+        },
+        where: {
+          DeletedAt: null,
+        },
+        skip: randomIndex,
+      });
+
+      return randomQuestion.Id;
+    } catch (error) {
+      throw new Error('Failed to get a random question id');
+    }
+  }
+
   async createOneQuestionDraft(userId: number): Promise<number> {
     try {
+      const existingDraft = await this.prisma.question_Temporary.findFirst({
+        where: {
+          UserId: userId,
+        },
+      });
+
+      if (existingDraft) {
+        return existingDraft.Id;
+      }
+
       const draft = await this.prisma.question_Temporary.create({
         data: {
           User: {
@@ -235,6 +346,25 @@ export class QuestionsService {
       return draft.Id;
     } catch (error) {
       throw new Error('Failed to create question draft');
+    }
+  }
+
+  async readOneQuestionDraft(userId: number): Promise<ReadQuestionDraftDto> {
+    try {
+      const draft = await this.prisma.question_Temporary.findFirstOrThrow({
+        where: {
+          UserId: userId,
+        },
+      });
+      return {
+        title: draft?.Title,
+        content: draft?.Content,
+        tag: draft?.Tag,
+        programmingLanguage: draft?.ProgrammingLanguage,
+        originalLink: draft?.OriginalLink,
+      };
+    } catch (error) {
+      throw new Error('Failed to read question draft');
     }
   }
 
@@ -272,6 +402,33 @@ export class QuestionsService {
       });
     } catch (error) {
       throw new Error('Failed to delete question draft');
+    }
+  }
+
+  async getTodayQuestionId(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    try {
+      const question = await this.prisma.question.findFirstOrThrow({
+        where: {
+          CreatedAt: {
+            gte: today,
+            lt: tomorrow,
+          },
+        },
+        orderBy: {
+          ViewCount: 'desc',
+        },
+        select: {
+          Id: true,
+        },
+      });
+      return question.Id;
+    } catch (error) {
+      throw new Error('Failed to get today question id');
     }
   }
 }

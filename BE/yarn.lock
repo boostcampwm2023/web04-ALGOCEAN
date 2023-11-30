@@ -1024,7 +1024,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/mapped-types@npm:^2.0.3":
+"@nestjs/mapped-types@npm:2.0.3, @nestjs/mapped-types@npm:^2.0.3":
   version: 2.0.3
   resolution: "@nestjs/mapped-types@npm:2.0.3"
   peerDependencies:
@@ -1079,6 +1079,33 @@ __metadata:
   peerDependencies:
     typescript: ">=4.8.2"
   checksum: d63962581826025e41c9c66874ecc788cf19f7df35c6ba943c46d11a929896516b9b365b6387e9c071138b592a4172628207b63bbd684e6d8f9ec97cff4af1e9
+  languageName: node
+  linkType: hard
+
+"@nestjs/swagger@npm:^7.1.16":
+  version: 7.1.16
+  resolution: "@nestjs/swagger@npm:7.1.16"
+  dependencies:
+    "@nestjs/mapped-types": "npm:2.0.3"
+    js-yaml: "npm:4.1.0"
+    lodash: "npm:4.17.21"
+    path-to-regexp: "npm:3.2.0"
+    swagger-ui-dist: "npm:5.9.1"
+  peerDependencies:
+    "@fastify/static": ^6.0.0
+    "@nestjs/common": ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0
+    class-transformer: "*"
+    class-validator: "*"
+    reflect-metadata: ^0.1.12
+  peerDependenciesMeta:
+    "@fastify/static":
+      optional: true
+    class-transformer:
+      optional: true
+    class-validator:
+      optional: true
+  checksum: 09b318985943d0b50dc44f26c2fb094674bfa2d5de9743102e4b2cdeeb16349a5cface6e747fb7eae8c00c98b0da2ae09718de78ebe455947992b0b3c768f09b
   languageName: node
   linkType: hard
 
@@ -2540,6 +2567,7 @@ __metadata:
     "@nestjs/passport": "npm:^10.0.2"
     "@nestjs/platform-express": "npm:^10.0.0"
     "@nestjs/schematics": "npm:^10.0.0"
+    "@nestjs/swagger": "npm:^7.1.16"
     "@nestjs/testing": "npm:^10.0.0"
     "@prisma/client": "npm:^5.5.2"
     "@types/bcrypt": "npm:^5.0.2"
@@ -2569,6 +2597,7 @@ __metadata:
     rxjs: "npm:^7.8.1"
     source-map-support: "npm:^0.5.21"
     supertest: "npm:^6.3.3"
+    swagger-ui-express: "npm:^5.0.0"
     ts-jest: "npm:^29.1.0"
     ts-loader: "npm:^9.4.3"
     ts-node: "npm:^10.9.1"
@@ -5459,6 +5488,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-yaml@npm:4.1.0, js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: "npm:^2.0.1"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 184a24b4eaacfce40ad9074c64fd42ac83cf74d8c8cd137718d456ced75051229e5061b8633c3366b8aada17945a7a356b337828c19da92b51ae62126575018f
+  languageName: node
+  linkType: hard
+
 "js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -5468,17 +5508,6 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 6746baaaeac312c4db8e75fa22331d9a04cccb7792d126ed8ce6a0bbcfef0cedaddd0c5098fade53db067c09fe00aa1c957674b4765610a8b06a5a189e46433b
-  languageName: node
-  linkType: hard
-
-"js-yaml@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 184a24b4eaacfce40ad9074c64fd42ac83cf74d8c8cd137718d456ced75051229e5061b8633c3366b8aada17945a7a356b337828c19da92b51ae62126575018f
   languageName: node
   linkType: hard
 
@@ -7546,6 +7575,31 @@ __metadata:
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
   checksum: 6c4032340701a9950865f7ae8ef38578d8d7053f5e10518076e6554a9381fa91bd9c6850193695c141f32b21f979c985db07265a758867bac95de05f7d8aeb39
+  languageName: node
+  linkType: hard
+
+"swagger-ui-dist@npm:5.9.1":
+  version: 5.9.1
+  resolution: "swagger-ui-dist@npm:5.9.1"
+  checksum: dee9f8b9e21b95a659ce3ecc63c71b11e1e4353b972772057a0ad88aa7a1a26eadab82996ef021b71bb8d6a4cc0212fd2fe45e5f72f4ffc57dd4df39993a1c1f
+  languageName: node
+  linkType: hard
+
+"swagger-ui-dist@npm:>=5.0.0":
+  version: 5.10.3
+  resolution: "swagger-ui-dist@npm:5.10.3"
+  checksum: d613a2122ef4323f0cbeb8387ff19db30728a97a60af2059393cc714d2038651268c60b65b4628dc6f792d7b60c65c699d786085f370d91acdda80dc81e8f7a1
+  languageName: node
+  linkType: hard
+
+"swagger-ui-express@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "swagger-ui-express@npm:5.0.0"
+  dependencies:
+    swagger-ui-dist: "npm:>=5.0.0"
+  peerDependencies:
+    express: ">=4.0.0 || >=5.0.0-beta"
+  checksum: 9f4c1f249cc613d687a80a1d5c60e8acf69145aa7dd573138b19902a7556396b9b2e7262eab69764d7d0ef14ae6f50214e701bd01a18fcf3b7776589d78b1c0b
   languageName: node
   linkType: hard
 

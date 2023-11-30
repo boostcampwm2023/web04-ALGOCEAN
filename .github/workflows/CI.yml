@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths:
+      - 'FE/**'
+      - 'BE/**'
+  pull_request:
+    branches: [ "dev", "main" ]
+    paths:
+      - 'FE/**'
+      - 'BE/**'
+
+jobs:
+  FE_build:
+    name: 'build FE'
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./FE
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: './FE'
+
+    - run: npm ci
+    - run: npm run build
+    
+  FE_lint:
+    name: 'lint FE'
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./FE
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        cache-dependency-path: './FE'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run ESLint
+      run: npm run lint
+    
+  BE_build:
+    name: 'build BE'
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./BE
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+#        cache: 'yarn'
+#        cache-dependency-path: './BE'
+        
+    - name: Install dependencies
+      run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
+      
+    - name: Build nest.js
+      run: yarn build
+
+  BE_lint:
+    name: 'lint BE'
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./BE
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+#        cache: 'yarn'
+#        cache-dependency-path: './BE'
+
+    - name: Install dependencies
+      run: npm install -g yarn && yarn set version berry && yarn install && yarn prisma generate
+      
+    - name: Lint nest.js
+      run: yarn lint

@@ -4,8 +4,9 @@ export const MainNav = styled.nav`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 4rem;
-  border-bottom: 1px solid ${({ theme }) => theme.color.grayscale[100]};
+  height: 3.2rem;
+  background-color: var(--color-grayscale-white);
+  border-bottom: 1px solid var(--color-grayscale-100);
   padding: 0 3rem;
 
   .inner {
@@ -14,7 +15,7 @@ export const MainNav = styled.nav`
     align-items: center;
 
     width: 100%;
-    max-width: ${({ theme }) => theme.maxWidth};
+    max-width: var(--max-width);
   }
   ol {
     display: flex;
@@ -22,14 +23,15 @@ export const MainNav = styled.nav`
     gap: 2rem;
 
     li {
-      color: ${({ theme }) => theme.color.grayscale[400]};
-      ${({ theme }) => theme.font.medium16}
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--color-grayscale-200);
       cursor: pointer;
     }
     li[class='selected'],
     li:hover {
-      border-bottom: 2px solid;
-      color: ${({ theme }) => theme.color.grayscale.black};
+      text-decoration: underline;
+      color: var(--color-grayscale-black);
       font-weight: 700;
       cursor: pointer;
     }
@@ -40,26 +42,20 @@ export const MainNav = styled.nav`
     align-items: center;
     gap: 0.5rem;
 
-    height: 3.2rem;
+    height: 100%;
     border: none;
-    border-radius: 0.25rem;
-    padding: 0 1rem;
-    color: ${({ theme }) => theme.color.grayscale.white};
-    background: ${({ theme }) => theme.color.mainColor.blueGradient};
-    opacity: 90%;
-    transition: 0.2s ease-in all;
+    padding: 0 1.5rem;
+    color: var(--color-grayscale-white);
+    background-color: var(--color-blue-100);
 
-    &:hover {
-      opacity: 100%;
-      transform: translateY(-0.2rem);
-    }
     img {
-      height: 1.25rem;
+      height: 1rem;
       aspect-ratio: 1/1;
     }
 
     span {
-      ${({ theme }) => theme.font.medium16}
+      position: relative;
+      top: -0.1rem;
     }
   }
 `;

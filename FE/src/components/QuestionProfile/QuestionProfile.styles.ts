@@ -1,43 +1,50 @@
 import styled from 'styled-components';
 
-export const LoginContainer = styled.div`
+export const Login = styled.div`
   width: 100%;
-  color: ${({ theme }) => theme.color.grayscale[400]};
-  text-align: center;
+  color: var(--color-grayscale-200);
+  font-size: 0.9rem;
+  font-weight: 300;
 
-  > div {
-    ${({ theme }) => theme.font.light14}
-    margin-bottom: 0.5rem;
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: 500;
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--color-blue-100);
+    opacity: 80%;
+    border: none;
+    border-radius: 0.25rem;
+    color: white;
+    font-size: 1.1rem;
+    margin: 0.8rem 0;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      transform: translateY(-0.2rem);
+      opacity: 100%;
+    }
+  }
+
+  .signup-button {
+    color: var(--color-blue-50);
+    font-size: inherit;
+    font-weight: inherit;
   }
 `;
 
-export const LoginButton = styled.button`
+export const UserQuestion = styled.section`
   width: 100%;
-  height: 3rem;
-
-  color: ${({ theme }) => theme.color.grayscale.white};
-  background-color: ${({ theme }) => theme.color.mainColor.blueMain};
-  ${({ theme }) => theme.font.medium16};
-  border: none;
-  border-radius: 0.25rem;
-
-  transition: 0.2s ease-in all;
-  opacity: 80%;
-
-  &:hover {
-    transform: translateY(-0.2rem);
-    opacity: 100%;
-  }
-`;
-
-export const QuestionProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-
-  width: 20rem;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1rem;
   border-radius: 1rem;
-  background-color: ${({ theme }) => theme.color.grayscale[50]};
+  background-color: var(--color-grayscale-white);
 `;

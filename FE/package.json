@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "prebuild": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "build": "tsc && vite build",
     "preview": "vite preview --open"

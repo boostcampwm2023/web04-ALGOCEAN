@@ -65,3 +65,9 @@ export interface QuestionAnswerFormCardProps {
   handleCancel: () => void;
   handleSubmit: (content: string) => void;
 }
+
+export interface SignupFetchData {
+  userId: string;
+  password: string;
+  nickname: string;
+}

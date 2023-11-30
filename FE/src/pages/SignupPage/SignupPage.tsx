@@ -1,37 +1,42 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { getUserIdVerified, postSignup } from '../../api/auth';
+import { SignupFetchData as FetchData } from 'src/types/type';
 import { Container, Inner, Form } from './SignupPage.styles';
 
 interface SignupFormProps {
   handleSignupSubmit: (data: any) => void;
 }
 
-interface FormData {
-  id: string;
-  password: string;
-  nickname: string;
+interface FormData extends FetchData {
   passwordConfirm: string;
 }
 
 const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, getValues, handleSubmit } = useForm<FormData>();
 
-  const [isIdValified, setIsIdValifed] = useState(false);
+  const [isIdVelified, setIsIdVelifed] = useState(false);
 
-  const onIdValifyButtonClick = () => {
-    if (isIdValified) {
+  const onIdVelifyButtonClick = async () => {
+    if (isIdVelified) {
       alert('이미 아이디 확인이 완료되었습니다.');
       return;
     }
-    // ⚠️ ID validate API 필요
-    setIsIdValifed(true);
-    alert('사용할 수 있는 id 입니다');
+
+    const userId = getValues('userId');
+    const isUserVerified = await getUserIdVerified(userId);
+    if (isUserVerified) {
+      setIsIdVelifed(true);
+      return alert('사용할 수 있는 id 입니다');
+    }
+    alert('중복된 아이디입니다. 다른 아이디를 입력해주세요');
   };
 
   const isFormDataRight = (formData: FormData) => {
     const isFormDataEmpty = (formData: FormData) => {
-      const { id, password, passwordConfirm, nickname } = formData;
-      const result = !id || !password || !passwordConfirm || !nickname;
+      const { userId, password, passwordConfirm, nickname } = formData;
+      const result = !userId || !password || !passwordConfirm || !nickname;
       return result;
     };
 
@@ -60,7 +65,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
   };
 
   const onSubmit: SubmitHandler<FormData> = (formData: FormData) => {
-    if (!isIdValified) {
+    if (!isIdVelified) {
       return alert('Id를 확인해 주세요');
     }
 
@@ -69,9 +74,9 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
       return alert(test.message);
     }
 
-    const { id, password, nickname } = formData;
+    const { userId, password, nickname } = formData;
     const fetchData = {
-      id,
+      userId,
       password,
       nickname,
     };
@@ -81,8 +86,11 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <label>ID</label>
-      <input {...register('id', { required: true, maxLength: 20 })} />
-      <button type="button" onClick={onIdValifyButtonClick}>
+      <input
+        {...register('userId', { required: true, maxLength: 20 })}
+        disabled={isIdVelified}
+      />
+      <button type="button" onClick={onIdVelifyButtonClick}>
         Id 확인
       </button>
       <label>비밀번호</label>
@@ -97,14 +105,21 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
 };
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const handleSignupsubmit = async (fetchData: FetchData) => {
+    const isSuccess = await postSignup(fetchData);
+
+    if (!isSuccess) {
+      return alert('회원 가입에 실패했습니다. 다시 시도해 주세요');
+    }
+    alert('성공적으로 회원 가입이 완료되었습니다');
+    navigate('/');
+  };
+
   return (
     <Container>
       <Inner>
-        <SignupForm
-          handleSignupSubmit={(data) => {
-            console.log('data', data);
-          }}
-        />
+        <SignupForm handleSignupSubmit={handleSignupsubmit} />
       </Inner>
     </Container>
   );

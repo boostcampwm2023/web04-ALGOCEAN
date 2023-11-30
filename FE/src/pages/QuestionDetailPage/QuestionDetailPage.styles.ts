@@ -8,8 +8,15 @@ export const Container = styled.div`
   width: 100%;
   height: fit-content;
   background-color: ${({ theme }) => theme.color.grayscale[50]};
+  margin-bottom: 6rem;
 
   > * {
     background-color: ${({ theme }) => theme.color.grayscale.white};
   }
+`;
+
+export const NoAnswer = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: ${({ theme }) => theme.color.grayscale[200]};
 `;

@@ -60,7 +60,7 @@ export function Item({ itemData }: { itemData: ItemData }) {
   } = itemData;
 
   const handleItemClick = () => {
-    navigate(`/question/${id}`);
+    navigate(`/question/${id}`, { state: { questionId: id } });
   };
 
   return (

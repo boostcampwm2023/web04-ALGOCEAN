@@ -15,6 +15,7 @@ import SquareButton from './SquareButton/SquareButton';
 import QuestionAnswerCard from './QuestionAnswerCard/QuestionAnswerCard';
 import QuestionAnswerFormCard from './QuestionAnswerFormCard/QuestionAnswerFormCard';
 import Scroller from './Scroller/Scroller';
+import Loading from './Loading/Loading';
 
 export {
   MainHeader,
@@ -32,4 +33,5 @@ export {
   QuestionAnswerCard,
   QuestionAnswerFormCard,
   Scroller,
+  Loading,
 };

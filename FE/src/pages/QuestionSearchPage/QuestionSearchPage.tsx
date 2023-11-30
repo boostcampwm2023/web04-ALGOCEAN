@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { QuestionList } from '../../components';
+//import { QuestionList } from '../../components';
 import { Main, Header, InnerDiv } from './QuestionSearchPage.style';
 
 const QuestionSearchPage = () => {
@@ -11,7 +11,7 @@ const QuestionSearchPage = () => {
     <Main>
       <InnerDiv className="inner">
         <Header>검색 결과</Header>
-        <QuestionList isSearching={true} />
+        {/* <QuestionList isSearching={true} /> */}
       </InnerDiv>
     </Main>
   );

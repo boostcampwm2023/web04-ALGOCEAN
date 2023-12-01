@@ -29,7 +29,7 @@ export class QuestionsController {
   @ApiOperation({
     summary: '질문 초안 생성',
     description:
-        '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
+      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
   })
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Post('drafts')
@@ -38,15 +38,15 @@ export class QuestionsController {
       const questionId = await this.questionsService.createOneQuestionDraft(1);
 
       return res
-          .status(HttpStatus.CREATED)
-          .json({ message: 'Draft created successfully', id: questionId });
+        .status(HttpStatus.CREATED)
+        .json({ message: 'Draft created successfully', id: questionId });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
       throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -63,8 +63,8 @@ export class QuestionsController {
 
       if (!draft) {
         return res
-            .status(HttpStatus.NOT_FOUND)
-            .json({ error: 'Draft not found' });
+          .status(HttpStatus.NOT_FOUND)
+          .json({ error: 'Draft not found' });
       }
 
       return res.status(HttpStatus.OK).json(draft);
@@ -73,12 +73,11 @@ export class QuestionsController {
         throw error;
       }
       throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
-
 
   @ApiOperation({
     summary: '질문 초안 수정',
@@ -87,27 +86,27 @@ export class QuestionsController {
   // TODO: Use UserGuard to obtain the user ID and associate it with the question
   @Put('drafts/:id')
   async updateDraft(
-      @Param('id') id: number,
-      @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
-      @Res() res: Response,
+    @Param('id') id: number,
+    @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
+    @Res() res: Response,
   ) {
     try {
       await this.questionsService.updateOneQuestionDraft(
-          id,
-          1,
-          updateQuestionDraftDto,
+        id,
+        1,
+        updateQuestionDraftDto,
       );
 
       return res
-          .status(HttpStatus.OK)
-          .json({ message: 'Draft updated successfully' });
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft updated successfully' });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
       throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -123,15 +122,15 @@ export class QuestionsController {
       await this.questionsService.deleteOneQuestionDraft(id, 1);
 
       return res
-          .status(HttpStatus.OK)
-          .json({ message: 'Draft deleted successfully' });
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft deleted successfully' });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
       throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -152,12 +151,11 @@ export class QuestionsController {
       }
 
       throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
-
 
   @Get('/random')
   async readRandomQuestion(@Res() res: Response) {
@@ -333,5 +331,20 @@ export class QuestionsController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
     }
+  }
+
+  @ApiOperation({
+    summary: '급상승 질문 API',
+    description: '급상승 질문을 조회합니다.',
+  })
+  @Get('trending')
+  async getMostViewedQuestion() {
+    const trendingQuetion = await this.questionsService.getTrendingQuestion();
+
+    if (!trendingQuetion) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    return trendingQuetion;
   }
 }

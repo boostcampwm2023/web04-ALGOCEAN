@@ -108,6 +108,8 @@ export class QuestionsService {
       updateViewCount,
     ]);
 
+    this.logView(id);
+
     const question = queryResult[0];
 
     return {
@@ -124,6 +126,53 @@ export class QuestionsService {
       likeCount: question.LikeCount,
       isLiked: question.User.LikeInfo[0]?.IsLiked || false,
     };
+  }
+
+  async logView(questionId: number): Promise<void> {
+    await this.prisma.viewLog.create({
+      data: {
+        QuestionId: questionId,
+      },
+    });
+  }
+
+  async getTrendingQuestion(): Promise<{ Id: number; Title: string } | null> {
+    const thirtyMinutesAgo = new Date();
+    thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30);
+
+    const mostViewedQuestion = await this.prisma.viewLog.groupBy({
+      by: ['QuestionId'],
+      _count: {
+        QuestionId: true,
+      },
+      where: {
+        CreatedAt: {
+          gte: thirtyMinutesAgo,
+        },
+      },
+      orderBy: {
+        _count: {
+          QuestionId: 'desc',
+        },
+      },
+      take: 1,
+    });
+
+    if (mostViewedQuestion.length === 0) {
+      return null;
+    }
+
+    const questionId = mostViewedQuestion[0].QuestionId;
+
+    return this.prisma.question.findUnique({
+      where: {
+        Id: questionId,
+      },
+      select: {
+        Id: true,
+        Title: true,
+      },
+    });
   }
 
   async deleteOneQuestion(id: number, userId: number): Promise<boolean> {

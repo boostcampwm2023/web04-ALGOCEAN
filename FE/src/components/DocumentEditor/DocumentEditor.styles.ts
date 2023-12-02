@@ -12,6 +12,7 @@ export const EditorWrapper = styled.div`
     border: 1px solid ${({ theme }) => theme.color.grayscale[50]};
     padding: 5px;
     border-radius: 0.4rem;
+    max-width: 50.75rem;
   }
   .toolbar-class {
     border: 1px solid ${({ theme }) => theme.color.grayscale[50]};

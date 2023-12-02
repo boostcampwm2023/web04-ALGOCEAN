@@ -30,6 +30,7 @@ export const Form = styled.form`
 `;
 
 export const Aside = styled.aside`
+  min-width: 15rem;
   width: 15rem;
   display: flex;
   flex-direction: column;

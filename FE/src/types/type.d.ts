@@ -79,3 +79,12 @@ export interface ItemData {
   viewCount: number;
   likeCount: number;
 }
+
+export interface FileProps {
+  name: string;
+  lastModified: number;
+  lastModifiedDate: any;
+  size: number;
+  type: string;
+  webkitRelativePath: string;
+}

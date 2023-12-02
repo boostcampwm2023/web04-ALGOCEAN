@@ -1,10 +1,12 @@
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import { AtomicBlockUtils, EditorState } from 'draft-js';
 import { EditorWrapper } from './DocumentEditor.styles';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useState } from 'react';
 import { putDraftQuestionAPI } from '../../api/questionService';
-import { QuestionData } from '../../types/type';
+import { FileProps, QuestionData } from '../../types/type';
+import { S3 } from '../../utils/network';
+import { v4 as uuidv4 } from 'uuid';
 
 interface EditorProps {
   editorState: EditorState;
@@ -46,6 +48,54 @@ const DocumentEditor = ({
     setPollingIntervalId(undefined);
   };
 
+  const uploadImageToNaverCloudPlatform = async (file: FileProps) => {
+    const bucket = 'algocean';
+    // 이미지를 업로드할 년 월 일 폴더 생성
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const folder_path = `images/${year}/${month}/${day}`;
+    const object_name =
+      uuidv4().toString().replace(/-/g, '') +
+      file.name.replace(/[-{}^%`[\]">~<#|]/g, '');
+    // 파일 업로드
+    try {
+      await S3.putObject({
+        Bucket: bucket,
+        Key: folder_path + '/' + object_name,
+        ACL: 'public-read',
+        // ACL을 지우면 전체 공개되지 않습니다.
+        Body: file,
+      }).promise();
+    } catch (error) {
+      console.error('에러 발생', error);
+    }
+    return `https://kr.object.ncloudstorage.com/${bucket}/${folder_path}/${object_name}`;
+  };
+
+  // 이미지 업로드
+  const uploadCallback = async (file: FileProps) => {
+    try {
+      const filePath = await uploadImageToNaverCloudPlatform(file);
+      const contentState = editorState.getCurrentContent();
+      const contentStateWithEntity = contentState.createEntity(
+        'IMAGE',
+        'IMMUTABLE',
+        { src: filePath, width: '600px' },
+      );
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      const newEditorState = EditorState.set(editorState, {
+        currentContent: contentStateWithEntity,
+      });
+      setEditorState(
+        AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' '),
+      );
+    } catch (error) {
+      console.error('에러 발생', error);
+    }
+  };
+
   return (
     <EditorWrapper>
       <Editor
@@ -63,6 +113,7 @@ const DocumentEditor = ({
           textAlign: { inDropdown: true },
           link: { inDropdown: true },
           history: { inDropdown: false },
+          image: { uploadCallback: uploadCallback }, // 이미지 업로드
         }}
         placeholder="내용을 입력해주세요."
         // 언어 설정

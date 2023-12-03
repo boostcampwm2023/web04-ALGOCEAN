@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { PrismaService } from '../prisma.service';
 import { AdoptAnswerDto } from './dto/adopt-answer.dto';
+import { SseService } from '../sse/sse.service';
 
 @Injectable()
 export class AnswersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private sseService: SseService,
+  ) {}
   async create(createAnswerDto: CreateAnswerDto) {
     const { content, videoLink } = createAnswerDto;
     return this.prisma.answer.create({
@@ -58,6 +62,15 @@ export class AnswersService {
         where: { Id: adoptedAnswer.Question.UserId },
         data: { Points: { increment: 1 } },
       });
+
+      const sendAnswerDto = {
+        questionId: adoptedAnswer.Question.Id,
+        questionTitle: adoptedAnswer.Question.Title,
+        answerId: adoptedAnswer.Id,
+        answerCreatedDate: adoptedAnswer.CreatedAt,
+      };
+
+      this.sseService.sendNotificationToUser(1, sendAnswerDto);
     });
   }
 }

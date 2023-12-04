@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContexts';
 import { useNavigate } from 'react-router-dom';
 import {
   LoginContainer,
@@ -21,10 +23,16 @@ export function Login() {
   );
 }
 
+function AuthorizedProfile() {
+  return <div>로그인 완료</div>;
+}
+
 export function QuestionProfile() {
+  const { getAccessToken } = useContext(AuthContext);
+  const isAuthorized = getAccessToken();
   return (
     <QuestionProfileContainer>
-      <Login />
+      {isAuthorized ? <AuthorizedProfile /> : <Login />}
     </QuestionProfileContainer>
   );
 }

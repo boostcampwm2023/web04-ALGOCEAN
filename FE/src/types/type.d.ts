@@ -66,8 +66,17 @@ export interface QuestionAnswerFormCardProps {
   handleSubmit: (content: string) => void;
 }
 
-export interface SignupFetchData {
+export interface LoginFetchData {
   userId: string;
   password: string;
+}
+
+export interface SignupFetchData extends LoginFetchData {
   nickname: string;
+}
+
+export interface AuthContextValue {
+  getAccessToken: () => string | null;
+  setAccessToken: (nextAuthToken: string) => void;
+  deleteAccessToken: () => void;
 }

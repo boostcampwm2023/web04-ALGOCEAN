@@ -4,6 +4,7 @@ import {
   MainPage,
   QuestionCreationPage,
   QuestionDetailPage,
+  QuestionSearchPage,
   LoginPage,
   SignupPage,
 } from './pages';
@@ -31,6 +32,7 @@ function App() {
               <Route path="/question/:id" element={<QuestionDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/search" element={<QuestionSearchPage />} />
             </Routes>
             <Scroller />
           </Router>

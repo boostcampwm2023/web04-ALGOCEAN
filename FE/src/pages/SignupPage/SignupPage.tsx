@@ -6,7 +6,7 @@ import { SignupFetchData as FetchData } from 'src/types/type';
 import { Container, Inner, Form } from './SignupPage.styles';
 
 interface SignupFormProps {
-  handleSignupSubmit: (data: any) => void;
+  handleSignupSubmit: (data: FetchData) => void;
 }
 
 interface FormData extends FetchData {
@@ -15,12 +15,12 @@ interface FormData extends FetchData {
 
 const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
   const { register, getValues, handleSubmit } = useForm<FormData>();
-
   const [isIdVelified, setIsIdVelifed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onIdVelifyButtonClick = async () => {
     if (isIdVelified) {
-      alert('이미 아이디 확인이 완료되었습니다.');
+      setErrorMessage('이미 아이디 확인이 완료되었습니다.');
       return;
     }
 
@@ -28,9 +28,12 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
     const isUserVerified = await getUserIdVerified(userId);
     if (isUserVerified) {
       setIsIdVelifed(true);
-      return alert('사용할 수 있는 id 입니다');
+      if (errorMessage === 'Id를 확인해 주세요') {
+        setErrorMessage(null);
+      }
+      return;
     }
-    alert('중복된 아이디입니다. 다른 아이디를 입력해주세요');
+    setErrorMessage('중복된 아이디입니다. 다른 아이디를 입력해주세요');
   };
 
   const isFormDataRight = (formData: FormData) => {
@@ -66,12 +69,12 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
 
   const onSubmit: SubmitHandler<FormData> = (formData: FormData) => {
     if (!isIdVelified) {
-      return alert('Id를 확인해 주세요');
+      return setErrorMessage('Id를 확인해 주세요');
     }
 
     const test = isFormDataRight(formData);
     if (test.result === false) {
-      return alert(test.message);
+      return setErrorMessage(test.message!);
     }
 
     const { userId, password, nickname } = formData;
@@ -80,6 +83,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
       password,
       nickname,
     };
+
     handleSignupSubmit(fetchData);
   };
 
@@ -90,6 +94,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
         {...register('userId', { required: true, maxLength: 20 })}
         disabled={isIdVelified}
       />
+      {isIdVelified && <small>아이디 중복 확인 완료</small>}
       <button type="button" onClick={onIdVelifyButtonClick}>
         Id 확인
       </button>
@@ -100,6 +105,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
       <label>닉네임</label>
       <input {...register('nickname')} />
       <button>회원 가입</button>
+      {!!errorMessage && <p>{errorMessage}</p>}
     </Form>
   );
 };
@@ -107,6 +113,7 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
 const SignupPage = () => {
   const navigate = useNavigate();
   const handleSignupsubmit = async (fetchData: FetchData) => {
+    debugger;
     const isSuccess = await postSignup(fetchData);
 
     if (!isSuccess) {

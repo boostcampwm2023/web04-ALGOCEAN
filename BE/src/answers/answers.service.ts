@@ -7,9 +7,10 @@ import { AdoptAnswerDto } from './dto/adopt-answer.dto';
 export class AnswersService {
   constructor(private prisma: PrismaService) {}
   async create(createAnswerDto: CreateAnswerDto) {
-    const { content, videoLink } = createAnswerDto;
+    const { questionId, content, videoLink } = createAnswerDto;
     return this.prisma.answer.create({
       data: {
+        QuestionId: questionId,
         Content: content,
         VideoLink: videoLink,
         UserId: 1, // TODO: get user id from request

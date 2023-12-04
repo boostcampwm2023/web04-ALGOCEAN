@@ -4,7 +4,7 @@ export interface UniqueQuestionItem {
   url: string;
 }
 
-interface QuestionDetailData {
+export interface QuestionDetailData {
   id: number;
   title: string;
   nickname: string;
@@ -50,14 +50,16 @@ export interface SquareButtonProps {
 
 export interface QuestionAnswerCardProps {
   cardData: {
-    userId: number;
-    nickname: string;
-    answerId: number;
-    content: string;
-    videoLink: unknown;
-    isAdopted: boolean;
-    createdAt: string;
-    isLiked: boolean;
+    Id: number;
+    User: {
+      Id: number;
+      Nickname: string;
+      ProfileImage: string;
+    };
+    Content: string;
+    VideoLink: string;
+    IsAdopted: boolean;
+    CreatedAt: string;
   };
 }
 
@@ -79,4 +81,15 @@ export interface AuthContextValue {
   getAccessToken: () => string | null;
   setAccessToken: (nextAuthToken: string) => void;
   deleteAccessToken: () => void;
+
+export interface ItemData {
+  id: number;
+  title: string;
+  nickname: string;
+  tag: string;
+  createdAt: string;
+  programmingLanguage: string;
+  isAdopted: number;
+  viewCount: number;
+  likeCount: number;
 }

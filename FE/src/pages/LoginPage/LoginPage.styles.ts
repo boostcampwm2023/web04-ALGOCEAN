@@ -11,6 +11,8 @@ export const Container = styled.main`
 export const Inner = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 3rem;
   width: 100%;
   max-width: ${({ theme }) => theme.maxWidth};
 `;

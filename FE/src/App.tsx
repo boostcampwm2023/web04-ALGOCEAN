@@ -6,6 +6,7 @@ import {
   QuestionDetailPage,
   LoginPage,
   SignupPage,
+ QuestionSearchPage,
 } from './pages';
 import {
   AuthContext,

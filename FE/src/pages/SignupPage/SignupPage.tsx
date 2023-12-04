@@ -83,7 +83,6 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
       password,
       nickname,
     };
-
     handleSignupSubmit(fetchData);
   };
 

@@ -47,7 +47,7 @@ const LoginForm = ({ handleLoginSubmit }: LoginFormProps) => {
       <label>ID</label>
       <input {...register('userId', { required: true, maxLength: 20 })} />
       <label>비밀번호</label>
-      <input {...register('password')} />
+      <input {...register('password')} type="password" />
       <button>로그인</button>
       {!!errorMessage && <small>{errorMessage}</small>}
     </Form>

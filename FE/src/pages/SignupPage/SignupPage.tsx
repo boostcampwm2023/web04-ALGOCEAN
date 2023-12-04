@@ -99,9 +99,9 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
         Id 확인
       </button>
       <label>비밀번호</label>
-      <input {...register('password')} />
+      <input {...register('password')} type="password" />
       <label>비밀번호 확인</label>
-      <input {...register('passwordConfirm')} />
+      <input {...register('passwordConfirm')} type="password" />
       <label>닉네임</label>
       <input {...register('nickname')} />
       <button>회원 가입</button>

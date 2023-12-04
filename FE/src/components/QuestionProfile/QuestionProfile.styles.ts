@@ -37,7 +37,12 @@ export const QuestionProfileContainer = styled.div`
   flex-shrink: 0;
 
   width: 20rem;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 1rem;
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.color.grayscale[50]};
+`;
+
+export const Signup = styled.div`
+  margin-top: 1rem;
+  cursor: pointer;
 `;

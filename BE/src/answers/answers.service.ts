@@ -86,4 +86,33 @@ export class AnswersService {
       });
     });
   }
+
+  async findAllByUserId(userId: number) {
+    const answerList = await this.prisma.answer.findMany({
+      where: { UserId: userId, DeletedAt: null },
+      select: {
+        Question: {
+          select: {
+            Id: true,
+            Title: true,
+          },
+        },
+        Content: true,
+        IsAdopted: true,
+        CreatedAt: true,
+      },
+      orderBy: { CreatedAt: 'desc' },
+      take: 3,
+    });
+
+    return answerList.map((answer) => {
+      return {
+        id: answer.Question.Id,
+        title: answer.Question.Title,
+        content: answer.Content,
+        isAdopted: answer.IsAdopted,
+        createdAt: answer.CreatedAt,
+      };
+    });
+  }
 }

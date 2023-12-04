@@ -10,11 +10,17 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AnswersService } from '../answers/answers.service';
+import { QuestionsService } from '../questions/questions.service';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly questionsService: QuestionsService,
+    private readonly answersService: AnswersService,
+  ) {}
 
   @ApiOperation({
     summary: '회원가입',
@@ -61,5 +67,23 @@ export class UsersController {
   @Get('/grade/:userId')
   getUserGrade(@Param('userId') userId: string) {
     return this.usersService.getUserGrade(userId);
+  }
+
+  @ApiOperation({
+    summary: '내 질문 조회',
+    description: '내가 작성한 질문을 조회합니다.',
+  })
+  @Get('/myQuestions/:userId')
+  async getMyQuestions(@Param('userId') userId: number) {
+    return this.questionsService.findAllByUserId(userId);
+  }
+
+  @ApiOperation({
+    summary: '내 답변 조회',
+    description: '내가 작성한 답변을 조회합니다.',
+  })
+  @Get('/myAnswers/:userId')
+  async getMyAnswers(@Param('userId') userId: number) {
+    return this.answersService.findAllByUserId(userId);
   }
 }

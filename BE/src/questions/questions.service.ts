@@ -480,4 +480,31 @@ export class QuestionsService {
       throw new Error('Failed to get today question id');
     }
   }
+
+  async findAllByUserId(userId: number) {
+    try {
+      return this.prisma.question.findMany({
+        where: {
+          UserId: userId,
+          DeletedAt: null,
+        },
+        orderBy: {
+          CreatedAt: 'desc',
+        },
+        select: {
+          Id: true,
+          Title: true,
+          CreatedAt: true,
+          Tag: true,
+          ProgrammingLanguage: true,
+          IsAdopted: true,
+          ViewCount: true,
+          LikeCount: true,
+        },
+        take: 3,
+      });
+    } catch (error) {
+      throw new Error('Failed to find all by user id');
+    }
+  }
 }

@@ -113,7 +113,6 @@ const SignupForm = ({ handleSignupSubmit }: SignupFormProps) => {
 const SignupPage = () => {
   const navigate = useNavigate();
   const handleSignupsubmit = async (fetchData: FetchData) => {
-    debugger;
     const isSuccess = await postSignup(fetchData);
 
     if (!isSuccess) {

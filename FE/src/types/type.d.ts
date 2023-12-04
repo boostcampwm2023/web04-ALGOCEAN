@@ -81,6 +81,7 @@ export interface AuthContextValue {
   getAccessToken: () => string | null;
   setAccessToken: (nextAuthToken: string) => void;
   deleteAccessToken: () => void;
+}
 
 export interface ItemData {
   id: number;

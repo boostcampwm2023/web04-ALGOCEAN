@@ -94,3 +94,13 @@ export interface ItemData {
   viewCount: number;
   likeCount: number;
 }
+
+export interface GetQuestionListOptions {
+  page?: number;
+  tag?: string;
+  ProgrammingLanguage?: string;
+  isAdopted?: 1 | 0;
+  sortByCreatedAt?: 'desc' | 'asc';
+  sortByViewCount?: 'desc' | 'asc';
+  [key: string]: number | string | undefined;
+}

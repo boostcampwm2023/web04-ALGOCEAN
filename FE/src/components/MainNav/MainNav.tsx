@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import writeIcon from '/icons/write.svg';
 import * as S from './MainNav.styles';
-import { postDraftQuestionAPI } from '../../api/questionService';
+import { postDraftQuestionAPI } from '../../api';
 
 const getCurrentNavItem = () => {
   const { pathname } = window.location;

@@ -114,7 +114,7 @@ export class UsersController {
       '본인 프로필을 조회합니다. 닉네임, 포인트, 등급, 프로필 사진 링크, 좋아요 합, 질문 갯수, 답변이 존재하는 질문 수, 질문 채택마감률, 최근 질문 최대 3개, 답변 갯수, 채택된 답변 갯수, 답변채택률, 최근 답변 최대 3개를 반환합니다.',
   })
   @UseGuards(AuthGuard('jwt'))
-  @Get('/myprofile')
+  @Get('/me')
   async getMyProfile(@Req() req) {
     const userId =
       req.user.provider === 'local' ? req.user.id : '_' + req.user.id;

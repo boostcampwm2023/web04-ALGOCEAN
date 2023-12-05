@@ -179,7 +179,14 @@ export class AnswersService {
       adoptedAnswerCount,
       adoptionRate,
       likes: likes._sum.LikeCount,
-      recentAnswers,
+      recentAnswers: recentAnswers.map((answer) => ({
+        id: answer.Id,
+        questionId: answer.Question.Id,
+        questionTitle: answer.Question.Title,
+        content: answer.Content,
+        isAdopted: answer.IsAdopted,
+        createdAt: answer.CreatedAt,
+      })),
     };
   }
 }

@@ -121,7 +121,7 @@ export class UsersController {
       questionCount: questions.questionCount,
       answeredQuestionCount: questions.answeredQuestionCount,
       questionAdoptionRate: questions.adoptionRate,
-      recentQuestions: questions.questions,
+      recentQuestions: questions.recentQuestions,
       answerCount: answers.answerCount,
       adoptedAnswerCount: answers.adoptedAnswerCount,
       answerAdoptionRate: answers.adoptionRate,

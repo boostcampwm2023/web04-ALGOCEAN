@@ -580,7 +580,16 @@ export class QuestionsService {
       answeredQuestionCount,
       adoptionRate,
       likes: likes._sum.LikeCount,
-      questions,
+      recentQuestions: questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        createdAt: question.CreatedAt,
+        tag: question.Tag,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      })),
     };
   }
 }

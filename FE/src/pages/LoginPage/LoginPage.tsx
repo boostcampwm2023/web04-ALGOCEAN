@@ -74,7 +74,7 @@ const LoginPage = () => {
     localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
 
     alert('성공적으로 로그인이 완료되었습니다');
-    navigate('/');
+    navigate(-1);
   };
 
   return (

@@ -73,8 +73,16 @@ export class AuthController {
   }
 
   @Post('refresh')
-  async refresh(@Req() req) {
+  async refresh(@Req() req, @Res() res) {
     const { refreshToken } = req.body;
-    return await this.authService.refreshToken(refreshToken);
+    const { access_token, refresh_token } =
+      await this.authService.refreshToken(refreshToken);
+
+    res.cookie('refreshToken', refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.send({ accessToken: access_token });
   }
 }

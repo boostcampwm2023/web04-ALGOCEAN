@@ -29,6 +29,12 @@ export class UsersController {
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto): Promise<void> {
     try {
+      if (createUserDto.userId.charAt(0) === '_') {
+        throw new HttpException(
+          'User ID cannot start with an underscore.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       await this.usersService.createUser(createUserDto);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -65,8 +71,10 @@ export class UsersController {
   }
 
   @Get('/grade/:userId')
-  getUserGrade(@Param('userId') userId: string) {
-    return this.usersService.getUserGrade(userId);
+  async getUserGrade(@Param('userId') userId: string) {
+    const { grade } = await this.usersService.getUserGradeAndRanking(userId);
+
+    return grade;
   }
 
   @ApiOperation({
@@ -85,5 +93,39 @@ export class UsersController {
   @Get('/myAnswers/:userId')
   async getMyAnswers(@Param('userId') userId: number) {
     return this.answersService.findAllByUserId(userId);
+  }
+
+  @ApiOperation({
+    summary: '프로필 조회',
+    description:
+      '프로필을 조회합니다. 닉네임, 포인트, 등급, 프로필 사진 링크, 좋아요 합, 질문 갯수, 답변이 존재하는 질문 수, 질문 채택마감률, 최근 질문 최대 3개, 답변 갯수, 채택된 답변 갯수, 답변채택률, 최근 답변 최대 3개를 반환합니다.',
+  })
+  @Get('/profile/:userId')
+  async getProfile(@Param('userId') userId: string) {
+    const usersPromise = this.usersService.getUserProfile(userId);
+    const questionsPromise = this.questionsService.getProfile(userId);
+    const answersPromise = this.answersService.getProfile(userId);
+
+    const [user, questions, answers] = await Promise.all([
+      usersPromise,
+      questionsPromise,
+      answersPromise,
+    ]);
+
+    return {
+      nickname: user.Nickname,
+      points: user.Points,
+      grade: user.grade,
+      profileImage: user.ProfileImage,
+      likeCount: questions.likes + answers.likes,
+      questionCount: questions.questionCount,
+      answeredQuestionCount: questions.answeredQuestionCount,
+      questionAdoptionRate: questions.adoptionRate,
+      recentQuestions: questions.questions,
+      answerCount: answers.answerCount,
+      adoptedAnswerCount: answers.adoptedAnswerCount,
+      answerAdoptionRate: answers.adoptionRate,
+      recentAnswers: answers.recentAnswers,
+    };
   }
 }

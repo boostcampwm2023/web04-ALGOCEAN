@@ -1,4 +1,10 @@
-export { getUserIdVerified, postSignup, postLogin } from './auth';
+export {
+  getUserIdVerified,
+  postSignup,
+  postLogin,
+  refreshAccessToken,
+  getWhoAmI,
+} from './auth';
 
 export {
   getQuestionList,

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { MainHeader, MainNav, Scroller } from './components';
 import {
@@ -11,8 +12,24 @@ import {
 import { AuthContextProvider } from './contexts/AuthContexts';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
+import { getWhoAmI } from './api';
 
 function App() {
+  const setUserInfo = async () => {
+    const data = await getWhoAmI();
+    if (data) {
+      const { Nickname: nickname, Points: points } = data;
+      localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    }
+  };
+
+  useEffect(() => {
+    const isLogined = !!localStorage.getItem('userInfo');
+    if (isLogined) {
+      setUserInfo();
+    }
+  }, []);
+
   return (
     <>
       <Router>

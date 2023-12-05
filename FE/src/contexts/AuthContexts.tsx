@@ -67,9 +67,12 @@ export const AuthContextProvider = ({ children }: any) => {
         }
 
         // refresh token 만료 여부 확인
-        if (config.url === REFRESH_URL && status === 401) {
-          alert('안전한 이용을 위해 자동 로그아웃되었습니다.');
-          return navigate('/login');
+        if (config.url === REFRESH_URL) {
+          localStorage.removeItem('userInfo');
+          alert(
+            '안전한 이용을 위해 자동 로그아웃되었습니다. 다시 로그인해 주세요',
+          );
+          navigate('/login');
         }
 
         // 그 외의 에러 확인

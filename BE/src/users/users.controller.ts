@@ -6,12 +6,15 @@ import {
   HttpStatus,
   Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AnswersService } from '../answers/answers.service';
 import { QuestionsService } from '../questions/questions.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('users')
 @Controller('users')
@@ -96,12 +99,29 @@ export class UsersController {
   }
 
   @ApiOperation({
-    summary: '프로필 조회',
+    summary: '프로필 조회 (타인)',
     description:
       '프로필을 조회합니다. 닉네임, 포인트, 등급, 프로필 사진 링크, 좋아요 합, 질문 갯수, 답변이 존재하는 질문 수, 질문 채택마감률, 최근 질문 최대 3개, 답변 갯수, 채택된 답변 갯수, 답변채택률, 최근 답변 최대 3개를 반환합니다.',
   })
   @Get('/profile/:userId')
   async getProfile(@Param('userId') userId: string) {
+    return await this.profileInfo(userId);
+  }
+
+  @ApiOperation({
+    summary: '프로필 조회 (본인)',
+    description:
+      '본인 프로필을 조회합니다. 닉네임, 포인트, 등급, 프로필 사진 링크, 좋아요 합, 질문 갯수, 답변이 존재하는 질문 수, 질문 채택마감률, 최근 질문 최대 3개, 답변 갯수, 채택된 답변 갯수, 답변채택률, 최근 답변 최대 3개를 반환합니다.',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/myprofile')
+  async getMyProfile(@Req() req) {
+    const userId =
+      req.user.provider === 'local' ? req.user.id : '_' + req.user.id;
+    return await this.profileInfo(userId);
+  }
+
+  private async profileInfo(userId) {
     const usersPromise = this.usersService.getUserProfile(userId);
     const questionsPromise = this.questionsService.getProfile(userId);
     const answersPromise = this.answersService.getProfile(userId);

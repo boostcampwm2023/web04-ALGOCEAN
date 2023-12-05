@@ -30,6 +30,21 @@ export const LoginButton = styled.button`
   }
 `;
 
+export const AuthorizedProfileContainer = styled.div`
+  text-align: center;
+
+  strong {
+    padding: 0 0.2rem;
+    ${({ theme }) => theme.font.bold14}
+    color: ${({ theme }) => theme.color.mainColor.blueMain};
+  }
+
+  button {
+    margin-top: 0.5rem;
+    color: ${({ theme }) => theme.color.grayscale[300]};
+  }
+`;
+
 export const QuestionProfileContainer = styled.div`
   display: flex;
   flex-direction: column;

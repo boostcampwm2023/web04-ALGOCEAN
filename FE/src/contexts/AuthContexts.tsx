@@ -41,9 +41,8 @@ export const AuthContextProvider = ({ children }: any) => {
   useLayoutEffect(() => {
     const requestInterceptor = client.interceptors.request.use(
       (config) => {
-        const isLogined = localStorage.getItem('isLogined');
         const accessToken = auth.getAccessToken();
-        if (isLogined && accessToken) {
+        if (accessToken) {
           config.headers['Authorization'] = `Bearer ${auth.getAccessToken()}`;
         }
         return config;
@@ -62,8 +61,8 @@ export const AuthContextProvider = ({ children }: any) => {
         } = error;
 
         // 로그인 여부 확인
-        const isLogined = localStorage.getItem('isLogined');
-        if (!isLogined) {
+        const userInfo = localStorage.getItem('userInfo');
+        if (!userInfo) {
           return Promise.reject(error);
         }
 
@@ -90,7 +89,7 @@ export const AuthContextProvider = ({ children }: any) => {
       client.interceptors.request.eject(requestInterceptor);
       client.interceptors.request.eject(responseInterceptor);
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider value={DEFAULT_AUTH_CONTEXT_VALUE}>

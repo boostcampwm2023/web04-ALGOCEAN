@@ -1,38 +1,70 @@
-import { useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContexts';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LoginContainer,
   LoginButton,
+  AuthorizedProfileContainer,
   QuestionProfileContainer,
   Signup,
 } from './QuestionProfile.styles';
+import { AuthContext } from '../../contexts/AuthContexts';
 
 export function Login() {
   const navigate = useNavigate();
-  const handleRoute = () => {
-    navigate('/login');
-  };
+
+  const onLoginClick = () => navigate('/login');
+  const onSignupClick = () => navigate('/signup');
 
   return (
     <LoginContainer>
       <div>로그인을 하면 나의 등급을 알 수 있어요!</div>
-      <LoginButton onClick={handleRoute}>로그인 하러 가기</LoginButton>
-      <Signup onClick={() => navigate('/signup')}>회원가입</Signup>
+      <LoginButton onClick={onLoginClick}>로그인 하러 가기</LoginButton>
+      <Signup onClick={onSignupClick}>회원가입</Signup>
     </LoginContainer>
   );
 }
 
-function AuthorizedProfile() {
-  return <div>로그인 완료</div>;
+function AuthorizedProfile({
+  handleIsLogined,
+}: {
+  handleIsLogined: (nextValue: boolean) => void;
+}) {
+  const { nickname, points } = JSON.parse(localStorage.getItem('userInfo')!);
+  const { deleteAccessToken } = useContext(AuthContext);
+
+  const onLogoutClick = () => {
+    localStorage.removeItem('userInfo');
+    deleteAccessToken();
+    alert('로그아웃이 완료되었습니다');
+    handleIsLogined(false);
+  };
+
+  return (
+    <AuthorizedProfileContainer>
+      <div>
+        반갑습니다, <strong>{nickname}</strong>님!
+      </div>
+      <div>현재 포인트 : {points}점</div>
+      <button type="button" onClick={onLogoutClick}>
+        로그아웃
+      </button>
+    </AuthorizedProfileContainer>
+  );
 }
 
 export function QuestionProfile() {
-  const { getAccessToken } = useContext(AuthContext);
-  const isAuthorized = getAccessToken();
+  const userInfo = localStorage.getItem('userInfo');
+  const [isLogined, setIsLogined] = useState(!!userInfo);
+
+  const handleIsLogined = (nextValue: boolean) => setIsLogined(nextValue);
+
   return (
     <QuestionProfileContainer>
-      {isAuthorized ? <AuthorizedProfile /> : <Login />}
+      {isLogined ? (
+        <AuthorizedProfile handleIsLogined={handleIsLogined} />
+      ) : (
+        <Login />
+      )}
     </QuestionProfileContainer>
   );
 }

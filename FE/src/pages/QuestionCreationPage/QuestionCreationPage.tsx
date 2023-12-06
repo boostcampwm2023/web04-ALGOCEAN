@@ -14,10 +14,7 @@ import {
 } from './QuestionCreationPage.style';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import {
-  createQuestionAPI,
-  putDraftQuestionAPI,
-} from '../../api/questionService';
+import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const POLLING_INTERVAL = 20000;

@@ -1,5 +1,69 @@
-import { QuestionData } from 'src/types/type';
+import { GetQuestionListOptions as Options, QuestionData } from '../types/type';
 import { client } from '../utils/network';
+
+export const getQuestionList = async (options: Options) => {
+  try {
+    const queryString = Object.keys(options)
+      .map((option) => `${option}=${options[option] as string}`)
+      .join('&');
+    const url = `/api/questions/lists/?${queryString}`;
+    const { status, data } = await client.get(url);
+    if (status !== 200) {
+      throw new Error();
+    }
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getQuestionDetailContentData = async (questionId: number) => {
+  try {
+    const url = `/api/questions/${questionId}`;
+    const { status, data } = await client.get(url);
+    if (status !== 200) {
+      throw new Error();
+    }
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getQuestionAnswerListData = async (questionId: number) => {
+  try {
+    const url = `/api/answers/${questionId}`;
+    const { data } = await client.get(url);
+    const { answers } = data;
+    return answers;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 404) {
+        return null;
+      }
+    } else {
+      console.error('Error from get answer list data:', error.message);
+    }
+    throw error;
+  }
+};
+
+export const postAnswer = async (content: string, questionId: number) => {
+  try {
+    const url = '/api/answers';
+    const { status, data } = await client.post(url, {
+      questionId,
+      content,
+      videoLink: 'https://localhost.com',
+    });
+    if (status !== 201) {
+      throw new Error('답변 작성 실패');
+    }
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export const createQuestionAPI = async (data: QuestionData) => {
   return await client.post('/api/questions', data);

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { postLogin } from '../../api/auth';
+import { getWhoAmI, postLogin } from '../../api';
 import { LoginFetchData as FormData } from 'src/types/type';
 import { Container, Inner, Form } from './LoginPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
@@ -69,8 +69,12 @@ const LoginPage = () => {
 
     const { accessToken } = data;
     setAccessToken(accessToken);
+
+    const { Nickname: nickname, Points: points } = await getWhoAmI();
+    localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+
     alert('성공적으로 로그인이 완료되었습니다');
-    navigate('/');
+    navigate(-1);
   };
 
   return (

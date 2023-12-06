@@ -3,7 +3,7 @@ import { EditorState } from 'draft-js';
 import { EditorWrapper } from './DocumentEditor.styles';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useState } from 'react';
-import { putDraftQuestionAPI } from '../../api/questionService';
+import { putDraftQuestionAPI } from '../../api';
 import { QuestionData } from '../../types/type';
 
 interface EditorProps {

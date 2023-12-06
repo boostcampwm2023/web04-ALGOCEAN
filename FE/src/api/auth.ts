@@ -41,3 +41,24 @@ export const postLogin = async (fetchBody: LoginFetchData) => {
     throw error;
   }
 };
+
+export const refreshAccessToken = async () => {
+  try {
+    const url = '/api/auth/refresh';
+    const { data } = await client.post(url);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getWhoAmI = async () => {
+  try {
+    const url = '/api/auth/whoami';
+    const { data } = await client.get(url);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+  }
+};

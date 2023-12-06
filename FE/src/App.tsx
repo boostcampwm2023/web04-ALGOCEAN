@@ -1,47 +1,25 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { MainHeader, MainNav, Scroller } from './components';
-import {
-  MainPage,
-  QuestionCreationPage,
-  QuestionDetailPage,
-  QuestionSearchPage,
-  LoginPage,
-  SignupPage,
-  ProfilePage,
-} from './pages';
-import {
-  AuthContext,
-  DEFAULT_AUTH_CONTEXT_VALUE,
-} from './contexts/AuthContexts';
-import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme';
+import { useEffect } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { getWhoAmI } from './api';
+import { router } from './router';
 
 function App() {
-  return (
-    <>
-      <AuthContext.Provider value={DEFAULT_AUTH_CONTEXT_VALUE}>
-        <ThemeProvider theme={theme}>
-          <Router>
-            <MainHeader />
-            <MainNav />
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route
-                path="/question/create"
-                element={<QuestionCreationPage />}
-              />
-              <Route path="/question/:id" element={<QuestionDetailPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/search" element={<QuestionSearchPage />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Routes>
-            <Scroller />
-          </Router>
-        </ThemeProvider>
-      </AuthContext.Provider>
-    </>
-  );
+  const setUserInfo = async () => {
+    const data = await getWhoAmI();
+    if (data) {
+      const { Nickname: nickname, Points: points } = data;
+      localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    }
+  };
+
+  useEffect(() => {
+    const isLogined = !!localStorage.getItem('userInfo');
+    if (isLogined) {
+      setUserInfo();
+    }
+  }, []);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;

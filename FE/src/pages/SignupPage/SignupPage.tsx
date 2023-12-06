@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { getUserIdVerified, postSignup } from '../../api/auth';
+import { getUserIdVerified, postSignup } from '../../api';
 import { SignupFetchData as FetchData } from 'src/types/type';
 import { Container, Inner, Form } from './SignupPage.styles';
 

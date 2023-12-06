@@ -1,7 +1,9 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContexts';
+import { postDraftQuestionAPI } from '../../api';
 import writeIcon from '/icons/write.svg';
 import * as S from './MainNav.styles';
-import { postDraftQuestionAPI } from '../../api/questionService';
 
 const getCurrentNavItem = () => {
   const { pathname } = window.location;
@@ -10,10 +12,18 @@ const getCurrentNavItem = () => {
 };
 
 export function MainNav() {
-  const currentNavItem = getCurrentNavItem();
+  const { getAccessToken } = useContext(AuthContext);
   const navigate = useNavigate();
+  const currentNavItem = getCurrentNavItem();
 
   const handleButtonClick = async () => {
+    const isLogined = localStorage.getItem('userInfo');
+    const accessToken = getAccessToken();
+    if (!isLogined || !accessToken) {
+      alert('로그인 후 질문 작성이 가능합니다 😉');
+      return navigate('/login');
+    }
+
     // 여기에서 POST 요청을 수행
     const res = await postDraftQuestionAPI();
 

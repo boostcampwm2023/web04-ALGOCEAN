@@ -8,7 +8,7 @@ import { ItemData, UniqueQuestionItem as Question } from '../../types/type';
 import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
 import { Container, Inner, HeroBanner, Main } from './MainPage.styles';
 import { useEffect, useState } from 'react';
-import { getQuestionList } from '../../api/index';
+import { getQuestionList } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const PAGINATION_SPLIT_NUMBER = 10;

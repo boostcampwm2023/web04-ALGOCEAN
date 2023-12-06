@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useLayoutEffect, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
@@ -18,6 +18,7 @@ import {
 } from 'src/types/type';
 
 import { Container, NoAnswer } from './QuestionDetailPage.styles';
+import { AuthContext } from '../../contexts/AuthContexts';
 const GLOBAL_USER_ID = 123;
 
 const QuestionDetailPage = () => {
@@ -29,6 +30,8 @@ const QuestionDetailPage = () => {
   const [answerList, setAnswerList] = useState<
     QuestionAnswerCardProps[] | null
   >(null);
+  const { getAccessToken } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const activateUserAnswering = () => {
     setIsUserAnswering(true);
@@ -39,6 +42,11 @@ const QuestionDetailPage = () => {
   };
 
   const submitUserAnswer = async (content: string) => {
+    const isLogined = !!localStorage.getItem('userInfo');
+    if (!isLogined || !getAccessToken()) {
+      return navigate('/login');
+    }
+
     const { questionId } = state;
     await postAnswer(content, questionId);
     setIsUserAnswered(true);

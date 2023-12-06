@@ -10,7 +10,18 @@ import {
   SignupPage,
   QuestionSearchPage,
   MainPage,
+  ProfilePage,
 } from '../pages';
+
+const unAuthorizedLoader = () => {
+  const isLogined = !!localStorage.getItem('userInfo');
+  return !isLogined ? redirect('/') : null;
+};
+
+const authorizedLoader = () => {
+  const isLogined = !!localStorage.getItem('userInfo');
+  return isLogined ? redirect('/') : null;
+};
 
 export const router = createBrowserRouter([
   {
@@ -32,13 +43,7 @@ export const router = createBrowserRouter([
       {
         path: '/question/create',
         element: <QuestionCreationPage />,
-        loader: () => {
-          const isLogined = localStorage.getItem('userInfo');
-          if (!isLogined) {
-            return redirect('/login');
-          }
-          return null;
-        },
+        loader: unAuthorizedLoader,
       },
       {
         path: '/question/:id',
@@ -49,15 +54,18 @@ export const router = createBrowserRouter([
         element: <QuestionSearchPage />,
       },
       {
+        path: '/profile',
+        element: <ProfilePage />,
+      },
+      {
         path: '/login',
         element: <LoginPage />,
-        loader: () => {
-          return null;
-        },
+        loader: authorizedLoader,
       },
       {
         path: '/signup',
         element: <SignupPage />,
+        loader: authorizedLoader,
       },
     ],
   },

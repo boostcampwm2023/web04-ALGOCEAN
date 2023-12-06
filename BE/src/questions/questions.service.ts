@@ -507,4 +507,89 @@ export class QuestionsService {
       throw new Error('Failed to find all by user id');
     }
   }
+
+  async getProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId, DeletedAt: null },
+      select: { Id: true },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const questionCount = await this.prisma.question.count({
+      where: {
+        UserId: user.Id,
+        DeletedAt: null,
+      },
+    });
+
+    const answeredQuestionCount = await this.prisma.question.count({
+      where: {
+        UserId: user.Id,
+        Answer: { some: {} },
+        DeletedAt: null,
+      },
+    });
+
+    const adoptedQuestionCount = await this.prisma.question.count({
+      where: {
+        UserId: user.Id,
+        IsAdopted: true,
+        DeletedAt: null,
+      },
+    });
+
+    // 답변 받은 질문 중 채택 완료한 질문의 퍼센트
+    const adoptionRate =
+      answeredQuestionCount === 0
+        ? 0
+        : Math.floor((adoptedQuestionCount / answeredQuestionCount) * 100);
+
+    const questions = await this.prisma.question.findMany({
+      where: {
+        UserId: user.Id,
+        DeletedAt: null,
+      },
+      select: {
+        Id: true,
+        Title: true,
+        CreatedAt: true,
+        Tag: true,
+        ProgrammingLanguage: true,
+        IsAdopted: true,
+        ViewCount: true,
+        LikeCount: true,
+      },
+      orderBy: { CreatedAt: 'desc' },
+      take: 3,
+    });
+
+    // 질문에 받은 좋아요의 합
+    const likes = await this.prisma.question.aggregate({
+      where: {
+        UserId: user.Id,
+        DeletedAt: null,
+      },
+      _sum: { LikeCount: true },
+    });
+
+    return {
+      questionCount,
+      answeredQuestionCount,
+      adoptionRate,
+      likes: likes._sum.LikeCount,
+      recentQuestions: questions.map((question) => ({
+        id: question.Id,
+        title: question.Title,
+        createdAt: question.CreatedAt,
+        tag: question.Tag,
+        programmingLanguage: question.ProgrammingLanguage,
+        isAdopted: question.IsAdopted,
+        viewCount: question.ViewCount,
+        likeCount: question.LikeCount,
+      })),
+    };
+  }
 }

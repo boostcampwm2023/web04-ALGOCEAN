@@ -16,6 +16,9 @@ import QuestionAnswerCard from './QuestionAnswerCard/QuestionAnswerCard';
 import QuestionAnswerFormCard from './QuestionAnswerFormCard/QuestionAnswerFormCard';
 import Scroller from './Scroller/Scroller';
 import Loading from './Loading/Loading';
+import { ProfileInfo } from './ProfileInfo/ProfileInfo';
+import { ProfileQuestionList } from './ProfileQuestionList/ProfileQuestionList';
+import ProfileAnswerList from './ProfileAnswerList/ProfileAnswerList';
 
 export {
   MainHeader,
@@ -34,4 +37,7 @@ export {
   QuestionAnswerFormCard,
   Scroller,
   Loading,
+  ProfileInfo,
+  ProfileQuestionList,
+  ProfileAnswerList,
 };

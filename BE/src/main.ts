@@ -15,7 +15,7 @@ async function bootstrap() {
     .addServer('http://algocean.site/api')
     .addServer('http://algocean.site')
     .addServer('api')
-    .addServer('')
+    .addServer('/')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

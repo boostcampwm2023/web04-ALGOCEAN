@@ -7,19 +7,19 @@ import { useNavigate } from 'react-router-dom';
 const REFRESH_URL = '/api/auth/refresh';
 
 class Auth {
-  #accessToken: string | null = null;
+  private _accessToken: string | null = null;
   static getAccessToken: () => string | null;
   static setAccessToken: (nextAuthToken: string) => void;
   static deleteAccessToken: () => void;
 
-  getAccessToken = () => this.#accessToken;
+  getAccessToken = () => this._accessToken;
 
   setAccessToken = (nextAuthToken: string) => {
-    this.#accessToken = nextAuthToken;
+    this._accessToken = nextAuthToken;
   };
 
   deleteAccessToken = () => {
-    this.#accessToken = null;
+    this._accessToken = null;
   };
 }
 

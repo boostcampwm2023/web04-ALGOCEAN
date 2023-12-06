@@ -12,6 +12,8 @@ import {
   MainPage,
   ProfilePage,
 } from '../pages';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const unAuthorizedLoader = () => {
   const isLogined = !!localStorage.getItem('userInfo');
@@ -23,17 +25,22 @@ const authorizedLoader = () => {
   return isLogined ? redirect('/') : null;
 };
 
+const queryClient = new QueryClient();
+
 export const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <AuthContextProvider>
-        <ThemeProvider theme={theme}>
-          <MainHeader />
-          <MainNav />
-          <Outlet />
-        </ThemeProvider>
-      </AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <AuthContextProvider>
+          <ThemeProvider theme={theme}>
+            <MainHeader />
+            <MainNav />
+            <Outlet />
+          </ThemeProvider>
+        </AuthContextProvider>
+      </QueryClientProvider>
     ),
     children: [
       {

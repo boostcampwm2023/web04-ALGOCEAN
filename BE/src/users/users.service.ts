@@ -70,7 +70,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserGrade(userId: string): Promise<string> {
+  async getUserGradeAndRanking(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { UserId: userId },
     });
@@ -105,6 +105,20 @@ export class UsersService {
       grade = 'Bronze';
     }
 
-    return grade;
+    return { grade, ranking: userPosition + 1 };
+  }
+
+  async getUserProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+      select: {
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+    });
+    const { grade, ranking } = await this.getUserGradeAndRanking(userId);
+
+    return { ...user, grade, ranking };
   }
 }

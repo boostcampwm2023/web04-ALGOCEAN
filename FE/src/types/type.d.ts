@@ -103,4 +103,23 @@ export interface GetQuestionListOptions {
   sortByCreatedAt?: 'desc' | 'asc';
   sortByViewCount?: 'desc' | 'asc';
   [key: string]: number | string | undefined;
+}  
+  
+export interface QuestionList {
+  Id: number;
+  Title: string;
+  CreatedAt: string;
+  Tag: string;
+  ProgrammingLanguage: string;
+  IsAdopted: boolean;
+  ViewCount: number;
+  LikeCount: number;
+}
+
+export interface AnswerList {
+  id: number;
+  title: string;
+  content: string;
+  isAdopted: boolean;
+  createdAt: string;
 }

@@ -7,6 +7,7 @@ import {
   QuestionSearchPage,
   LoginPage,
   SignupPage,
+  ProfilePage,
 } from './pages';
 import {
   AuthContext,
@@ -33,6 +34,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/search" element={<QuestionSearchPage />} />
+              <Route path="profile" element={<ProfilePage />} />
             </Routes>
             <Scroller />
           </Router>

@@ -86,4 +86,107 @@ export class AnswersService {
       });
     });
   }
+
+  async findAllByUserId(userId: number) {
+    const answerList = await this.prisma.answer.findMany({
+      where: { UserId: userId, DeletedAt: null },
+      select: {
+        Question: {
+          select: {
+            Id: true,
+            Title: true,
+          },
+        },
+        Content: true,
+        IsAdopted: true,
+        CreatedAt: true,
+      },
+      orderBy: { CreatedAt: 'desc' },
+      take: 3,
+    });
+
+    return answerList.map((answer) => {
+      return {
+        id: answer.Question.Id,
+        title: answer.Question.Title,
+        content: answer.Content,
+        isAdopted: answer.IsAdopted,
+        createdAt: answer.CreatedAt,
+      };
+    });
+  }
+
+  async getProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        UserId: userId,
+        DeletedAt: null,
+      },
+      select: { Id: true },
+    });
+    // 답변 갯수, 채택된 답변 갯수, 답변채택률, 최근 답변 최대 3개 반환
+    const answerCount = await this.prisma.question.count({
+      where: {
+        UserId: user.Id,
+        DeletedAt: null,
+      },
+    });
+
+    const adoptedAnswerCount = await this.prisma.answer.count({
+      where: {
+        UserId: user.Id,
+        IsAdopted: true,
+        DeletedAt: null,
+      },
+    });
+
+    const adoptionRate =
+      answerCount === 0
+        ? 0
+        : Math.round((adoptedAnswerCount / answerCount) * 100);
+
+    const recentAnswers = await this.prisma.answer.findMany({
+      where: {
+        UserId: parseInt(userId, 10),
+        DeletedAt: null,
+      },
+      select: {
+        Id: true,
+        Question: {
+          select: {
+            Id: true,
+            Title: true,
+          },
+        },
+        Content: true,
+        IsAdopted: true,
+        CreatedAt: true,
+      },
+      orderBy: { CreatedAt: 'desc' },
+      take: 3,
+    });
+
+    const likes = await this.prisma.answer.aggregate({
+      where: {
+        UserId: user.Id,
+        DeletedAt: null,
+      },
+      _sum: { LikeCount: true },
+    });
+
+    return {
+      answerCount,
+      adoptedAnswerCount,
+      adoptionRate,
+      likes: likes._sum.LikeCount,
+      recentAnswers: recentAnswers.map((answer) => ({
+        id: answer.Id,
+        questionId: answer.Question.Id,
+        questionTitle: answer.Question.Title,
+        content: answer.Content,
+        isAdopted: answer.IsAdopted,
+        createdAt: answer.CreatedAt,
+      })),
+    };
+  }
 }

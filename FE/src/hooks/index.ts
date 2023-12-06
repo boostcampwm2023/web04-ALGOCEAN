@@ -6,3 +6,9 @@ export const getFormalizedDate = (dateString: string) => {
 
   return `${year}.${month}.${date}`;
 };
+
+export const getText = (html: string) => {
+  const divContainer = document.createElement('div');
+  divContainer.innerHTML = html;
+  return divContainer.textContent || divContainer.innerText || '';
+};

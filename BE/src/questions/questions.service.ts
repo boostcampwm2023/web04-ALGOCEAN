@@ -350,7 +350,7 @@ export class QuestionsService {
     }
   }
 
-  async getRandomQuestionId(): Promise<number> {
+  async getRandomQuestion() {
     try {
       const totalRows = await this.prisma.question.count();
       const randomIndex = Math.floor(Math.random() * totalRows);
@@ -358,6 +358,7 @@ export class QuestionsService {
       const randomQuestion = await this.prisma.question.findFirst({
         select: {
           Id: true,
+          Title: true,
         },
         where: {
           DeletedAt: null,
@@ -365,7 +366,10 @@ export class QuestionsService {
         skip: randomIndex,
       });
 
-      return randomQuestion.Id;
+      return {
+        id: randomQuestion.Id,
+        title: randomQuestion.Title,
+      };
     } catch (error) {
       throw new Error('Failed to get a random question id');
     }
@@ -454,7 +458,7 @@ export class QuestionsService {
     }
   }
 
-  async getTodayQuestionId(): Promise<number> {
+  async getTodayQuestion() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -473,9 +477,13 @@ export class QuestionsService {
         },
         select: {
           Id: true,
+          Title: true,
         },
       });
-      return question.Id;
+      return {
+        id: question.Id,
+        title: question.Title,
+      };
     } catch (error) {
       throw new Error('Failed to get today question id');
     }

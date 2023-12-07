@@ -4,12 +4,12 @@ import {
   QuestionProfile,
   Pagination,
 } from '../../components';
-import { ItemData, UniqueQuestionItem as Question } from '../../types/type';
+import { UniqueQuestionItem as Question } from '../../types/type';
 import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
 import { Container, Inner, HeroBanner, Main } from './MainPage.styles';
-import { useEffect, useState } from 'react';
 import { getQuestionList } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 const PAGINATION_SPLIT_NUMBER = 10;
 
@@ -18,25 +18,24 @@ export default function MainPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const page = Number(queryParams.get('page')) || 1;
-  const [questionListData, setQuestionListData] = useState<
-    ItemData[] | undefined
-  >(undefined);
-  const [wholePageCount, setwholePageCount] = useState<number | null>(null);
+
   const getQuestionListData = async () => {
-    const { questions, totalPage } = await getQuestionList({
-      page: page,
-    });
-    setQuestionListData(questions);
-    setwholePageCount(totalPage);
+    return await getQuestionList({ page: page });
   };
+
+  const { data: questionListData } = useQuery({
+    queryKey: ['questionList', page],
+    queryFn: getQuestionListData,
+    staleTime: 10 * 1000,
+    gcTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+  });
+
+  const wholePageCount = questionListData?.totalPage || 0;
 
   const handleCurrentPage = (page: number) => {
     navigate(`/?page=${encodeURIComponent(page)}`);
   };
-
-  useEffect(() => {
-    getQuestionListData();
-  }, [page]);
 
   return (
     <Container>
@@ -46,14 +45,18 @@ export default function MainPage() {
           <QuestionProfile />
         </HeroBanner>
         <Main>
-          <QuestionList questionListData={questionListData} />
-          {!!wholePageCount && (
-            <Pagination
-              wholePageCount={wholePageCount}
-              currentPage={page}
-              handleCurrentPage={handleCurrentPage}
-              splitNumber={PAGINATION_SPLIT_NUMBER}
-            />
+          {questionListData && (
+            <>
+              <QuestionList questionListData={questionListData.questions} />
+              {!!wholePageCount && (
+                <Pagination
+                  wholePageCount={wholePageCount}
+                  currentPage={page}
+                  handleCurrentPage={handleCurrentPage}
+                  splitNumber={PAGINATION_SPLIT_NUMBER}
+                />
+              )}
+            </>
           )}
         </Main>
       </Inner>

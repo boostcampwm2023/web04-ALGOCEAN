@@ -16,6 +16,7 @@ import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -53,6 +54,8 @@ const QuestionCreationPage = () => {
   const location = useLocation();
   const locationData = location.state?.id || null;
 
+  const queryClient = useQueryClient();
+
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
     title: '',
@@ -82,14 +85,19 @@ const QuestionCreationPage = () => {
     };
   };
 
-  // 폼 제출 핸들러
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const postQuestion = async () => {
     const createQuestionData = preprocessData();
-    try {
-      await createQuestionAPI(createQuestionData);
+    return await createQuestionAPI(createQuestionData);
+  };
+  // 질문 등록
+  const { mutate: createQuestion } = useMutation({
+    mutationFn: postQuestion,
+    onSuccess: () => {
+      // 성공적인 뮤테이션 후 'questionList' 쿼리를 무효화하고 UI를 다시 불러온다.
+      queryClient.invalidateQueries({ queryKey: ['questionList'] });
       navigate('/');
-    } catch (error: any) {
+    },
+    onError: (error: any) => {
       if (error.response) {
         // 서버 응답이 있는 경우 (오류 상태 코드 처리)
         if (error.response.status === 400) {
@@ -101,8 +109,13 @@ const QuestionCreationPage = () => {
         // 서버 응답이 없는 경우 (네트워크 오류 등)
         console.error('Error creating question:', error.message);
       }
-      throw error;
-    }
+    },
+  });
+
+  // 폼 제출 핸들러
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    createQuestion();
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러
@@ -122,6 +135,16 @@ const QuestionCreationPage = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   // 임시글 저장 처리
+  const putDraft = async () => {
+    const putQuestionData = preprocessData();
+    return await putDraftQuestionAPI(putQuestionData);
+  };
+
+  const { mutate: putDraftQuestion } = useMutation({
+    mutationFn: putDraft,
+    onError: () => console.error('실패'),
+  });
+
   const [pollingIntervalId, setPollingIntervalId] = useState<
     number | undefined
   >(undefined);
@@ -129,8 +152,7 @@ const QuestionCreationPage = () => {
   const handleFocus = () => {
     // 폴링 시작
     const intervalId = setInterval(async () => {
-      const putQuestionData = preprocessData();
-      await putDraftQuestionAPI(putQuestionData);
+      putDraftQuestion();
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);
   };

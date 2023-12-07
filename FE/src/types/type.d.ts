@@ -1,7 +1,7 @@
 export interface UniqueQuestionItem {
   type: 'today' | 'hot' | 'random';
   title: string;
-  url: string;
+  id: number;
 }
 
 export interface QuestionDetailData {

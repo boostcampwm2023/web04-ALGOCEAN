@@ -39,7 +39,7 @@ export class AuthController {
       password,
     );
 
-    res.cookie('refreshToken', refresh_token, {
+    res.cookie('mayOwall', refresh_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -64,7 +64,7 @@ export class AuthController {
       },
     );
 
-    res.cookie('refreshToken', refresh_token, {
+    res.cookie('mayOwall', refresh_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -74,11 +74,11 @@ export class AuthController {
 
   @Post('refresh')
   async refresh(@Req() req, @Res() res) {
-    const refreshToken = req.headers['refreshtoken'];
+    const refreshToken = req.cookies['mayOwall'];
     const { access_token, refresh_token } =
       await this.authService.refreshToken(refreshToken);
 
-    res.cookie('refreshToken', refresh_token, {
+    res.cookie('mayOwall', refresh_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',

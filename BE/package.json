@@ -12,13 +12,17 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "start:test": "dotenv -e .env.test nest start --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:generate": "yarn pnpify prisma generate"
+    "prisma:generate": "yarn pnpify prisma generate",
+    "test:e2e": "yarn docker:up && sleep 15 && yarn test:push && dotenv -e .env.test -- jest --forceExit --config ./test/jest-e2e.json && sleep 5 && yarn docker:down",
+    "test:push": "dotenv -e .env.test yarn prisma db push",
+    "docker:up": "docker-compose -f test.dockerfile.yml up -d",
+    "docker:down": "docker-compose -f test.dockerfile.yml down -v"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -34,6 +38,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
+    "dotenv-cli": "^7.3.0",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
     "passport-jwt": "^4.0.1",

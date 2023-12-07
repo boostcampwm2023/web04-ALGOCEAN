@@ -458,7 +458,7 @@ export class QuestionsService {
     }
   }
 
-  async getTodayQuestionId() {
+  async getTodayQuestion() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);

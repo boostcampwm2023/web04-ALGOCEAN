@@ -171,6 +171,21 @@ export class QuestionsController {
   }
 
   @ApiOperation({
+    summary: '급상승 질문 API',
+    description: '급상승 질문을 조회합니다.',
+  })
+  @Get('/trending')
+  async getMostViewedQuestion() {
+    const trendingQuetion = await this.questionsService.getTrendingQuestion();
+
+    if (!trendingQuetion) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    return trendingQuetion;
+  }
+
+  @ApiOperation({
     summary: '질문 목록 조회',
     description:
       '질문 목록을 조회합니다.\n 쿼리스트링으로 옵션을 줄 수 있습니다.\n 옵션은 read-question-list-options.dto.ts를 ' +
@@ -327,20 +342,5 @@ export class QuestionsController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
     }
-  }
-
-  @ApiOperation({
-    summary: '급상승 질문 API',
-    description: '급상승 질문을 조회합니다.',
-  })
-  @Get('trending')
-  async getMostViewedQuestion() {
-    const trendingQuetion = await this.questionsService.getTrendingQuestion();
-
-    if (!trendingQuetion) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-    }
-
-    return trendingQuetion;
   }
 }

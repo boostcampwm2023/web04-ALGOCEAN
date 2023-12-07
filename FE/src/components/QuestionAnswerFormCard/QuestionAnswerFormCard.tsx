@@ -10,15 +10,14 @@ import {
   Footer,
 } from './QuestionAnswerFormCard.styles';
 
-const GLOBAL_USER_NICKNAME = JSON.parse(
-  localStorage.getItem('userInfo')!,
-).nickname;
-
 const QuestionAnswerFormCard = ({
   handleCancel,
   handleSubmit,
 }: QuestionAnswerFormCardProps) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const GLOBAL_USER_NICKNAME = JSON.parse(
+    localStorage.getItem('userInfo')!,
+  ).nickname;
 
   const getEditorContent = () => {
     const editorContent = draftToHtml(

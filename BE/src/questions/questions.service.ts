@@ -136,7 +136,7 @@ export class QuestionsService {
     });
   }
 
-  async getTrendingQuestion(): Promise<{ Id: number; Title: string } | null> {
+  async getTrendingQuestion() {
     const thirtyMinutesAgo = new Date();
     thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30);
 
@@ -164,7 +164,7 @@ export class QuestionsService {
 
     const questionId = mostViewedQuestion[0].QuestionId;
 
-    return this.prisma.question.findUnique({
+    const question = await this.prisma.question.findUnique({
       where: {
         Id: questionId,
       },
@@ -173,6 +173,10 @@ export class QuestionsService {
         Title: true,
       },
     });
+    return {
+      id: question.Id,
+      title: question.Title,
+    };
   }
 
   async deleteOneQuestion(id: number, userId: number): Promise<boolean> {

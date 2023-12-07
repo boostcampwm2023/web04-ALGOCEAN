@@ -63,6 +63,17 @@ export class AnswersService {
         data: { Points: { increment: 1 } },
       });
 
+      await prisma.notification.create({
+        data: {
+          UserId: adoptedAnswer.Question.UserId,
+          QuestionId: adoptedAnswer.Question.Id,
+          QuestionTitle: adoptedAnswer.Question.Title,
+          AnswerId: adoptedAnswer.Id,
+          AnswerCreatedAt: adoptedAnswer.CreatedAt,
+          IsRead: false,
+        },
+      });
+
       const sendAnswerDto = {
         questionId: adoptedAnswer.Question.Id,
         questionTitle: adoptedAnswer.Question.Title,
@@ -70,7 +81,7 @@ export class AnswersService {
         answerCreatedDate: adoptedAnswer.CreatedAt,
       };
 
-      this.sseService.sendNotificationToUser(1, sendAnswerDto);
+      await this.sseService.sendNotificationToUser(1, sendAnswerDto);
     });
   }
 }

@@ -15,6 +15,8 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+const { DEV } = import.meta.env;
+
 const unAuthorizedLoader = () => {
   const isLogined = !!localStorage.getItem('userInfo');
   return !isLogined ? redirect('/') : null;
@@ -32,7 +34,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: (
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={true} />
+        {DEV && <ReactQueryDevtools initialIsOpen={true} />}
         <AuthContextProvider>
           <ThemeProvider theme={theme}>
             <MainHeader />

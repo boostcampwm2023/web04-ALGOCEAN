@@ -11,6 +11,7 @@ import {
   QuestionSearchPage,
   MainPage,
   ProfilePage,
+  NotFoundPage,
 } from '../pages';
 
 const unAuthorizedLoader = () => {
@@ -68,5 +69,13 @@ export const router = createBrowserRouter([
         loader: authorizedLoader,
       },
     ],
+  },
+  {
+    path: '*',
+    element: (
+      <ThemeProvider theme={theme}>
+        <NotFoundPage />
+      </ThemeProvider>
+    ),
   },
 ]);

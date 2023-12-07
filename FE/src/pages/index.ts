@@ -5,6 +5,7 @@ import SignupPage from './SignupPage/SignupPage';
 import LoginPage from './LoginPage/LoginPage';
 import QuestionSearchPage from './QuestionSearchPage/QuestionSearchPage';
 import ProfilePage from './ProfilePage/ProfilePage';
+import NotFoundPage from './NotFoundPage/NotFoundPage';
 
 export {
   MainPage,
@@ -14,4 +15,5 @@ export {
   LoginPage,
   QuestionSearchPage,
   ProfilePage,
+  NotFoundPage,
 };

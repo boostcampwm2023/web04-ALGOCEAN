@@ -1,5 +1,6 @@
 import { SignupFetchData, LoginFetchData } from '../types/type';
 import { client } from '../utils/network';
+const { VITE_BASE_URL } = import.meta.env;
 
 export const getUserIdVerified = async (userId: string) => {
   try {
@@ -61,4 +62,8 @@ export const getWhoAmI = async () => {
   } catch (error: any) {
     console.error(error);
   }
+};
+
+export const getGithub = () => {
+  window.location.href = `${VITE_BASE_URL}/api/auth/github`;
 };

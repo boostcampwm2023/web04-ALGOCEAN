@@ -1,14 +1,17 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { getWhoAmI, postLogin } from '../../api';
+import { getWhoAmI, postLogin, getGithub } from '../../api';
 import { LoginFetchData as FormData } from 'src/types/type';
-import { Container, Inner, Form } from './LoginPage.styles';
+import { Container, Inner, Form, SocialContainer } from './LoginPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
 
 interface LoginFormProps {
   handleLoginSubmit: (data: FormData) => void;
 }
+
+const GITHUB_ICON_URL =
+  'https://static-00.iconduck.com/assets.00/github-icon-2048x1988-jzvzcf2t.png';
 
 const LoginForm = ({ handleLoginSubmit }: LoginFormProps) => {
   const { register, handleSubmit } = useForm<FormData>();
@@ -54,6 +57,18 @@ const LoginForm = ({ handleLoginSubmit }: LoginFormProps) => {
   );
 };
 
+const SocialLoginButtons = () => {
+  return (
+    <SocialContainer>
+      <p>소셜 로그인</p>
+      <button onClick={getGithub}>
+        <img src={GITHUB_ICON_URL} alt="Sign in with Github" />
+        <span>Sign in with Github</span>
+      </button>
+    </SocialContainer>
+  );
+};
+
 const LoginPage = () => {
   const { setAccessToken } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -81,6 +96,7 @@ const LoginPage = () => {
     <Container>
       <Inner>
         <LoginForm handleLoginSubmit={handleLoginSubmit} />
+        <SocialLoginButtons />
       </Inner>
     </Container>
   );

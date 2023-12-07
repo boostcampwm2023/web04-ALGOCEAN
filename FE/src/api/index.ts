@@ -4,6 +4,7 @@ export {
   postLogin,
   refreshAccessToken,
   getWhoAmI,
+  getGithub,
 } from './auth';
 
 export {

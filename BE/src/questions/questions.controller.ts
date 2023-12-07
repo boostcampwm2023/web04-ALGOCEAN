@@ -136,11 +136,9 @@ export class QuestionsController {
   }
 
   @Get('today')
-  async readTodayQuestion(@Res() res: Response) {
+  async readTodayQuestion() {
     try {
-      const question = await this.questionsService.getTodayQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+      return await this.questionsService.getTodayQuestion();
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -149,7 +147,7 @@ export class QuestionsController {
       if (error.message === 'Failed to get today question id') {
         throw new HttpException('Not found', HttpStatus.NOT_FOUND);
       }
-
+      console.log(error);
       throw new HttpException(
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -158,11 +156,9 @@ export class QuestionsController {
   }
 
   @Get('/random')
-  async readRandomQuestion(@Res() res: Response) {
+  async readRandomQuestion() {
     try {
-      const question = await this.questionsService.getRandomQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+      return await this.questionsService.getRandomQuestion();
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -172,6 +168,21 @@ export class QuestionsController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  @ApiOperation({
+    summary: '급상승 질문 API',
+    description: '급상승 질문을 조회합니다.',
+  })
+  @Get('/trending')
+  async getMostViewedQuestion() {
+    const trendingQuetion = await this.questionsService.getTrendingQuestion();
+
+    if (!trendingQuetion) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+
+    return trendingQuetion;
   }
 
   @ApiOperation({
@@ -331,20 +342,5 @@ export class QuestionsController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: 'Internal server error' });
     }
-  }
-
-  @ApiOperation({
-    summary: '급상승 질문 API',
-    description: '급상승 질문을 조회합니다.',
-  })
-  @Get('trending')
-  async getMostViewedQuestion() {
-    const trendingQuetion = await this.questionsService.getTrendingQuestion();
-
-    if (!trendingQuetion) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-    }
-
-    return trendingQuetion;
   }
 }

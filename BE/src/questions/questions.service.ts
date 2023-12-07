@@ -6,6 +6,7 @@ import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 import { ReadQuestionDraftDto } from './dto/read-question-draft.dto';
+import * as process from 'process';
 
 @Injectable()
 export class QuestionsService {
@@ -16,62 +17,49 @@ export class QuestionsService {
     userId: number,
   ): Promise<number> {
     try {
-      const question = this.prisma.question.create({
-        data: {
-          User: {
-            connect: {
-              Id: userId,
-            },
-          },
-          Title: createQuestionDto.title,
-          Content: createQuestionDto.content,
-          Tag: createQuestionDto.tag,
-          ProgrammingLanguage: createQuestionDto.programmingLanguage,
-          OriginalLink: createQuestionDto.originalLink,
-        },
-      });
+      const startTime = process.hrtime();
 
-      const updatePoint = this.prisma.user.update({
-        where: {
-          Id: userId,
-        },
-        data: {
-          Points: {
-            increment: 10,
-          },
-        },
-      });
+      // Question 생성
+      await this.prisma.$executeRaw`
+      INSERT INTO Question (UserId, Title, Content, Tag, ProgrammingLanguage, OriginalLink)
+      VALUES (${userId}, ${createQuestionDto.title}, ${createQuestionDto.content}, 
+              ${createQuestionDto.tag}, ${createQuestionDto.programmingLanguage}, ${createQuestionDto.originalLink});
+    `;
 
-      const updatePointHistory = this.prisma.point_History.create({
-        data: {
-          User: {
-            connect: {
-              Id: userId,
-            },
-          },
-          PointChange: 10,
-          Reason: 'create question',
-        },
-      });
+      // User의 Points 업데이트
+      await this.prisma.$executeRaw`
+      UPDATE User
+      SET Points = Points + 10
+      WHERE Id = ${userId};
+    `;
 
-      const deleteDraft = this.prisma.question_Temporary.delete({
-        where: {
-          Id: createQuestionDto.draftId,
-        },
-      });
+      // Point_History에 기록 추가
+      await this.prisma.$executeRaw`
+      INSERT INTO Point_History (UserId, PointChange, Reason)
+      VALUES (${userId}, 10, 'create question');
+    `;
 
-      const queryResult = await this.prisma.$transaction([
-        question,
-        updatePoint,
-        updatePointHistory,
-        deleteDraft,
-      ]);
+      // Question_Temporary 삭제
+      await this.prisma.$executeRaw`
+      DELETE FROM Question_Temporary
+      WHERE Id = ${createQuestionDto.draftId};
+    `;
 
-      return queryResult[0].Id;
+      // 마지막으로 생성된 Question의 ID 반환
+      const question = await this.prisma
+        .$queryRaw`SELECT Id FROM Question WHERE UserId = ${userId} ORDER BY CreatedAt DESC LIMIT 1;`;
+
+      const endTime = process.hrtime(startTime);
+      console.log(`Execution time: ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+
+      return question[0].Id;
     } catch (error) {
       throw new Error('Failed to create question');
+    } finally {
+      await this.prisma.$disconnect();
     }
   }
+
   async readOneQuestion(id: number): Promise<ReadQuestionDto> {
     const readQuestion = this.prisma.question.findUnique({
       where: {
@@ -350,7 +338,7 @@ export class QuestionsService {
     }
   }
 
-  async getRandomQuestionId(): Promise<number> {
+  async getRandomQuestion(): Promise<{ Id: number; Title: string }> {
     try {
       const totalRows = await this.prisma.question.count();
       const randomIndex = Math.floor(Math.random() * totalRows);
@@ -358,6 +346,7 @@ export class QuestionsService {
       const randomQuestion = await this.prisma.question.findFirst({
         select: {
           Id: true,
+          Title: true,
         },
         where: {
           DeletedAt: null,
@@ -365,8 +354,12 @@ export class QuestionsService {
         skip: randomIndex,
       });
 
-      return randomQuestion.Id;
+      return {
+        Id: randomQuestion.Id,
+        Title: randomQuestion.Title,
+      };
     } catch (error) {
+      console.log(error);
       throw new Error('Failed to get a random question id');
     }
   }
@@ -454,7 +447,7 @@ export class QuestionsService {
     }
   }
 
-  async getTodayQuestionId(): Promise<number> {
+  async getTodayQuestion() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -473,9 +466,13 @@ export class QuestionsService {
         },
         select: {
           Id: true,
+          Title: true,
         },
       });
-      return question.Id;
+      return {
+        Id: question.Id,
+        Title: question.Title,
+      };
     } catch (error) {
       throw new Error('Failed to get today question id');
     }

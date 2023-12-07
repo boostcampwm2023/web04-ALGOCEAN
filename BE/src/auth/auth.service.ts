@@ -98,9 +98,9 @@ export class AuthService {
     }
 
     return await this.createTokens({
-      sub: user.sub,
-      username: user.username,
-      provider: user.provider,
+      sub: decoded.sub,
+      username: decoded.username,
+      provider: decoded.provider,
     });
   }
 }

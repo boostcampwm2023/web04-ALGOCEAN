@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
@@ -19,109 +19,81 @@ import {
 
 import { Container, NoAnswer } from './QuestionDetailPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
-const GLOBAL_USER_ID = 123;
 
 const QuestionDetailPage = () => {
-  const { state } = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isUserAnswering, setIsUserAnswering] = useState(false);
-  const [isUserAnswered, setIsUserAnswered] = useState(false);
-  const [questionData, setQuestionData] = useState<QuestionData | null>(null);
-  const [answerList, setAnswerList] = useState<
-    QuestionAnswerCardProps[] | null
-  >(null);
+  const { id: questionId } = useParams();
   const { getAccessToken } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [answerState, setAnswerState] = useState<
+    'notyet' | 'progress' | 'done'
+  >('notyet');
+  const [questionData, setQuestionData] = useState<QuestionData | null>(null);
+  const [answerListData, setAnswerListData] = useState<
+    QuestionAnswerCardProps[] | null
+  >(null);
 
-  const activateUserAnswering = () => {
-    setIsUserAnswering(true);
-  };
-
-  const deactivateUserAnswering = () => {
-    setIsUserAnswering(false);
-  };
-
-  const submitUserAnswer = async (content: string) => {
-    const isLogined = !!localStorage.getItem('userInfo');
-    if (!isLogined || !getAccessToken()) {
+  const submitAnswer = async (content: string) => {
+    if (!getAccessToken()) {
+      alert('로그인 후 답변 가능합니다');
       return navigate('/login');
     }
 
-    const { questionId } = state;
-    await postAnswer(content, questionId);
-    setIsUserAnswered(true);
-    initAnswerList();
-
-    alert('답변이 성공적으로 추가되었습니다.');
-    deactivateUserAnswering();
-  };
-
-  const isAnswerListContainsUserAnswer = () => {
-    return answerList!.find(
-      ({ cardData }) => cardData.User.Id === GLOBAL_USER_ID,
-    );
-  };
-
-  const initAnswerList = async () => {
-    const { questionId } = state;
-    const answersData = await getQuestionAnswerListData(questionId);
-    if (!answersData) {
-      return;
-    }
-    const answerList = answersData.map((answer: QuestionAnswerCardProps) => {
-      return { cardData: answer };
-    });
-    setAnswerList(answerList);
+    await postAnswer(content, questionId!);
+    setAnswerState(() => 'done');
+    initAnswerListData();
   };
 
   const initQuestionDetailContentData = async () => {
-    const { questionId } = state;
-    const questionData = await getQuestionDetailContentData(questionId);
-    setQuestionData(questionData);
+    try {
+      const questionData = await getQuestionDetailContentData(questionId!);
+      setQuestionData(questionData);
+    } catch (e) {
+      return navigate('/notfound');
+    }
+  };
+
+  const initAnswerListData = async () => {
+    const answerListData = await getQuestionAnswerListData(questionId!);
+    setAnswerListData(answerListData);
   };
 
   const initFetchData = async () => {
     await initQuestionDetailContentData();
-    await initAnswerList();
+    await initAnswerListData();
     setIsLoading(false);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     initFetchData();
   }, []);
 
-  useLayoutEffect(() => {
-    if (answerList && isAnswerListContainsUserAnswer()) {
-      setIsUserAnswered(true);
-    } else {
-      setIsUserAnswered(false);
-    }
-  }, [answerList]);
+  useEffect(() => {
+    // TODO : 이미 질문에 응답했는지 확인 여부 확인 필요
+  }, []);
 
   return (
     <Container>
       {isLoading && <Loading />}
       {!isLoading && (
         <>
-          {questionData && (
-            <QuestionDetailContent questionData={questionData} />
-          )}
-          {!isUserAnswered && !isUserAnswering && (
+          <QuestionDetailContent questionData={questionData!} />
+          {answerState === 'notyet' && (
             <QuestionAnswerRequestCard
-              onAnswerButtonClick={activateUserAnswering}
+              onAnswerButtonClick={() => setAnswerState('progress')}
             />
           )}
-          {isUserAnswering && (
+          {answerState === 'progress' && (
             <QuestionAnswerFormCard
-              handleCancel={deactivateUserAnswering}
-              handleSubmit={submitUserAnswer}
+              handleCancel={() => setAnswerState('notyet')}
+              handleSubmit={submitAnswer}
             />
           )}
-          {!!answerList &&
-            answerList.map(({ cardData }, idx) => (
+          {!!answerListData &&
+            answerListData.map(({ cardData }, idx) => (
               <QuestionAnswerCard key={idx} cardData={cardData} />
             ))}
-          {!answerList && <NoAnswer>답변이 없습니다</NoAnswer>}
+          {!answerListData && <NoAnswer>답변이 없습니다</NoAnswer>}
         </>
       )}
     </Container>

@@ -10,8 +10,9 @@ import {
   Footer,
 } from './QuestionAnswerFormCard.styles';
 
-// ⚠️ 현재 로그인한 유저의 전역 이름을 가져오는 로직이 필요
-const GLOBAL_USER_NICKNAME = 'Snoopy';
+const GLOBAL_USER_NICKNAME = JSON.parse(
+  localStorage.getItem('userInfo')!,
+).nickname;
 
 const QuestionAnswerFormCard = ({
   handleCancel,

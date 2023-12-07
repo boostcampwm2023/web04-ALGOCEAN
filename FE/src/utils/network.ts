@@ -5,5 +5,6 @@ const baseURL = DEV ? '' : VITE_BASE_URL;
 
 export const client = axios.create({
   baseURL: baseURL,
+  timeout: 5000,
   withCredentials: true,
 });

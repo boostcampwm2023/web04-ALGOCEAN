@@ -17,7 +17,7 @@ export const getQuestionList = async (options: Options) => {
   }
 };
 
-export const getQuestionDetailContentData = async (questionId: number) => {
+export const getQuestionDetailContentData = async (questionId: string) => {
   try {
     const url = `/api/questions/${questionId}`;
     const { status, data } = await client.get(url);
@@ -25,17 +25,20 @@ export const getQuestionDetailContentData = async (questionId: number) => {
       throw new Error();
     }
     return data;
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 
-export const getQuestionAnswerListData = async (questionId: number) => {
+export const getQuestionAnswerListData = async (questionId: string) => {
   try {
     const url = `/api/answers/${questionId}`;
     const { data } = await client.get(url);
     const { answers } = data;
-    return answers;
+    return answers.map((answer: unknown) => {
+      return { cardData: answer };
+    });
   } catch (error: any) {
     if (error.response) {
       if (error.response.status === 404) {
@@ -48,11 +51,11 @@ export const getQuestionAnswerListData = async (questionId: number) => {
   }
 };
 
-export const postAnswer = async (content: string, questionId: number) => {
+export const postAnswer = async (content: string, questionId: string) => {
   try {
     const url = '/api/answers';
     const { status, data } = await client.post(url, {
-      questionId,
+      questionId: Number(questionId),
       content,
       videoLink: 'https://localhost.com',
     });

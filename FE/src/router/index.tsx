@@ -11,6 +11,7 @@ import {
   QuestionSearchPage,
   MainPage,
   ProfilePage,
+  NotFoundPage,
 } from '../pages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -77,5 +78,13 @@ export const router = createBrowserRouter([
         loader: authorizedLoader,
       },
     ],
+  },
+  {
+    path: '*',
+    element: (
+      <ThemeProvider theme={theme}>
+        <NotFoundPage />
+      </ThemeProvider>
+    ),
   },
 ]);

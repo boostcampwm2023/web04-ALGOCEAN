@@ -136,11 +136,9 @@ export class QuestionsController {
   }
 
   @Get('today')
-  async readTodayQuestion(@Res() res: Response) {
+  async readTodayQuestion() {
     try {
-      const question = await this.questionsService.getTodayQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+      return await this.questionsService.getRandomQuestion();
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -158,11 +156,9 @@ export class QuestionsController {
   }
 
   @Get('/random')
-  async readRandomQuestion(@Res() res: Response) {
+  async readRandomQuestion() {
     try {
-      const question = await this.questionsService.getRandomQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+      return await this.questionsService.getRandomQuestion();
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

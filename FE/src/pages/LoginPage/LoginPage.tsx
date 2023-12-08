@@ -5,6 +5,7 @@ import { getWhoAmI, postLogin } from '../../api';
 import { LoginFetchData as FormData } from 'src/types/type';
 import { Container, Inner, Form } from './LoginPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
+import Swal from 'sweetalert2';
 
 interface LoginFormProps {
   handleLoginSubmit: (data: FormData) => void;
@@ -62,9 +63,12 @@ const LoginPage = () => {
     const data = await postLogin(fetchData);
 
     if (!data) {
-      return alert(
-        '로그인에 실패했습니다. 아이디 혹은 비밀번호를 확인해주세요',
-      );
+      return Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        text: '아이디 혹은 비밀번호를 확인해주세요',
+        confirmButtonText: '확인',
+      });
     }
 
     const { accessToken } = data;

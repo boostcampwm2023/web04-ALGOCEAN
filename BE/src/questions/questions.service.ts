@@ -356,7 +356,11 @@ export class QuestionsService {
 
   async getRandomQuestion() {
     try {
-      const totalRows = await this.prisma.question.count();
+      const totalRows = await this.prisma.question.count({
+        where: {
+          DeletedAt: null,
+        },
+      });
       const randomIndex = Math.floor(Math.random() * totalRows);
 
       const randomQuestion = await this.prisma.question.findFirst({

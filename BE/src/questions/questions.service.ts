@@ -487,7 +487,7 @@ export class QuestionsService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const question = await this.prisma.question.findFirstOrThrow({
+    const question = await this.prisma.question.findFirst({
       where: {
         CreatedAt: {
           gte: today,

@@ -159,7 +159,7 @@ export class QuestionsService {
     });
 
     if (mostViewedQuestion.length === 0) {
-      return this.prisma.question.findFirst({
+      const lastQuestion = await this.prisma.question.findFirst({
         where: {
           DeletedAt: null,
         },
@@ -171,6 +171,10 @@ export class QuestionsService {
           Title: true,
         },
       });
+      return {
+        id: lastQuestion.Id,
+        title: lastQuestion.Title,
+      };
     }
 
     const questionId = mostViewedQuestion[0].QuestionId;
@@ -489,6 +493,7 @@ export class QuestionsService {
           gte: today,
           lt: tomorrow,
         },
+        DeletedAt: null,
       },
       orderBy: {
         ViewCount: 'desc',
@@ -500,7 +505,7 @@ export class QuestionsService {
     });
 
     if (!question) {
-      return this.prisma.question.findFirst({
+      const lastQuestion = await this.prisma.question.findFirst({
         where: {
           DeletedAt: null,
         },
@@ -512,6 +517,10 @@ export class QuestionsService {
           Title: true,
         },
       });
+      return {
+        id: lastQuestion.Id,
+        title: lastQuestion.Title,
+      };
     }
 
     return {

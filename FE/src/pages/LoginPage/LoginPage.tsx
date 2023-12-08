@@ -77,7 +77,14 @@ const LoginPage = () => {
     const { Nickname: nickname, Points: points } = await getWhoAmI();
     localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
 
-    alert('성공적으로 로그인이 완료되었습니다');
+    Swal.fire({
+      icon: 'success',
+      title: '로그인이 완료되었습니다',
+      showConfirmButton: false,
+      toast: true,
+      timer: 1000,
+    });
+
     navigate(-1);
   };
 

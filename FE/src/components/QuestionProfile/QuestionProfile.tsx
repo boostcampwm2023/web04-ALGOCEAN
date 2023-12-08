@@ -8,6 +8,7 @@ import {
   Signup,
 } from './QuestionProfile.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
+import Swal from 'sweetalert2';
 
 export function Login() {
   const navigate = useNavigate();
@@ -35,7 +36,13 @@ function AuthorizedProfile({
   const onLogoutClick = () => {
     localStorage.removeItem('userInfo');
     deleteAccessToken();
-    alert('로그아웃이 완료되었습니다');
+    Swal.fire({
+      icon: 'success',
+      title: '로그아웃이 완료되었습니다',
+      showConfirmButton: false,
+      toast: true,
+      timer: 1000,
+    });
     handleIsLogined(false);
   };
 

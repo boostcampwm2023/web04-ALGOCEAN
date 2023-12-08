@@ -123,7 +123,13 @@ const SignupPage = () => {
         confirmButtonText: '확인',
       });
     }
-    alert('성공적으로 회원 가입이 완료되었습니다');
+    Swal.fire({
+      icon: 'success',
+      title: '회원가입에 성공하였습니다.',
+      showConfirmButton: false,
+      toast: true,
+      timer: 2000,
+    });
     navigate('/');
   };
 

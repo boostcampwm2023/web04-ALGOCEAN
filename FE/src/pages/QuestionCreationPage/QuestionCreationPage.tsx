@@ -36,18 +36,6 @@ const PROGRAMMING_LANGUAGE_LIST = [
 ];
 const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
 
-const BUTTON_ONCLICK_HANDLER = [
-  () => {
-    //console.log('질문 등록하기');
-  },
-  () => {
-    //console.log('임시 등록');
-  },
-  () => {
-    //console.log('작성 취소하기');
-  },
-];
-
 const QuestionCreationPage = () => {
   const navigate = useNavigate();
   // draft ID 가져오기
@@ -55,6 +43,17 @@ const QuestionCreationPage = () => {
   const locationData = location.state?.id || null;
 
   const queryClient = useQueryClient();
+  // 사이드 바 버튼 핸들러
+  const BUTTON_ONCLICK_HANDLER = [
+    () => {},
+    () => {
+      putDraftQuestion();
+      alert('임시글이 등록되었습니다.');
+    },
+    () => {
+      navigate('/');
+    },
+  ];
 
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
@@ -112,10 +111,37 @@ const QuestionCreationPage = () => {
     },
   });
 
+  // URL 검사
+  const isValidURL = (text: string) => {
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlRegex.test(text);
+  };
+
+  // 유효성 검사
+  const checkValidation = () => {
+    const errorMessages = [];
+
+    if (formData.title.trim() === '') {
+      errorMessages.push('제목을 입력해 주세요.');
+    }
+
+    if (!isValidURL(formData.originalLink)) {
+      errorMessages.push('유효한 URL을 입력해 주세요.');
+    }
+
+    if (errorMessages.length > 0) {
+      alert(errorMessages.join('\n'));
+      return false;
+    }
+    return true;
+  };
+
   // 폼 제출 핸들러
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createQuestion();
+    if (checkValidation()) {
+      createQuestion();
+    }
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러
@@ -151,7 +177,7 @@ const QuestionCreationPage = () => {
 
   const handleFocus = () => {
     // 폴링 시작
-    const intervalId = setInterval(async () => {
+    const intervalId = setInterval(() => {
       putDraftQuestion();
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);

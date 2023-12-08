@@ -3,10 +3,16 @@
    License: none (public domain)
 */
 
+span,
+div {
+  padding: 0;
+  vertical-align: baseline;
+  font: inherit;
+  line-height: 1;
+}
+
 html,
 body,
-div,
-span,
 applet,
 object,
 iframe,

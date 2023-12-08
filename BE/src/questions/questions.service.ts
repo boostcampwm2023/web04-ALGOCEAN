@@ -159,7 +159,18 @@ export class QuestionsService {
     });
 
     if (mostViewedQuestion.length === 0) {
-      return null;
+      return this.prisma.question.findFirst({
+        where: {
+          DeletedAt: null,
+        },
+        orderBy: {
+          CreatedAt: 'desc',
+        },
+        select: {
+          Id: true,
+          Title: true,
+        },
+      });
     }
 
     const questionId = mostViewedQuestion[0].QuestionId;
@@ -472,29 +483,41 @@ export class QuestionsService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    try {
-      const question = await this.prisma.question.findFirstOrThrow({
+    const question = await this.prisma.question.findFirstOrThrow({
+      where: {
+        CreatedAt: {
+          gte: today,
+          lt: tomorrow,
+        },
+      },
+      orderBy: {
+        ViewCount: 'desc',
+      },
+      select: {
+        Id: true,
+        Title: true,
+      },
+    });
+
+    if (!question) {
+      return this.prisma.question.findFirst({
         where: {
-          CreatedAt: {
-            gte: today,
-            lt: tomorrow,
-          },
+          DeletedAt: null,
         },
         orderBy: {
-          ViewCount: 'desc',
+          CreatedAt: 'desc',
         },
         select: {
           Id: true,
           Title: true,
         },
       });
-      return {
-        id: question.Id,
-        title: question.Title,
-      };
-    } catch (error) {
-      throw new Error('Failed to get today question id');
     }
+
+    return {
+      id: question.Id,
+      title: question.Title,
+    };
   }
 
   async findAllByUserId(userId: number) {

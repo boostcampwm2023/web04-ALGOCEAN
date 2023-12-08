@@ -138,14 +138,13 @@ export class QuestionsController {
   @Get('today')
   async readTodayQuestion() {
     try {
-      return await this.questionsService.getRandomQuestion();
+      const todayQuestion = await this.questionsService.getTodayQuestion();
+      if (!todayQuestion) {
+        throw new HttpException('No Content', HttpStatus.NO_CONTENT);
+      }
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
-      }
-
-      if (error.message === 'Failed to get today question id') {
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
       }
 
       throw new HttpException(
@@ -179,7 +178,7 @@ export class QuestionsController {
     const trendingQuetion = await this.questionsService.getTrendingQuestion();
 
     if (!trendingQuetion) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('No Content', HttpStatus.NO_CONTENT);
     }
 
     return trendingQuetion;

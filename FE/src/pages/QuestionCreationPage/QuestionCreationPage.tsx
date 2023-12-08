@@ -152,6 +152,11 @@ const QuestionCreationPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (checkValidation()) {
+      Swal.fire({
+        icon: 'success',
+        title: '글이 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
       createQuestion();
     }
   };

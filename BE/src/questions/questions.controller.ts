@@ -142,6 +142,7 @@ export class QuestionsController {
       if (!todayQuestion) {
         throw new HttpException('No Content', HttpStatus.NO_CONTENT);
       }
+      return todayQuestion;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

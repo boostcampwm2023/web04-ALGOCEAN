@@ -11,12 +11,8 @@ RUN yarn run build
 
 FROM node:20-alpine
 
-#TODO: 이미지 최적화 필요
 WORKDIR /app
 ENV NODE_ENV production
-#RUN apk upgrade --update-cache --available && \
-#    apk add openssl && \
-#    rm -rf /var/cache/apk/*
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/yarn.lock ./yarn.lock
 COPY --from=builder /app/package.json ./package.json

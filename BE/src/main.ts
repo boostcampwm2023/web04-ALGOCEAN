@@ -7,22 +7,23 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('ALGOCEAN API')
-    .setDescription('API Documentation')
-    .setVersion('0.4.1')
-    .addTag('ALGOCEAN')
-    .addServer('https://algocean.site/api')
-    .addServer('https://algocean.site')
-    .addServer('http://algocean.site/api')
-    .addServer('http://algocean.site')
-    .addServer('api')
-    .addServer('/')
-    .build();
+  if (process.env.NODE_ENV !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('ALGOCEAN API')
+      .setDescription('API Documentation')
+      .setVersion('0.4.1')
+      .addTag('ALGOCEAN')
+      .addServer('https://algocean.site/api')
+      .addServer('https://algocean.site')
+      .addServer('http://algocean.site/api')
+      .addServer('http://algocean.site')
+      .addServer('api')
+      .addServer('/')
+      .build();
 
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('swagger', app, swaggerDocument);
-
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('swagger', app, swaggerDocument);
+  }
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.enableCors({
     origin: [

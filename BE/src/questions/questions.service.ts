@@ -159,7 +159,22 @@ export class QuestionsService {
     });
 
     if (mostViewedQuestion.length === 0) {
-      return null;
+      const lastQuestion = await this.prisma.question.findFirst({
+        where: {
+          DeletedAt: null,
+        },
+        orderBy: {
+          CreatedAt: 'desc',
+        },
+        select: {
+          Id: true,
+          Title: true,
+        },
+      });
+      return {
+        id: lastQuestion.Id,
+        title: lastQuestion.Title,
+      };
     }
 
     const questionId = mostViewedQuestion[0].QuestionId;
@@ -356,7 +371,11 @@ export class QuestionsService {
 
   async getRandomQuestion() {
     try {
-      const totalRows = await this.prisma.question.count();
+      const totalRows = await this.prisma.question.count({
+        where: {
+          DeletedAt: null,
+        },
+      });
       const randomIndex = Math.floor(Math.random() * totalRows);
 
       const randomQuestion = await this.prisma.question.findFirst({
@@ -468,16 +487,30 @@ export class QuestionsService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    try {
-      const question = await this.prisma.question.findFirstOrThrow({
+    const question = await this.prisma.question.findFirst({
+      where: {
+        CreatedAt: {
+          gte: today,
+          lt: tomorrow,
+        },
+        DeletedAt: null,
+      },
+      orderBy: {
+        ViewCount: 'desc',
+      },
+      select: {
+        Id: true,
+        Title: true,
+      },
+    });
+
+    if (!question) {
+      const lastQuestion = await this.prisma.question.findFirst({
         where: {
-          CreatedAt: {
-            gte: today,
-            lt: tomorrow,
-          },
+          DeletedAt: null,
         },
         orderBy: {
-          ViewCount: 'desc',
+          CreatedAt: 'desc',
         },
         select: {
           Id: true,
@@ -485,12 +518,15 @@ export class QuestionsService {
         },
       });
       return {
-        id: question.Id,
-        title: question.Title,
+        id: lastQuestion.Id,
+        title: lastQuestion.Title,
       };
-    } catch (error) {
-      throw new Error('Failed to get today question id');
     }
+
+    return {
+      id: question.Id,
+      title: question.Title,
+    };
   }
 
   async findAllByUserId(userId: number) {

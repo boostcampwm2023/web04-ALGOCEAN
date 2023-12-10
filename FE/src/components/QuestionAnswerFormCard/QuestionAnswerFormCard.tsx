@@ -43,6 +43,9 @@ const QuestionAnswerFormCard = ({
         icon: 'info',
         title: '답변을 입력해 주세요.',
         confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
       });
     }
     handleSubmit(editorContent);

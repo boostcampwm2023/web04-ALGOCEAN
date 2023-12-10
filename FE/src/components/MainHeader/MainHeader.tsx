@@ -38,6 +38,9 @@ function SearchBar() {
         icon: 'warning',
         title: '검색어를 입력해주세요.',
         confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
       });
 
       return;

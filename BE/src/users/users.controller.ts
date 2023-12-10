@@ -117,7 +117,7 @@ export class UsersController {
   @Get('/me')
   async getMyProfile(@Req() req) {
     const userId =
-      req.user.provider === 'local' ? req.user.id : '_' + req.user.id;
+      req.user.provider === 'local' ? req.user.UserId : '_' + req.user.UserId;
     return await this.profileInfo(userId);
   }
 

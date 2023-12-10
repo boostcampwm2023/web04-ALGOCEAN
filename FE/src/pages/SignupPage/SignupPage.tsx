@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { getUserIdVerified, postSignup } from '../../api';
 import { SignupFetchData as FetchData } from 'src/types/type';
 import { Container, Inner, Form } from './SignupPage.styles';
+import Swal from 'sweetalert2';
 
 interface SignupFormProps {
   handleSignupSubmit: (data: FetchData) => void;
@@ -115,9 +116,20 @@ const SignupPage = () => {
     const isSuccess = await postSignup(fetchData);
 
     if (!isSuccess) {
-      return alert('회원 가입에 실패했습니다. 다시 시도해 주세요');
+      return Swal.fire({
+        icon: 'error',
+        title: '회원가입 실패',
+        text: '다시 시도해 주세요.',
+        confirmButtonText: '확인',
+      });
     }
-    alert('성공적으로 회원 가입이 완료되었습니다');
+    Swal.fire({
+      icon: 'success',
+      title: '회원가입에 성공하였습니다.',
+      showConfirmButton: false,
+      toast: true,
+      timer: 2000,
+    });
     navigate('/');
   };
 

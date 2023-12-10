@@ -9,6 +9,7 @@ import {
   Header,
   Footer,
 } from './QuestionAnswerFormCard.styles';
+import Swal from 'sweetalert2';
 
 const QuestionAnswerFormCard = ({
   handleCancel,
@@ -35,11 +36,17 @@ const QuestionAnswerFormCard = ({
   const onCancelButtonClick = () => {
     handleCancel();
   };
-
   const onSubmitButtonClick = () => {
     const editorContent = getEditorContent();
     if (isEditorContentEmpty(editorContent)) {
-      return alert('답변을 입력해 주세요');
+      return Swal.fire({
+        icon: 'info',
+        title: '답변을 입력해 주세요.',
+        confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
+      });
     }
     handleSubmit(editorContent);
   };

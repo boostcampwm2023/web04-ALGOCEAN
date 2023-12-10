@@ -17,6 +17,7 @@ import draftToHtml from 'draftjs-to-html';
 import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -48,7 +49,11 @@ const QuestionCreationPage = () => {
     () => {},
     () => {
       putDraftQuestion();
-      alert('임시글이 등록되었습니다.');
+      Swal.fire({
+        icon: 'success',
+        title: '글이 임시 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
     },
     () => {
       navigate('/');
@@ -130,9 +135,16 @@ const QuestionCreationPage = () => {
     }
 
     if (errorMessages.length > 0) {
-      alert(errorMessages.join('\n'));
+      const errorMessageHTML = errorMessages.join('<br>');
+      Swal.fire({
+        icon: 'error',
+        title: '질문 등록 실패',
+        html: errorMessageHTML,
+        confirmButtonText: '확인',
+      });
       return false;
     }
+
     return true;
   };
 
@@ -140,6 +152,11 @@ const QuestionCreationPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (checkValidation()) {
+      Swal.fire({
+        icon: 'success',
+        title: '글이 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
       createQuestion();
     }
   };

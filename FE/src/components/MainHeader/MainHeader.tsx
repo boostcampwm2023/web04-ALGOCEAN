@@ -10,6 +10,7 @@ import {
 } from './MainHeader.styles';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const PAGE_TITLE = 'ALGOCEAN';
 
@@ -33,7 +34,16 @@ function SearchBar() {
     e.preventDefault();
     // 검색어가 비어있으면 navigate를 하지 않음
     if (!searchValue.trim()) {
-      return alert('검색어를 입력해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '검색어를 입력해주세요.',
+        confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
+      });
+
+      return;
     }
     navigate(`/search?query=${encodeURIComponent(searchValue)}`);
   };

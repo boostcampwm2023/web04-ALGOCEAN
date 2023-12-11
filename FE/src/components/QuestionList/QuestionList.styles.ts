@@ -86,10 +86,11 @@ export const ItemAside = styled.div`
     width: 6rem;
     ${({ theme }) => theme.font.medium14}
 
-    img {
+    svg {
       margin-right: 0.2rem;
       width: 1.5rem;
       height: 1.5rem;
+      fill: ${({ theme }) => theme.color.grayscale[200]};
     }
   }
 `;

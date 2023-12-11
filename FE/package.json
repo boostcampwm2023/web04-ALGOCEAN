@@ -8,6 +8,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "prebuild": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "build": "tsc && vite build",
+    "postbuild": "react-snap",
     "preview": "vite preview --open"
   },
   "dependencies": {
@@ -22,8 +23,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
+    "react-helmet-async": "^2.0.3",
     "react-hook-form": "^7.48.2",
     "react-router-dom": "^6.18.0",
+    "react-snap": "^1.23.0",
     "styled-components": "^6.1.1",
     "sweetalert2": "^11.10.1"
   },
@@ -46,5 +49,14 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-svgr": "^4.2.0"
+  },
+  "reactSnap": {
+    "source": "./dist",
+    "include": [
+      "/",
+      "/profile",
+      "/search",
+      "/question"
+    ]
   }
 }

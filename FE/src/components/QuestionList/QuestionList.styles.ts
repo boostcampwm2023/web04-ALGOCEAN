@@ -49,7 +49,7 @@ export const ItemMain = styled.div`
   width: 1px;
 `;
 
-export const Title = styled.h4`
+export const Title = styled.h3`
   width: 100%;
   color: ${({ theme }) => theme.color.grayscale[500]};
   ${({ theme }) => theme.font.bold16}

@@ -80,7 +80,7 @@ const color = {
     black: '#14212B',
   },
   mainColor: {
-    blueMain: '#4B5AEA',
+    blueMain: '#2131DE',
     blueDark: '#3443C5',
     blueLight: '#8798FF',
     blueOutline: '#C7DCFF',
@@ -97,9 +97,9 @@ const color = {
     baekjoon: '#2F77BB',
     programmers: '#222B3C',
     leetcode: '#ECA240',
-    rainbowLilac: '#A8BBFF',
-    rainbowViolet: '#9881E7',
-    rainbowCornFlower: '#A1C4FE',
+    rainbowLilac: '#CCD7FF',
+    rainbowViolet: '#7A5CE0',
+    rainbowCornFlower: '#5E09E2',
   },
 };
 

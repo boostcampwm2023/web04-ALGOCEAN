@@ -43,7 +43,7 @@ export const ItemContainer = styled.div<ItemProps>`
   }
 `;
 
-export const ItemTitle = styled.h3`
+export const ItemTitle = styled.h2`
   ${({ theme }) => theme.font.bold16}
   margin-bottom: 0.5rem;
 `;

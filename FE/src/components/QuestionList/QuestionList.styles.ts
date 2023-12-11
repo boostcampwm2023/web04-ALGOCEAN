@@ -31,7 +31,7 @@ export const Item = styled.li`
   gap: 2rem;
   width: 100%;
   padding: 1rem 0.5rem;
-  color: ${({ theme }) => theme.color.grayscale[200]};
+  color: ${({ theme }) => theme.color.grayscale[400]};
   border-radius: 0.5rem;
   cursor: pointer;
   transition: 0.1s ease-in all;
@@ -49,7 +49,7 @@ export const ItemMain = styled.div`
   width: 1px;
 `;
 
-export const Title = styled.h4`
+export const Title = styled.h3`
   width: 100%;
   color: ${({ theme }) => theme.color.grayscale[500]};
   ${({ theme }) => theme.font.bold16}
@@ -61,7 +61,7 @@ export const Title = styled.h4`
 export const Details = styled.div`
   display: flex;
   gap: 1rem;
-  color: ${({ theme }) => theme.color.grayscale[200]};
+  color: ${({ theme }) => theme.color.grayscale[400]};
   ${({ theme }) => theme.font.light14}
 `;
 
@@ -86,10 +86,11 @@ export const ItemAside = styled.div`
     width: 6rem;
     ${({ theme }) => theme.font.medium14}
 
-    img {
+    svg {
       margin-right: 0.2rem;
       width: 1.5rem;
       height: 1.5rem;
+      fill: ${({ theme }) => theme.color.grayscale[400]};
     }
   }
 `;

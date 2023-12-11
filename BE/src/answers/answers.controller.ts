@@ -7,26 +7,39 @@ import {
   Param,
   HttpException,
   Get,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { AdoptAnswerDto } from './dto/adopt-answer.dto';
 import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UsersService } from '../users/users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('answers')
 @Controller('answers')
 export class AnswersController {
-  constructor(private readonly answersService: AnswersService) {}
+  constructor(
+    private readonly answersService: AnswersService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @ApiOperation({
     summary: '답변 생성',
     description: '답변을 생성합니다.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() createAnswerDto: CreateAnswerDto, @Res() res: Response) {
+  async create(
+    @Body() createAnswerDto: CreateAnswerDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      await this.answersService.create(createAnswerDto);
+      const userId = await this.usersService.getIdByUserId(req.user.userId);
+      await this.answersService.create(createAnswerDto, userId);
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'Answer created successfully' });
@@ -59,11 +72,16 @@ export class AnswersController {
     summary: '답변 채택',
     description: '답변을 채택합니다.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post('adopt')
-  adopt(@Body() adoptAnswerDto: AdoptAnswerDto, @Res() res: Response) {
-    //TODO: get user id from request, and pass it to answersService.adopt
+  async adopt(
+    @Body() adoptAnswerDto: AdoptAnswerDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      this.answersService.adopt(adoptAnswerDto);
+      const userId = await this.usersService.getIdByUserId(req.user.userId);
+      await this.answersService.adopt(adoptAnswerDto, userId);
       return res.status(HttpStatus.OK).json({ message: 'Answer adopted' });
     } catch (e) {
       return res

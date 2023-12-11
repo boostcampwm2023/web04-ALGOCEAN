@@ -11,6 +11,8 @@ import {
   Put,
   Res,
   HttpException,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
@@ -20,22 +22,29 @@ import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UsersService } from '../users/users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('questions')
 @Controller('questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+  constructor(
+    private readonly questionsService: QuestionsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @ApiOperation({
     summary: '질문 초안 생성',
     description:
       '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
   })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @UseGuards(AuthGuard('jwt'))
   @Post('drafts')
-  async createDraft(@Res() res: Response) {
+  async createDraft(@Req() req, @Res() res: Response) {
     try {
-      const questionId = await this.questionsService.createOneQuestionDraft(1);
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
+      const questionId =
+        await this.questionsService.createOneQuestionDraft(userId);
 
       return res
         .status(HttpStatus.CREATED)
@@ -55,11 +64,12 @@ export class QuestionsController {
     summary: '질문 초안 읽기',
     description: '질문 초안을 읽어옵니다.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('drafts')
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  async readDraft(@Res() res: Response) {
+  async readDraft(@Req() req, @Res() res: Response) {
     try {
-      const draft = await this.questionsService.readOneQuestionDraft(1);
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
+      const draft = await this.questionsService.readOneQuestionDraft(userId);
 
       if (!draft) {
         return res
@@ -83,17 +93,19 @@ export class QuestionsController {
     summary: '질문 초안 수정',
     description: '질문 초안을 수정합니다.',
   })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @UseGuards(AuthGuard('jwt'))
   @Put('drafts/:id')
   async updateDraft(
     @Param('id') id: number,
     @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
+    @Req() req,
     @Res() res: Response,
   ) {
     try {
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       await this.questionsService.updateOneQuestionDraft(
         id,
-        1,
+        userId,
         updateQuestionDraftDto,
       );
 
@@ -115,11 +127,12 @@ export class QuestionsController {
     summary: '질문 초안 삭제',
     description: '질문 초안을 삭제합니다.',
   })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @UseGuards(AuthGuard('jwt'))
   @Delete('drafts/:id')
-  async deleteDraft(@Param('id') id: number, @Res() res: Response) {
+  async deleteDraft(@Param('id') id: number, @Req() req, @Res() res: Response) {
     try {
-      await this.questionsService.deleteOneQuestionDraft(id, 1);
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
+      await this.questionsService.deleteOneQuestionDraft(id, userId);
 
       return res
         .status(HttpStatus.OK)
@@ -201,17 +214,18 @@ export class QuestionsController {
     summary: '질문 생성',
     description: '질문을 생성합니다.',
   })
-
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
+    @Req() req,
     @Res() res: Response,
   ) {
     try {
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       const questionId = await this.questionsService.createOneQuestion(
         createQuestionDto,
-        1,
+        userId,
       );
 
       return res
@@ -255,11 +269,19 @@ export class QuestionsController {
     summary: '질문 삭제',
     description: '질문을 삭제합니다.',
   })
-  // TODO: use UserGuard to check if user is the owner of the question
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  async deleteOneQuestion(@Param('id') id: number, @Res() res: Response) {
+  async deleteOneQuestion(
+    @Param('id') id: number,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      const isDeleted = await this.questionsService.deleteOneQuestion(id, 1);
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
+      const isDeleted = await this.questionsService.deleteOneQuestion(
+        id,
+        userId,
+      );
 
       if (isDeleted) {
         return res
@@ -303,17 +325,19 @@ export class QuestionsController {
     summary: '질문 수정',
     description: '질문을 수정합니다.',
   })
-  // TODO: use UserGuard to check if user is the owner of the question
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async updateOneQuestion(
     @Param('id') id: number,
     @Body() updateQuestionDto: UpdateQuestionDto,
+    @Req() req,
     @Res() res: Response,
   ) {
     try {
+      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       const isUpdated = await this.questionsService.updateOneQuestion(
         id,
-        1,
+        userId,
         updateQuestionDto,
       );
 

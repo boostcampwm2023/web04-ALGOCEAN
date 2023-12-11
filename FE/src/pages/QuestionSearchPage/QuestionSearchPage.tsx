@@ -3,6 +3,7 @@ import { getQuestionList } from '../../api';
 import { Pagination, QuestionList } from '../../components';
 import { Main, Header, InnerDiv } from './QuestionSearchPage.style';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { QuestionSearchPageMetas } from '../../metas/metas';
 
 const PAGINATION_SPLIT_NUMBER = 10;
 
@@ -37,6 +38,7 @@ const QuestionSearchPage = () => {
 
   return (
     <Main>
+      <QuestionSearchPageMetas />
       <InnerDiv className="inner">
         <Header>검색 결과</Header>
         {questionListData && (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ProfilePageMetas } from '../../metas/metas';
 import { AnswerList, QuestionList } from 'src/types/type';
 import {
   getUserAnswerListAPI,
@@ -69,6 +70,7 @@ export default function ProfilePage() {
 
   return (
     <Container>
+      <ProfilePageMetas userName={data.userNickname} />
       <Inner>
         <ProfileInfo
           userPoint={data.userPoint}

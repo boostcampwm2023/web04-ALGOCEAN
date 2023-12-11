@@ -5,6 +5,7 @@ import { getUserIdVerified, postSignup } from '../../api';
 import { SignupFetchData as FetchData } from 'src/types/type';
 import { Container, Inner, Form } from './SignupPage.styles';
 import Swal from 'sweetalert2';
+import { SignupPageMetas } from '../../metas/metas';
 
 interface SignupFormProps {
   handleSignupSubmit: (data: FetchData) => void;
@@ -135,6 +136,7 @@ const SignupPage = () => {
 
   return (
     <Container>
+      <SignupPageMetas />
       <Inner>
         <SignupForm handleSignupSubmit={handleSignupsubmit} />
       </Inner>

@@ -15,6 +15,7 @@ import {
 } from '../pages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 
 const { DEV } = import.meta.env;
 
@@ -37,11 +38,32 @@ export const router = createBrowserRouter([
       <QueryClientProvider client={queryClient}>
         {DEV && <ReactQueryDevtools initialIsOpen={true} />}
         <AuthContextProvider>
-          <ThemeProvider theme={theme}>
-            <MainHeader />
-            <MainNav />
-            <Outlet />
-          </ThemeProvider>
+          <HelmetProvider>
+            <ThemeProvider theme={theme}>
+              <Helmet>
+                <meta property="og:url" content="https://algocean.site" />
+                <meta property="og:title" content="ALGOCEAN" />
+                <meta property="og:type" content="website" />
+                <meta
+                  property="og:image"
+                  content="https://user-images.githubusercontent.com/97934878/285278009-d7f75de2-17b3-4c0f-9df7-16a12aafbba1.png"
+                />
+                <meta
+                  property="og:description"
+                  content="🌊 알고리즘의 바다에 풍덩 빠져보시겠어요"
+                />
+                <meta name="keywords" content="algocean, 알고션, 알고리즘" />
+                <meta name="robots" content="index, follow" />
+                <meta
+                  name="naver-site-verification"
+                  content="df4b8ce0d43ccc2f3f5211e0c6d285606dd4b926"
+                />
+              </Helmet>
+              <MainHeader />
+              <MainNav />
+              <Outlet />
+            </ThemeProvider>
+          </HelmetProvider>
         </AuthContextProvider>
       </QueryClientProvider>
     ),
@@ -82,9 +104,11 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: (
-      <ThemeProvider theme={theme}>
-        <NotFoundPage />
-      </ThemeProvider>
+      <HelmetProvider>
+        <ThemeProvider theme={theme}>
+          <NotFoundPage />
+        </ThemeProvider>
+      </HelmetProvider>
     ),
   },
 ]);

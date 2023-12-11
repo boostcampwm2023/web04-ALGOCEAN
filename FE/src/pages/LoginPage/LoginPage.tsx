@@ -6,6 +6,7 @@ import { LoginFetchData as FormData } from 'src/types/type';
 import { Container, Inner, Form } from './LoginPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
 import Swal from 'sweetalert2';
+import { LoginPageMetas } from '../../metas/metas';
 
 interface LoginFormProps {
   handleLoginSubmit: (data: FormData) => void;
@@ -90,6 +91,7 @@ const LoginPage = () => {
 
   return (
     <Container>
+      <LoginPageMetas />
       <Inner>
         <LoginForm handleLoginSubmit={handleLoginSubmit} />
       </Inner>

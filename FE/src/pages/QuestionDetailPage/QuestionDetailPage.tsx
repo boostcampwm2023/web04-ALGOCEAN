@@ -20,6 +20,7 @@ import {
 import { Container, NoAnswer } from './QuestionDetailPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
 import Swal from 'sweetalert2';
+import { QuestionDetailPageMetas } from '../../metas/metas';
 
 const QuestionDetailPage = () => {
   const { id: questionId } = useParams();
@@ -79,6 +80,7 @@ const QuestionDetailPage = () => {
 
   return (
     <Container>
+      <QuestionDetailPageMetas />
       {isLoading && <Loading />}
       {!isLoading && (
         <>

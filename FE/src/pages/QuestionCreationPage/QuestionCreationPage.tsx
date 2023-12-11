@@ -18,6 +18,7 @@ import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
+import { QuestionCreatePageMetas } from '../../metas/metas';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -205,6 +206,7 @@ const QuestionCreationPage = () => {
 
   return (
     <Main>
+      <QuestionCreatePageMetas />
       <InnerDiv className="inner">
         <Header>질문 작성</Header>
         <Form className="contentContainer" onSubmit={handleSubmit}>

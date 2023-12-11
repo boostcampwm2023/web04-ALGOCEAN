@@ -88,13 +88,13 @@ export function Pagination({
       </button>
       <ul className="page-list">
         {getCurrentNum(wholePageCount, currentPage, splitNumber).map((i) => (
-          <span
+          <li
             key={i}
             className={i === currentPage ? 'current' : ''}
             onClick={() => handlePageItem(i)}
           >
             {i}
-          </span>
+          </li>
         ))}
       </ul>
       <button

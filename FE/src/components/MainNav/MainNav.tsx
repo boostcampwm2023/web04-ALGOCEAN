@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContexts';
 import { postDraftQuestionAPI } from '../../api';
-import writeIcon from '/icons/write.svg';
+import { WriteIcon } from '../../assets/icons';
 import * as S from './MainNav.styles';
 import Swal from 'sweetalert2';
 
@@ -63,7 +63,7 @@ export function MainNav() {
           </li>
         </ol>
         <button onClick={handleButtonClick}>
-          <img src={writeIcon} alt="질문하기" />
+          <WriteIcon />
           <span>질문하기</span>
         </button>
       </div>

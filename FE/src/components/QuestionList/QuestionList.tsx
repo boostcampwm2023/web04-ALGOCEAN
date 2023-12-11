@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import eyeIcon from '/icons/eye.svg';
-import likeIcon from '/icons/like.svg';
+import { EyeIcon, LikeIcon } from '../../assets/icons';
 import CheckIcon from '../../assets/icons/check-circle.svg?react';
 import { getFormalizedDate } from '../../hooks/index';
 import {
@@ -82,11 +81,11 @@ export function Item({ itemData }: { itemData: ItemData }) {
         <Tag $tag={tag}>{tag}</Tag>
         <ProgrammingLanguage>{programmingLanguage}</ProgrammingLanguage>
         <ViewCount>
-          <img src={eyeIcon} />
+          <EyeIcon />
           <span>{viewCount}</span>
         </ViewCount>
         <LikeCount>
-          <img src={likeIcon} alt="좋아요 수" />
+          <LikeIcon />
           <span>{likeCount}</span>
         </LikeCount>
       </ItemAside>

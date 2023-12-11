@@ -188,9 +188,7 @@ const QuestionCreationPage = () => {
     onError: () => console.error('실패'),
   });
 
-  const [pollingIntervalId, setPollingIntervalId] = useState<
-    number | undefined
-  >(undefined);
+  const [pollingIntervalId, setPollingIntervalId] = useState<any>();
 
   const handleFocus = () => {
     // 폴링 시작

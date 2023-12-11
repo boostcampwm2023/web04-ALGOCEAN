@@ -24,9 +24,7 @@ const DocumentEditor = ({
   };
 
   // 임시글 저장 처리
-  const [pollingIntervalId, setPollingIntervalId] = useState<
-    number | undefined
-  >(undefined);
+  const [pollingIntervalId, setPollingIntervalId] = useState<any>(undefined);
 
   const handleFocus = () => {
     // 폴링 시작

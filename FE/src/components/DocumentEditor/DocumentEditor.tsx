@@ -12,7 +12,7 @@ interface EditorProps {
   editorState: EditorState;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
   handleFocusCallback?: () => QuestionData;
-  draftContent: string | undefined;
+  draftContent?: string | undefined;
 }
 
 const POLLING_INTERVAL = 30000;

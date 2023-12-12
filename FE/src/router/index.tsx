@@ -12,6 +12,7 @@ import {
   MainPage,
   ProfilePage,
   NotFoundPage,
+  RankingPage,
 } from '../pages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: '/search',
         element: <QuestionSearchPage />,
+      },
+      {
+        path: 'ranking',
+        element: <RankingPage />,
       },
       {
         path: '/profile',

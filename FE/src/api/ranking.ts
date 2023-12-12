@@ -10,3 +10,14 @@ export const getRankingListData = async () => {
     throw error;
   }
 };
+
+export const getUserRankingData = async (userId: string) => {
+  try {
+    const url = `/api/users/ranking/${userId}`;
+    const { data } = await client.get(url);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

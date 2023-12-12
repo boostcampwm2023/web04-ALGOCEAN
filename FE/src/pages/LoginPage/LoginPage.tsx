@@ -76,7 +76,10 @@ const LoginPage = () => {
     setAccessToken(accessToken);
 
     const { Nickname: nickname, Points: points } = await getWhoAmI();
-    localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    localStorage.setItem(
+      'userInfo',
+      JSON.stringify({ userId: fetchData.userId, nickname, points }),
+    );
 
     Swal.fire({
       icon: 'success',

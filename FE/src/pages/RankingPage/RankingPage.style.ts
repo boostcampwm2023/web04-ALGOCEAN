@@ -50,6 +50,11 @@ export const Label = styled.label`
   color: ${({ theme }) => theme.color.grayscale[500]};
 `;
 
+export const RankingTitle = styled.div`
+  ${({ theme }) => theme.font.bold16}
+  margin-bottom: 1rem;
+`;
+
 export const RankingHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -75,4 +80,9 @@ export const RankingHeader = styled.div`
     flex: 1;
     text-align: left;
   }
+`;
+
+export const MyRankingContainer = styled.div`
+  width: 100%;
+  padding-bottom: 5rem;
 `;

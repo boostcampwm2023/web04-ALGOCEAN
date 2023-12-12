@@ -125,7 +125,7 @@ export interface AnswerList {
 }
 
 export interface RankingItemProps {
-  ranking: number;
+  ranking: number | null;
   userInfo: {
     userId: string;
     nickname: string;
@@ -133,4 +133,5 @@ export interface RankingItemProps {
     profileImage: string | null;
     grade: string;
   };
+  isMyData?: boolean;
 }

@@ -8,7 +8,6 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "prebuild": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "build": "tsc && vite build",
-    "postbuild": "react-snap",
     "preview": "vite preview --open"
   },
   "dependencies": {

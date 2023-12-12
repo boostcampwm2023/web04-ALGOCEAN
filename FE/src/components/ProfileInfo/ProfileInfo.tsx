@@ -11,24 +11,31 @@ import {
 } from './ProfileInfo.styles';
 import Programmer from '/images/Programmer.png';
 
-const dummyTopic = ['등수', '포인트', '전체질문', '전체답변', '채택답변'];
-const dummyContent = ['1817', 0, '13건', '6건', '3건'];
-
 interface ProfileInfoProps {
   userPoint: number;
   userNickname: string;
   userGrade: string;
+  userAdoptedAnswerCount: number;
+  userAnswerCount: number;
+  userQuestionCount: number;
 }
 
 export function ProfileInfo({
   userPoint,
   userNickname,
   userGrade,
+  userAdoptedAnswerCount,
+  userAnswerCount,
+  userQuestionCount,
 }: ProfileInfoProps) {
-  // dummyContent에 넣은 이유는 아직 등수, 전체질문, 전체답변, 채택답변 등에 대한 api가 없어서다.
-  // 현상태로 Content 태그에 userPoint를 직접 넣는 것은 쓸모없다고 판단하였다.
-  // 추후에 api가 개발되면 dummyContent를 없앨 예정이다.
-  dummyContent[1] = userPoint;
+  // user/me api에 등수는 아직 안 내려와서 mock data 추가.
+  const data = [
+    { topic: '등수', content: '2등' },
+    { topic: '포인트', content: userPoint },
+    { topic: '전체 질문', content: `${userQuestionCount}건` },
+    { topic: '전체 답변', content: `${userAnswerCount}건` },
+    { topic: '채택 답변', content: `${userAdoptedAnswerCount}건` },
+  ];
   return (
     <Section>
       <PersonalInfoLeftDiv>
@@ -37,10 +44,10 @@ export function ProfileInfo({
         <Rank>{userGrade}</Rank>
       </PersonalInfoLeftDiv>
       <PersonalInfoRightDiv>
-        {dummyTopic.map((topic, idx) => (
+        {data.map(({ topic, content }, idx) => (
           <div key={idx}>
             <Topic>{topic}</Topic>
-            <Content>{dummyContent[idx]}</Content>
+            <Content>{content}</Content>
           </div>
         ))}
       </PersonalInfoRightDiv>

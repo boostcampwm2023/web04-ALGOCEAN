@@ -121,22 +121,4 @@ export class UsersService {
 
     return { ...user, grade, ranking };
   }
-
-  async getIdByUserId(userId: string) {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: { UserId: userId },
-        select: { Id: true },
-      });
-      if (!user) {
-        throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-      }
-      return user.Id;
-    } catch (error) {
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
 }

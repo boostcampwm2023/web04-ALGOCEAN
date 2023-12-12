@@ -6,6 +6,7 @@ import LoginPage from './LoginPage/LoginPage';
 import QuestionSearchPage from './QuestionSearchPage/QuestionSearchPage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
+import GithubCallbackPage from './GithubCallbackPage/GithubCallbackpage';
 
 export {
   MainPage,
@@ -16,4 +17,5 @@ export {
   QuestionSearchPage,
   ProfilePage,
   NotFoundPage,
+  GithubCallbackPage,
 };

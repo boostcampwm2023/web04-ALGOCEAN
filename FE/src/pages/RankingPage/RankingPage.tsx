@@ -25,7 +25,11 @@ const RankingPage = () => {
         {rankingListData && (
           <ul>
             {rankingListData.map((data: any, idx: number) => (
-              <RankingItem ranking={idx + 1} userInfo={data} />
+              <RankingItem
+                ranking={idx + 1}
+                userInfo={data}
+                key={data.userId}
+              />
             ))}
           </ul>
         )}

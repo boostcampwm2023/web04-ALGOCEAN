@@ -1,15 +1,18 @@
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { EditorWrapper } from './DocumentEditor.styles';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useState } from 'react';
 import { putDraftQuestionAPI } from '../../api';
 import { QuestionData } from '../../types/type';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import htmlToDraft from 'html-to-draftjs';
 
 interface EditorProps {
   editorState: EditorState;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
   handleFocusCallback?: () => QuestionData;
+  draftContent: string | undefined;
 }
 
 const POLLING_INTERVAL = 30000;
@@ -18,6 +21,7 @@ const DocumentEditor = ({
   editorState,
   setEditorState,
   handleFocusCallback,
+  draftContent,
 }: EditorProps) => {
   const onEditorStateChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
@@ -43,6 +47,19 @@ const DocumentEditor = ({
     clearInterval(pollingIntervalId);
     setPollingIntervalId(undefined);
   };
+
+  // draft 반영
+  useDidMountEffect(() => {
+    const blocksFromHTML = htmlToDraft(draftContent as string);
+    if (!blocksFromHTML) return;
+    const { contentBlocks, entityMap } = blocksFromHTML;
+    const contentState = ContentState.createFromBlockArray(
+      contentBlocks,
+      entityMap,
+    );
+    const draftState = EditorState.createWithContent(contentState);
+    setEditorState(draftState);
+  }, [draftContent]);
 
   return (
     <EditorWrapper>

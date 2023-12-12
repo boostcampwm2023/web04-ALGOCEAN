@@ -1,6 +1,7 @@
+import { RankingItem } from '../../components';
 import { getRankingListData } from '../../api';
-import { Main, Header, InnerDiv } from './RankingPage.style';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { Main, Header, InnerDiv, RankingHeader } from './RankingPage.style';
 
 const RankingPage = () => {
   const { data: rankingListData } = useQuery({
@@ -14,11 +15,19 @@ const RankingPage = () => {
   return (
     <Main>
       <InnerDiv className="inner">
-        <Header>랭킹 게시판</Header>
+        <Header>👑 랭킹 게시판</Header>
+        <RankingHeader>
+          <div>순위</div>
+          <div>닉네임</div>
+          <div>포인트</div>
+          <div>등급</div>
+        </RankingHeader>
         {rankingListData && (
-          <>
-            <div>{JSON.stringify(rankingListData)}</div>
-          </>
+          <ul>
+            {rankingListData.map((data: any, idx: number) => (
+              <RankingItem ranking={idx + 1} userInfo={data} />
+            ))}
+          </ul>
         )}
       </InnerDiv>
     </Main>

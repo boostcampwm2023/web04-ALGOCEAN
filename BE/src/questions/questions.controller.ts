@@ -21,30 +21,27 @@ import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UsersService } from '../users/users.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('questions')
 @Controller('questions')
 export class QuestionsController {
-  constructor(
-    private readonly questionsService: QuestionsService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly questionsService: QuestionsService) {}
 
   @ApiOperation({
     summary: '질문 초안 생성',
     description:
-      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
+      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Post('drafts')
   async createDraft(@Req() req, @Res() res: Response) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
-      const questionId =
-        await this.questionsService.createOneQuestionDraft(userId);
+      const questionId = await this.questionsService.createOneQuestionDraft(
+        req.user.Id,
+      );
 
       return res
         .status(HttpStatus.CREATED)
@@ -62,14 +59,16 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 초안 읽기',
-    description: '질문 초안을 읽어옵니다.',
+    description: '질문 초안을 읽어옵니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Get('drafts')
   async readDraft(@Req() req, @Res() res: Response) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
-      const draft = await this.questionsService.readOneQuestionDraft(userId);
+      const draft = await this.questionsService.readOneQuestionDraft(
+        req.user.Id,
+      );
 
       if (!draft) {
         return res
@@ -91,8 +90,9 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 초안 수정',
-    description: '질문 초안을 수정합니다.',
+    description: '질문 초안을 수정합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Put('drafts/:id')
   async updateDraft(
@@ -102,10 +102,9 @@ export class QuestionsController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       await this.questionsService.updateOneQuestionDraft(
         id,
-        userId,
+        req.user.Id,
         updateQuestionDraftDto,
       );
 
@@ -125,14 +124,14 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 초안 삭제',
-    description: '질문 초안을 삭제합니다.',
+    description: '질문 초안을 삭제합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Delete('drafts/:id')
   async deleteDraft(@Param('id') id: number, @Req() req, @Res() res: Response) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
-      await this.questionsService.deleteOneQuestionDraft(id, userId);
+      await this.questionsService.deleteOneQuestionDraft(id, req.user.Id);
 
       return res
         .status(HttpStatus.OK)
@@ -212,9 +211,10 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 생성',
-    description: '질문을 생성합니다.',
+    description: '질문을 생성합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @Post()
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
@@ -222,10 +222,9 @@ export class QuestionsController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       const questionId = await this.questionsService.createOneQuestion(
         createQuestionDto,
-        userId,
+        req.user.Id,
       );
 
       return res
@@ -267,9 +266,10 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 삭제',
-    description: '질문을 삭제합니다.',
+    description: '질문을 삭제합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @Delete(':id')
   async deleteOneQuestion(
     @Param('id') id: number,
@@ -277,10 +277,9 @@ export class QuestionsController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       const isDeleted = await this.questionsService.deleteOneQuestion(
         id,
-        userId,
+        req.user.Id,
       );
 
       if (isDeleted) {
@@ -323,9 +322,10 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 수정',
-    description: '질문을 수정합니다.',
+    description: '질문을 수정합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @Put(':id')
   async updateOneQuestion(
     @Param('id') id: number,
@@ -334,10 +334,9 @@ export class QuestionsController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.UserId);
       const isUpdated = await this.questionsService.updateOneQuestion(
         id,
-        userId,
+        req.user.Id,
         updateQuestionDto,
       );
 

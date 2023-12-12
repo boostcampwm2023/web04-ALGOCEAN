@@ -14,22 +14,19 @@ import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { AdoptAnswerDto } from './dto/adopt-answer.dto';
 import { Response } from 'express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UsersService } from '../users/users.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('answers')
 @Controller('answers')
 export class AnswersController {
-  constructor(
-    private readonly answersService: AnswersService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly answersService: AnswersService) {}
 
   @ApiOperation({
     summary: '답변 생성',
-    description: '답변을 생성합니다.',
+    description: '답변을 생성합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
@@ -38,8 +35,7 @@ export class AnswersController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.userId);
-      await this.answersService.create(createAnswerDto, userId);
+      await this.answersService.create(createAnswerDto, req.user.Id);
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'Answer created successfully' });
@@ -70,8 +66,9 @@ export class AnswersController {
 
   @ApiOperation({
     summary: '답변 채택',
-    description: '답변을 채택합니다.',
+    description: '답변을 채택합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
   @Post('adopt')
   async adopt(
@@ -80,8 +77,7 @@ export class AnswersController {
     @Res() res: Response,
   ) {
     try {
-      const userId = await this.usersService.getIdByUserId(req.user.userId);
-      await this.answersService.adopt(adoptAnswerDto, userId);
+      await this.answersService.adopt(adoptAnswerDto, req.user.Id);
       return res.status(HttpStatus.OK).json({ message: 'Answer adopted' });
     } catch (e) {
       return res

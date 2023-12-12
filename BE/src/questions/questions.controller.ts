@@ -34,7 +34,7 @@ export class QuestionsController {
     description:
       '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Post('drafts')
   async createDraft(@Req() req, @Res() res: Response) {
@@ -61,7 +61,7 @@ export class QuestionsController {
     summary: '질문 초안 읽기',
     description: '질문 초안을 읽어옵니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Get('drafts')
   async readDraft(@Req() req, @Res() res: Response) {
@@ -92,7 +92,7 @@ export class QuestionsController {
     summary: '질문 초안 수정',
     description: '질문 초안을 수정합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Put('drafts/:id')
   async updateDraft(
@@ -126,7 +126,7 @@ export class QuestionsController {
     summary: '질문 초안 삭제',
     description: '질문 초안을 삭제합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Delete('drafts/:id')
   async deleteDraft(@Param('id') id: number, @Req() req, @Res() res: Response) {
@@ -214,7 +214,7 @@ export class QuestionsController {
     description: '질문을 생성합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @Post()
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
@@ -269,7 +269,7 @@ export class QuestionsController {
     description: '질문을 삭제합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @Delete(':id')
   async deleteOneQuestion(
     @Param('id') id: number,
@@ -325,7 +325,7 @@ export class QuestionsController {
     description: '질문을 수정합니다. (토큰 필요)',
   })
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @Put(':id')
   async updateOneQuestion(
     @Param('id') id: number,

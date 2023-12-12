@@ -21,7 +21,7 @@ export class AuthController {
     summary: '나는 누구',
     description: '로그인한 사용자의 정보를 반환합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @Get('whoami')
   @UseGuards(AuthGuard('jwt'))
   async whoami(@Req() req) {

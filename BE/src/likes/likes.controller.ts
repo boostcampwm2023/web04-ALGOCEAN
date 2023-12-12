@@ -12,7 +12,7 @@ export class LikesController {
     summary: '좋아요',
     description: '좋아요를 토글합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() createLikesDto: CreateLikesDto, @Req() req) {

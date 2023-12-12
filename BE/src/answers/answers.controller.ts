@@ -26,7 +26,7 @@ export class AnswersController {
     summary: '답변 생성',
     description: '답변을 생성합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
@@ -68,7 +68,7 @@ export class AnswersController {
     summary: '답변 채택',
     description: '답변을 채택합니다. (토큰 필요)',
   })
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('Authorization')
   @UseGuards(AuthGuard('jwt'))
   @Post('adopt')
   async adopt(

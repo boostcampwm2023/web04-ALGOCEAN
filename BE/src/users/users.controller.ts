@@ -121,6 +121,26 @@ export class UsersController {
     return await this.profileInfo(userId);
   }
 
+  @ApiOperation({
+    summary: '랭킹 조회',
+    description:
+      '랭킹 리스트를 조회합니다. 아이디, 닉네임, 포인트, 등급, 프로필 사진 링크들의 배열을 반환합니다.',
+  })
+  @Get('/ranking/lists')
+  async getRankingLists() {
+    return this.usersService.getRankingLists();
+  }
+
+  @ApiOperation({
+    summary: '랭킹 조회 (본인)',
+    description:
+      '특정 유저의 랭킹을 조회합니다. 아이디, 닉네임, 포인트, 등급, 프로필 사진 링크를 반환합니다.',
+  })
+  @Get('/ranking/:userId')
+  async getRanking(@Param('userId') userId: string) {
+    return this.usersService.getRanking(userId);
+  }
+
   private async profileInfo(userId) {
     const usersPromise = this.usersService.getUserProfile(userId);
     const questionsPromise = this.questionsService.getProfile(userId);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DocumentEditor } from '../../components';
 import {
   Main,
@@ -14,11 +14,17 @@ import {
 } from './QuestionCreationPage.style';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
+import {
+  createQuestionAPI,
+  getDraftQuestionAPI,
+  putDraftQuestionAPI,
+} from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { QuestionCreatePageMetas } from '../../metas/metas';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import { DraftData } from '../../types/type';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -36,6 +42,29 @@ const PROGRAMMING_LANGUAGE_LIST = [
   'Swift',
   'etc',
 ];
+
+const TAG_IDX_DICT: any = {
+  baekjoon: 0,
+  programmers: 1,
+  leetcode: 2,
+  etc: 3,
+};
+
+const PROGRAMMING_LANGUAGE_IDX_DICT: any = {
+  C: 0,
+  'C++': 1,
+  'C#': 2,
+  Go: 3,
+  Java: 4,
+  JavaScript: 5,
+  Kotlin: 6,
+  Python3: 7,
+  Ruby: 8,
+  Scala: 9,
+  Swift: 10,
+  etc: 11,
+};
+
 const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
 
 const QuestionCreationPage = () => {
@@ -60,6 +89,33 @@ const QuestionCreationPage = () => {
       navigate('/');
     },
   ];
+
+  // 기존 draft 가져오는 로직
+  const getDraftData = async () => {
+    return await getDraftQuestionAPI();
+  };
+
+  const { data: draftData } = useQuery<DraftData>({
+    queryKey: ['draft'],
+    queryFn: getDraftData,
+    gcTime: 0,
+  });
+
+  useDidMountEffect(() => {
+    if (!draftData) return;
+    setFormData({
+      title: draftData.title,
+      tag: draftData.tag,
+      programmingLanguage: draftData.programmingLanguage,
+      originalLink: draftData.originalLink,
+      draftId: locationData,
+    });
+    handleButtonClick('tagActiveButton', TAG_IDX_DICT[draftData.tag]);
+    handleButtonClick(
+      'programmingLanguageActiveButton',
+      PROGRAMMING_LANGUAGE_IDX_DICT[draftData.programmingLanguage],
+    );
+  }, [draftData]);
 
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
@@ -225,6 +281,7 @@ const QuestionCreationPage = () => {
               handleFocusCallback={preprocessData}
               editorState={editorState}
               setEditorState={setEditorState}
+              draftContent={draftData?.content}
             />
             <Label>문제 출처 사이트</Label>
             <ButtonWrapper>

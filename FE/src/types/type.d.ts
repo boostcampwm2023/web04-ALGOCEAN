@@ -134,3 +134,11 @@ export interface RankingItemProps {
     grade: string;
   };
 }
+
+interface DraftData {
+  title: string;
+  content: string;
+  tag: string;
+  programmingLanguage: string;
+  originalLink: string;
+}

@@ -9,16 +9,16 @@ import {
   Header,
   Footer,
 } from './QuestionAnswerFormCard.styles';
-
-const GLOBAL_USER_NICKNAME = JSON.parse(
-  localStorage.getItem('userInfo')!,
-).nickname;
+import Swal from 'sweetalert2';
 
 const QuestionAnswerFormCard = ({
   handleCancel,
   handleSubmit,
 }: QuestionAnswerFormCardProps) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const GLOBAL_USER_NICKNAME = JSON.parse(
+    localStorage.getItem('userInfo')!,
+  ).nickname;
 
   const getEditorContent = () => {
     const editorContent = draftToHtml(
@@ -36,11 +36,17 @@ const QuestionAnswerFormCard = ({
   const onCancelButtonClick = () => {
     handleCancel();
   };
-
   const onSubmitButtonClick = () => {
     const editorContent = getEditorContent();
     if (isEditorContentEmpty(editorContent)) {
-      return alert('답변을 입력해 주세요');
+      return Swal.fire({
+        icon: 'info',
+        title: '답변을 입력해 주세요.',
+        confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
+      });
     }
     handleSubmit(editorContent);
   };

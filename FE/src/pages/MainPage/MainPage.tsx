@@ -5,11 +5,16 @@ import {
   Pagination,
 } from '../../components';
 import { UniqueQuestionItem as Question } from '../../types/type';
-import dummyUniqueQuestions from '../../assets/uniqueQuestions.json';
 import { Container, Inner, HeroBanner, Main } from './MainPage.styles';
 import { getQuestionList } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import {
+  getRandomQuestionAPI,
+  getTodayQuestionAPI,
+  getTrendingQuestionAPI,
+} from '../../api/questionService';
+import { MainPageMetas } from '../../metas/metas';
 
 const PAGINATION_SPLIT_NUMBER = 10;
 
@@ -31,6 +36,47 @@ export default function MainPage() {
     placeholderData: keepPreviousData,
   });
 
+  const getNavQuestionData = async () => {
+    try {
+      const [
+        todayQuestionResult,
+        randomQuestionResult,
+        trendingQuestionResult,
+      ] = await Promise.all([
+        getTodayQuestionAPI(),
+        getRandomQuestionAPI(),
+        getTrendingQuestionAPI(),
+      ]);
+      return [
+        {
+          type: 'hot',
+          title: trendingQuestionResult.title,
+          id: trendingQuestionResult.id,
+        },
+        {
+          type: 'today',
+          title: todayQuestionResult.title,
+          id: todayQuestionResult.id,
+        },
+        {
+          type: 'random',
+          title: randomQuestionResult.title,
+          id: randomQuestionResult.id,
+        },
+      ];
+    } catch (error) {
+      console.error('Error fetching Nav Question data: ', error);
+    }
+  };
+
+  const { data: navQuestionData } = useQuery({
+    queryKey: ['navQuestion'],
+    queryFn: getNavQuestionData,
+    staleTime: 30 * 1000,
+    gcTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+  });
+
   const wholePageCount = questionListData?.totalPage || 0;
 
   const handleCurrentPage = (page: number) => {
@@ -39,9 +85,10 @@ export default function MainPage() {
 
   return (
     <Container>
+      <MainPageMetas />
       <Inner>
         <HeroBanner>
-          <UniqueQuestions questions={dummyUniqueQuestions as Question[]} />
+          <UniqueQuestions questions={navQuestionData as Question[]} />
           <QuestionProfile />
         </HeroBanner>
         <Main>

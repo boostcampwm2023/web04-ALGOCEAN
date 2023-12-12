@@ -34,7 +34,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './FE'
-
+    - run: mkdir dist
     - run: npm ci
     - run: npm run build
     

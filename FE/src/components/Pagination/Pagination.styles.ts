@@ -17,7 +17,7 @@ export const Pagination = styled.div`
     gap: 0.5rem;
     font-weight: 300;
 
-    span {
+    li {
       width: 1.7rem;
       height: 1.7rem;
       border-radius: 50%;

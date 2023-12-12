@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { NotFoundPageMetas } from '../../metas/metas';
 import { Container } from './NotFoundPage.styles';
 
 const NotFoundPage = () => {
@@ -22,6 +23,7 @@ const NotFoundPage = () => {
 
   return (
     <Container>
+      <NotFoundPageMetas />
       <div>
         웁스바리 <span>404</span> 링딩동
       </div>

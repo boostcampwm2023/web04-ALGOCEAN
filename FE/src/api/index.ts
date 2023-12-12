@@ -16,3 +16,5 @@ export {
   postDraftQuestionAPI,
   putDraftQuestionAPI,
 } from './questionService';
+
+export { getRankingListData } from './ranking';

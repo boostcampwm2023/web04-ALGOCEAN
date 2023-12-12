@@ -5,6 +5,8 @@ import { getWhoAmI, postLogin, getGithub } from '../../api';
 import { LoginFetchData as FormData } from 'src/types/type';
 import { Container, Inner, Form, SocialContainer } from './LoginPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
+import Swal from 'sweetalert2';
+import { LoginPageMetas } from '../../metas/metas';
 
 interface LoginFormProps {
   handleLoginSubmit: (data: FormData) => void;
@@ -77,9 +79,12 @@ const LoginPage = () => {
     const data = await postLogin(fetchData);
 
     if (!data) {
-      return alert(
-        '로그인에 실패했습니다. 아이디 혹은 비밀번호를 확인해주세요',
-      );
+      return Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        text: '아이디 혹은 비밀번호를 확인해주세요',
+        confirmButtonText: '확인',
+      });
     }
 
     const { accessToken } = data;
@@ -88,12 +93,20 @@ const LoginPage = () => {
     const { Nickname: nickname, Points: points } = await getWhoAmI();
     localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
 
-    alert('성공적으로 로그인이 완료되었습니다');
+    Swal.fire({
+      icon: 'success',
+      title: '로그인이 완료되었습니다',
+      showConfirmButton: false,
+      toast: true,
+      timer: 1000,
+    });
+
     navigate(-1);
   };
 
   return (
     <Container>
+      <LoginPageMetas />
       <Inner>
         <LoginForm handleLoginSubmit={handleLoginSubmit} />
         <SocialLoginButtons />

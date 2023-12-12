@@ -67,3 +67,13 @@ export const getWhoAmI = async () => {
 export const getGithub = () => {
   window.location.href = `${VITE_BASE_URL}/api/auth/github`;
 };
+
+export const getGithubCallback = async (code: string) => {
+  try {
+    const url = `/api/auth/github/callback?code=${code}`;
+    const { data } = await client.get(url);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+  }
+};

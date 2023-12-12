@@ -5,6 +5,7 @@ export {
   refreshAccessToken,
   getWhoAmI,
   getGithub,
+  getGithubCallback,
 } from './auth';
 
 export {

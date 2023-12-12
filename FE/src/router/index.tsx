@@ -30,7 +30,7 @@ const authorizedLoader = () => {
   return isLogined ? redirect('/') : null;
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({});
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +71,7 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: <ProfilePage />,
+        loader: unAuthorizedLoader,
       },
       {
         path: '/login',

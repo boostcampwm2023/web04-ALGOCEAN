@@ -119,7 +119,7 @@ export class UsersService {
     });
     const { grade, ranking } = await this.getUserGradeAndRanking(userId);
 
-    return { ...user, grade, ranking };
+    return { ...user, userId, grade, ranking };
   }
 
   async getRankingLists() {

@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
 const getCurrentNavItem = () => {
   const { pathname } = window.location;
   if (pathname === '/') return 'question';
-  return 'question';
+  if (pathname === '/profile') return 'profile';
+  return 'ranking';
 };
 
 export function MainNav() {
@@ -52,14 +53,20 @@ export function MainNav() {
     <S.MainNav>
       <div className="inner">
         <ol>
-          <li className={currentNavItem === 'question' ? 'selected' : ''}>
+          <li
+            onClick={() => navigate('/')}
+            className={currentNavItem === 'question' ? 'selected' : ''}
+          >
             질문 게시판
           </li>
           <li className={currentNavItem === 'ranking' ? 'selected' : ''}>
             랭킹 게시판
           </li>
-          <li className={currentNavItem === 'point' ? 'selected' : ''}>
-            포인트 상점
+          <li
+            onClick={() => navigate('profile')}
+            className={currentNavItem === 'profile' ? 'selected' : ''}
+          >
+            내 정보
           </li>
         </ol>
         <button onClick={handleButtonClick}>

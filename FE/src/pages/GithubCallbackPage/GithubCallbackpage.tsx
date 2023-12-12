@@ -17,8 +17,12 @@ const GithubCallbackPage = () => {
     }
     setAccessToken(accessToken);
 
-    const { Nickname: nickname, Points: points } = await getWhoAmI();
-    localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    try {
+      const { Nickname: nickname, Points: points } = await getWhoAmI();
+      localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    } catch (e) {
+      navigate('/notfound');
+    }
 
     navigate('/');
   };

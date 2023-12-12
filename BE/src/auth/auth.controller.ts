@@ -70,7 +70,7 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
-    res.redirect(HttpStatus.FOUND, `/login/gitubcallback?accesstoken=${access_token}`);
+    res.send({ accessToken: access_token });
   }
 
   @Post('refresh')

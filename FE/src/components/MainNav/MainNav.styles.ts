@@ -25,6 +25,11 @@ export const MainNav = styled.nav`
       color: ${({ theme }) => theme.color.grayscale[400]};
       ${({ theme }) => theme.font.medium16}
       cursor: pointer;
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
     }
     li[class='selected'],
     li:hover {

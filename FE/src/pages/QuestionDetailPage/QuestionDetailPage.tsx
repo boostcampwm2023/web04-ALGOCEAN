@@ -19,6 +19,8 @@ import {
 
 import { Container, NoAnswer } from './QuestionDetailPage.styles';
 import { AuthContext } from '../../contexts/AuthContexts';
+import Swal from 'sweetalert2';
+import { QuestionDetailPageMetas } from '../../metas/metas';
 
 const QuestionDetailPage = () => {
   const { id: questionId } = useParams();
@@ -35,7 +37,11 @@ const QuestionDetailPage = () => {
 
   const submitAnswer = async (content: string) => {
     if (!getAccessToken()) {
-      alert('로그인 후 답변 가능합니다');
+      Swal.fire({
+        icon: 'error',
+        title: '로그인후 답변가능합니다',
+        confirmButtonText: '확인',
+      });
       return navigate('/login');
     }
 
@@ -74,6 +80,7 @@ const QuestionDetailPage = () => {
 
   return (
     <Container>
+      <QuestionDetailPageMetas />
       {isLoading && <Loading />}
       {!isLoading && (
         <>

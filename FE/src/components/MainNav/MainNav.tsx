@@ -2,8 +2,9 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContexts';
 import { postDraftQuestionAPI } from '../../api';
-import writeIcon from '/icons/write.svg';
+import { WriteIcon } from '../../assets/icons';
 import * as S from './MainNav.styles';
+import Swal from 'sweetalert2';
 
 const getCurrentNavItem = () => {
   const { pathname } = window.location;
@@ -20,8 +21,20 @@ export function MainNav() {
     const isLogined = localStorage.getItem('userInfo');
     const accessToken = getAccessToken();
     if (!isLogined || !accessToken) {
-      alert('로그인 후 질문 작성이 가능합니다 😉');
-      return navigate('/login');
+      Swal.fire({
+        width: 600,
+        icon: 'question',
+        title: '로그인 후 질문 작성이 가능합니다 😉',
+        text: '로그인 페이지로 이동하시겠습니까?',
+        showCancelButton: true,
+        cancelButtonText: '취소',
+        confirmButtonText: '확인',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return navigate('/login');
+        }
+      });
+      return;
     }
 
     // 여기에서 POST 요청을 수행
@@ -50,7 +63,7 @@ export function MainNav() {
           </li>
         </ol>
         <button onClick={handleButtonClick}>
-          <img src={writeIcon} alt="질문하기" />
+          <WriteIcon />
           <span>질문하기</span>
         </button>
       </div>

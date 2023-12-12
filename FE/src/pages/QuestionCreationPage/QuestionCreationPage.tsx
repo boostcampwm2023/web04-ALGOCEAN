@@ -17,6 +17,8 @@ import draftToHtml from 'draftjs-to-html';
 import { createQuestionAPI, putDraftQuestionAPI } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
+import { QuestionCreatePageMetas } from '../../metas/metas';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -36,18 +38,6 @@ const PROGRAMMING_LANGUAGE_LIST = [
 ];
 const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
 
-const BUTTON_ONCLICK_HANDLER = [
-  () => {
-    //console.log('질문 등록하기');
-  },
-  () => {
-    //console.log('임시 등록');
-  },
-  () => {
-    //console.log('작성 취소하기');
-  },
-];
-
 const QuestionCreationPage = () => {
   const navigate = useNavigate();
   // draft ID 가져오기
@@ -55,6 +45,21 @@ const QuestionCreationPage = () => {
   const locationData = location.state?.id || null;
 
   const queryClient = useQueryClient();
+  // 사이드 바 버튼 핸들러
+  const BUTTON_ONCLICK_HANDLER = [
+    () => {},
+    () => {
+      putDraftQuestion();
+      Swal.fire({
+        icon: 'success',
+        title: '글이 임시 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
+    },
+    () => {
+      navigate('/');
+    },
+  ];
 
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
@@ -112,10 +117,49 @@ const QuestionCreationPage = () => {
     },
   });
 
+  // URL 검사
+  const isValidURL = (text: string) => {
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlRegex.test(text);
+  };
+
+  // 유효성 검사
+  const checkValidation = () => {
+    const errorMessages = [];
+
+    if (formData.title.trim() === '') {
+      errorMessages.push('제목을 입력해 주세요.');
+    }
+
+    if (!isValidURL(formData.originalLink)) {
+      errorMessages.push('유효한 URL을 입력해 주세요.');
+    }
+
+    if (errorMessages.length > 0) {
+      const errorMessageHTML = errorMessages.join('<br>');
+      Swal.fire({
+        icon: 'error',
+        title: '질문 등록 실패',
+        html: errorMessageHTML,
+        confirmButtonText: '확인',
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   // 폼 제출 핸들러
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createQuestion();
+    if (checkValidation()) {
+      Swal.fire({
+        icon: 'success',
+        title: '글이 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
+      createQuestion();
+    }
   };
 
   // 선택된 버튼 focusing 효과를 주기 위한 상태 및 핸들러
@@ -145,13 +189,11 @@ const QuestionCreationPage = () => {
     onError: () => console.error('실패'),
   });
 
-  const [pollingIntervalId, setPollingIntervalId] = useState<
-    number | undefined
-  >(undefined);
+  const [pollingIntervalId, setPollingIntervalId] = useState<any>();
 
   const handleFocus = () => {
     // 폴링 시작
-    const intervalId = setInterval(async () => {
+    const intervalId = setInterval(() => {
       putDraftQuestion();
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);
@@ -164,6 +206,7 @@ const QuestionCreationPage = () => {
 
   return (
     <Main>
+      <QuestionCreatePageMetas />
       <InnerDiv className="inner">
         <Header>질문 작성</Header>
         <Form className="contentContainer" onSubmit={handleSubmit}>

@@ -121,4 +121,62 @@ export class UsersService {
 
     return { ...user, grade, ranking };
   }
+
+  async getRankingLists() {
+    const users = await this.prisma.user.findMany({
+      where: { DeletedAt: null },
+      select: {
+        UserId: true,
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+      orderBy: [{ Points: 'desc' }, { CreatedAt: 'asc' }],
+      take: 30,
+    });
+
+    const rankingLists = await Promise.all(
+      users.map(async (user) => {
+        const { grade } = await this.getUserGradeAndRanking(user.UserId);
+        return { ...user, grade };
+      }),
+    );
+
+    // userid, nickname, points, profileimage, grade, ranking를 key값으로
+    // 하는 객체를 배열에 담아 반환
+    return rankingLists.map((user) => {
+      return {
+        userId: user.UserId,
+        nickname: user.Nickname,
+        points: user.Points,
+        profileImage: user.ProfileImage,
+        grade: user.grade,
+      };
+    });
+  }
+
+  async getRanking(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+      select: {
+        UserId: true,
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const { grade } = await this.getUserGradeAndRanking(userId);
+
+    return {
+      userId: user.UserId,
+      nickname: user.Nickname,
+      points: user.Points,
+      profileImage: user.ProfileImage,
+      grade: grade,
+    };
+  }
 }

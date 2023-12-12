@@ -113,3 +113,58 @@ export const putDraftQuestionAPI = async (data: QuestionData) => {
     throw error;
   }
 };
+
+export const getTodayQuestionAPI = async () => {
+  try {
+    const res = await client.get('/api/questions/today');
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      // 서버 응답이 있는 경우 (오류 상태 코드 처리)
+      console.error('Server Error:', error.response.data);
+    } else {
+      // 서버 응답이 없는 경우 (네트워크 오류 등)
+      console.error('Error creating question:', error.message);
+    }
+    throw error;
+  }
+};
+
+export const getRandomQuestionAPI = async () => {
+  try {
+    const res = await client.get('/api/questions/random');
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      // 서버 응답이 있는 경우 (오류 상태 코드 처리)
+      console.error('Server Error:', error.response.data);
+    } else {
+      // 서버 응답이 없는 경우 (네트워크 오류 등)
+      console.error('Error creating question:', error.message);
+    }
+    throw error;
+  }
+};
+
+export const getTrendingQuestionAPI = async () => {
+  try {
+    const res = await client.get('/api/questions/trending');
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      // 현재 404 에러가 뜨면 dummy 데이터 보내주도록 처리.
+      if (error.response.status === 404) {
+        return {
+          id: 86279,
+          title: '다익스트라 알고리즘의 정당성이 궁금해요',
+        };
+      }
+      // 서버 응답이 있는 경우 (오류 상태 코드 처리)
+      console.error('Server Error:', error.response.data);
+    } else {
+      // 서버 응답이 없는 경우 (네트워크 오류 등)
+      console.error('Error creating question:', error.message);
+    }
+    throw error;
+  }
+};

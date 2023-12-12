@@ -123,3 +123,14 @@ export interface AnswerList {
   isAdopted: boolean;
   createdAt: string;
 }
+
+export interface RankingItemProps {
+  ranking: number;
+  userInfo: {
+    userId: string;
+    nickname: string;
+    points: number;
+    profileImage: string | null;
+    grade: string;
+  };
+}

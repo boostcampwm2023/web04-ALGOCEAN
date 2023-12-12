@@ -12,6 +12,8 @@ import {
   MainPage,
   ProfilePage,
   NotFoundPage,
+  GithubCallbackPage,
+  RankingPage,
 } from '../pages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -69,9 +71,17 @@ export const router = createBrowserRouter([
         element: <QuestionSearchPage />,
       },
       {
+        path: 'ranking',
+        element: <RankingPage />,
+      },
+      {
         path: '/profile',
         element: <ProfilePage />,
         loader: unAuthorizedLoader,
+      },
+      {
+        path: '/login/githubcallback',
+        element: <GithubCallbackPage />,
       },
       {
         path: '/login',

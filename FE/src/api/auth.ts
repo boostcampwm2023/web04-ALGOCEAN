@@ -1,5 +1,6 @@
 import { SignupFetchData, LoginFetchData } from '../types/type';
 import { client } from '../utils/network';
+const { VITE_BASE_URL } = import.meta.env;
 
 export const getUserIdVerified = async (userId: string) => {
   try {
@@ -56,6 +57,20 @@ export const refreshAccessToken = async () => {
 export const getWhoAmI = async () => {
   try {
     const url = '/api/auth/whoami';
+    const { data } = await client.get(url);
+    return data;
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+export const getGithub = () => {
+  window.location.href = `${VITE_BASE_URL}/api/auth/github`;
+};
+
+export const getGithubCallback = async (code: string) => {
+  try {
+    const url = `/api/auth/github/callback?code=${code}`;
     const { data } = await client.get(url);
     return data;
   } catch (error: any) {

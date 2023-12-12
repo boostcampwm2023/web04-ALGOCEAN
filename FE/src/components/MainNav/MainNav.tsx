@@ -1,22 +1,22 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContexts';
 import { postDraftQuestionAPI } from '../../api';
 import { WriteIcon } from '../../assets/icons';
 import * as S from './MainNav.styles';
 import Swal from 'sweetalert2';
 
-const getCurrentNavItem = () => {
-  const { pathname } = window.location;
-  if (pathname === '/') return 'question';
+const getCurrentNavItem = (pathname: string) => {
+  if (pathname === '/ranking') return 'ranking';
   if (pathname === '/profile') return 'profile';
-  return 'ranking';
+  return 'question';
 };
 
 export function MainNav() {
   const { getAccessToken } = useContext(AuthContext);
   const navigate = useNavigate();
-  const currentNavItem = getCurrentNavItem();
+  const { pathname } = useLocation();
+  const currentNavItem = getCurrentNavItem(pathname);
 
   const handleButtonClick = async () => {
     const isLogined = localStorage.getItem('userInfo');
@@ -49,24 +49,33 @@ export function MainNav() {
     });
   };
 
+  const handleClick = (type: 'question' | 'ranking' | 'profile') => {
+    if (type === currentNavItem) return;
+    if (type === 'question') return navigate('');
+    navigate(`/${type}`);
+  };
+
   return (
     <S.MainNav>
       <div className="inner">
         <ol>
           <li
-            onClick={() => navigate('/')}
             className={currentNavItem === 'question' ? 'selected' : ''}
+            onClick={() => handleClick('question')}
           >
-            질문 게시판
-          </li>
-          <li className={currentNavItem === 'ranking' ? 'selected' : ''}>
-            랭킹 게시판
+            <Link to="/">질문 게시판</Link>
           </li>
           <li
-            onClick={() => navigate('profile')}
-            className={currentNavItem === 'profile' ? 'selected' : ''}
+            className={currentNavItem === 'ranking' ? 'selected' : ''}
+            onClick={() => handleClick('ranking')}
           >
-            내 정보
+            <Link to="/ranking">랭킹 게시판</Link>
+          </li>
+          <li
+            className={currentNavItem === 'profile' ? 'selected' : ''}
+            onClick={() => handleClick('profile')}
+          >
+            <Link to="/profile">내 정보</Link>
           </li>
         </ol>
         <button onClick={handleButtonClick}>

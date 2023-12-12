@@ -153,6 +153,7 @@ export class UsersController {
     ]);
 
     return {
+      userId: user.userId,
       nickname: user.Nickname,
       points: user.Points,
       grade: user.grade,

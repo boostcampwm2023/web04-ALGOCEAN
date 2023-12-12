@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -69,7 +70,7 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
-    res.send({ accessToken: access_token });
+    res.redirect(HttpStatus.FOUND, `/login/gitubcallback?accesstoken=${access_token}`);
   }
 
   @Post('refresh')

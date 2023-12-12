@@ -14,7 +14,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: configService.get('GITHUB_CLIENT_ID'),
       clientSecret: configService.get('GITHUB_CLIENT_SECRET'),
-      callbackURL: 'https://www.algocean.site/api/auth/github/callback',
+      callbackURL: 'https://algocean.site/api/auth/github/callback',
       scope: ['read:user'],
     });
   }

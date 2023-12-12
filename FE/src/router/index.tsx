@@ -15,6 +15,8 @@ import {
 } from '../pages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { HelmetProvider } from 'react-helmet-async';
+import { DefaultMetas } from '../metas/metas';
 
 const { DEV } = import.meta.env;
 
@@ -37,11 +39,14 @@ export const router = createBrowserRouter([
       <QueryClientProvider client={queryClient}>
         {DEV && <ReactQueryDevtools initialIsOpen={true} />}
         <AuthContextProvider>
-          <ThemeProvider theme={theme}>
-            <MainHeader />
-            <MainNav />
-            <Outlet />
-          </ThemeProvider>
+          <HelmetProvider>
+            <ThemeProvider theme={theme}>
+              <DefaultMetas />
+              <MainHeader />
+              <MainNav />
+              <Outlet />
+            </ThemeProvider>
+          </HelmetProvider>
         </AuthContextProvider>
       </QueryClientProvider>
     ),
@@ -82,9 +87,11 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: (
-      <ThemeProvider theme={theme}>
-        <NotFoundPage />
-      </ThemeProvider>
+      <HelmetProvider>
+        <ThemeProvider theme={theme}>
+          <NotFoundPage />
+        </ThemeProvider>
+      </HelmetProvider>
     ),
   },
 ]);

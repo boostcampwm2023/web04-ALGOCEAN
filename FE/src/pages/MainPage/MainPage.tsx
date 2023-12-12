@@ -14,6 +14,7 @@ import {
   getTodayQuestionAPI,
   getTrendingQuestionAPI,
 } from '../../api/questionService';
+import { MainPageMetas } from '../../metas/metas';
 
 const PAGINATION_SPLIT_NUMBER = 10;
 
@@ -84,6 +85,7 @@ export default function MainPage() {
 
   return (
     <Container>
+      <MainPageMetas />
       <Inner>
         <HeroBanner>
           <UniqueQuestions questions={navQuestionData as Question[]} />

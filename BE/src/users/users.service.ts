@@ -119,7 +119,7 @@ export class UsersService {
     });
     const { grade, ranking } = await this.getUserGradeAndRanking(userId);
 
-    return { ...user, grade, ranking };
+    return { ...user, userId, grade, ranking };
   }
 
   async getRankingLists() {
@@ -137,8 +137,10 @@ export class UsersService {
 
     const rankingLists = await Promise.all(
       users.map(async (user) => {
-        const { grade } = await this.getUserGradeAndRanking(user.UserId);
-        return { ...user, grade };
+        const { grade, ranking } = await this.getUserGradeAndRanking(
+          user.UserId,
+        );
+        return { ...user, grade, ranking };
       }),
     );
 
@@ -151,6 +153,7 @@ export class UsersService {
         points: user.Points,
         profileImage: user.ProfileImage,
         grade: user.grade,
+        ranking: user.ranking,
       };
     });
   }
@@ -169,7 +172,7 @@ export class UsersService {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
-    const { grade } = await this.getUserGradeAndRanking(userId);
+    const { grade, ranking } = await this.getUserGradeAndRanking(userId);
 
     return {
       userId: user.UserId,
@@ -177,6 +180,7 @@ export class UsersService {
       points: user.Points,
       profileImage: user.ProfileImage,
       grade: grade,
+      ranking: ranking,
     };
   }
 }

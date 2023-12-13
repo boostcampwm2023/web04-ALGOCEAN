@@ -32,7 +32,14 @@ const authorizedLoader = () => {
   return isLogined ? redirect('/') : null;
 };
 
-const queryClient = new QueryClient({});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 1000,
+      gcTime: 30 * 1000,
+    },
+  },
+});
 
 export const router = createBrowserRouter([
   {

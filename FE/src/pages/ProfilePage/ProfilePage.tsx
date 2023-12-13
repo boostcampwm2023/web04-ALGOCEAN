@@ -16,8 +16,6 @@ export default function ProfilePage() {
   const { data: userProfileData } = useQuery({
     queryKey: ['userProfile'],
     queryFn: getUserProfileData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 

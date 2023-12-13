@@ -31,8 +31,6 @@ export default function MainPage() {
   const { data: questionListData } = useQuery({
     queryKey: ['questionList', page],
     queryFn: getQuestionListData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 
@@ -73,7 +71,6 @@ export default function MainPage() {
     queryKey: ['navQuestion'],
     queryFn: getNavQuestionData,
     staleTime: 30 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 

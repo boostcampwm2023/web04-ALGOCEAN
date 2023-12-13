@@ -33,7 +33,6 @@ const QuestionContent = ({ questionId }: { questionId: string }) => {
     queryKey: ['questionDetailContent', questionId],
     queryFn: getContent,
     staleTime: 10 * 6000,
-    gcTime: 30 * 1000,
     refetchOnWindowFocus: false,
     retry: false,
   });
@@ -56,7 +55,6 @@ const QuestionAnswers = ({
     queryKey: ['questionDetailAnswer', questionId, answerReloadTrigger],
     queryFn: getAnswers,
     staleTime: 30 * 1000,
-    gcTime: 30 * 1000,
     refetchOnWindowFocus: false,
     retry: false,
     placeholderData: keepPreviousData,

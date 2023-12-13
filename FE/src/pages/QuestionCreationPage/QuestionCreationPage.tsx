@@ -98,6 +98,7 @@ const QuestionCreationPage = () => {
   const { data: draftData } = useQuery<DraftData>({
     queryKey: ['draft'],
     queryFn: getDraftData,
+    staleTime: 0,
     gcTime: 0,
   });
 

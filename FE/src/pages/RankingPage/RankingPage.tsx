@@ -15,8 +15,6 @@ const RankingPage = () => {
   const { data: rankingListData } = useQuery({
     queryKey: ['rankingList'],
     queryFn: getRankingListData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 
@@ -28,8 +26,6 @@ const RankingPage = () => {
   const { data: myRankingData } = useQuery({
     queryKey: ['myRankingData'],
     queryFn: getMyRankingData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 

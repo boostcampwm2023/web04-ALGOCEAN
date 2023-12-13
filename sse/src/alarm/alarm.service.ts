@@ -52,13 +52,13 @@ export class AlarmService {
 
       // Redis Pub/Sub을 통한 메시지 구독
       await this.subscribeClient.subscribe(`user:${userId}`);
-      this.subscribeClient.on('message', (channel, message) => {
+      this.subscribeClient.on('message', async (channel, message) => {
         if (channel === `user:${userId}`) {
-          const decodedMessage = Buffer.from(message, 'base64').toString();
           this.userSubjects[userId].next(message);
+          const decodedMessage = Buffer.from(message, 'base64').toString();
           const { questionId } = JSON.parse(decodedMessage);
-          this.prisma
-            .$executeRaw`UPDATE Notification SET IsRead = true WHERE UserId = ${userId} AND AnswerId = ${questionId}`;
+          await this.prisma
+            .$executeRaw`UPDATE Notification SET IsRead = true WHERE UserId = ${userId} AND QuestionId = ${questionId}`;
         }
       });
     }

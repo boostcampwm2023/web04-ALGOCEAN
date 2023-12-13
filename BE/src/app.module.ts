@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SseModule } from './sse/sse.module';
 import { LikesModule } from './likes/likes.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { PollingModule } from './polling/polling.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     AuthModule,
     SseModule,
     LikesModule,
+    PollingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -157,13 +157,4 @@ model Notification {
   User            User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Notification_ibfk_1")
 
   @@index([UserId], map: "UserId")
-}
-
-model ViewLog {
-  Id         Int       @id @default(autoincrement())
-  QuestionId Int?
-  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
-  Question   Question? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "ViewLog_ibfk_1")
-
-  @@index([QuestionId], map: "QuestionId")
 }

@@ -1,6 +1,6 @@
 import { createBrowserRouter, redirect, Outlet } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { MainHeader, MainNav, Loading } from '../components';
+import { MainHeader, MainNav } from '../components';
 import { AuthContextProvider } from '../contexts/AuthContexts';
 import { theme } from '../styles/theme';
 import {
@@ -19,7 +19,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HelmetProvider } from 'react-helmet-async';
 import { DefaultMetas } from '../metas/metas';
-import { Suspense } from 'react';
 
 const { DEV } = import.meta.env;
 
@@ -65,11 +64,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/question/:id',
-        element: (
-          <Suspense fallback={<Loading />}>
-            <QuestionDetailPage />
-          </Suspense>
-        ),
+        element: <QuestionDetailPage />,
         errorElement: <NotFoundPage />,
       },
       {

@@ -15,6 +15,18 @@ export const Container = styled.div`
   }
 `;
 
+export const AnswerContainer = styled.div`
+  background-color: transparent;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2rem;
+  width: 100%;
+
+  > * {
+    background-color: ${({ theme }) => theme.color.grayscale.white};
+  }
+`;
+
 export const NoAnswer = styled.div`
   text-align: center;
   padding: 3rem;

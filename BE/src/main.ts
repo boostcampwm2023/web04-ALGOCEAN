@@ -18,6 +18,15 @@ async function bootstrap() {
     .addServer('http://algocean.site')
     .addServer('api')
     .addServer('/')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        in: 'header',
+      },
+      'Authorization',
+    )
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

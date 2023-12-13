@@ -6,14 +6,14 @@ import { AdoptAnswerDto } from './dto/adopt-answer.dto';
 @Injectable()
 export class AnswersService {
   constructor(private prisma: PrismaService) {}
-  async create(createAnswerDto: CreateAnswerDto) {
+  async create(createAnswerDto: CreateAnswerDto, userId: number) {
     const { questionId, content, videoLink } = createAnswerDto;
     return this.prisma.answer.create({
       data: {
         QuestionId: questionId,
         Content: content,
         VideoLink: videoLink,
-        UserId: 1, // TODO: get user id from request
+        UserId: userId,
       },
     });
   }
@@ -43,15 +43,18 @@ export class AnswersService {
     }
   }
 
-  async adopt(adoptAnswerDto: AdoptAnswerDto) {
+  async adopt(adoptAnswerDto: AdoptAnswerDto, userId: number) {
     const { answerId } = adoptAnswerDto;
     await this.prisma.$transaction(async (prisma) => {
-      //TODO: check if user is the owner of the question
-
       const adoptedAnswer = await prisma.answer.findUnique({
         where: { Id: answerId },
         include: { Question: true },
       });
+
+      const isOwner = adoptedAnswer.Question.UserId === userId;
+      if (!isOwner) {
+        throw new Error('User is not the owner of the question.');
+      }
 
       if (!adoptedAnswer) {
         throw new Error('Answer not found. Rolling back transaction.');

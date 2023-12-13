@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDTO } from './DTO/login.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -19,8 +19,9 @@ export class AuthController {
 
   @ApiOperation({
     summary: '나는 누구',
-    description: '로그인한 사용자의 정보를 반환합니다.',
+    description: '로그인한 사용자의 정보를 반환합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('Authorization')
   @Get('whoami')
   @UseGuards(AuthGuard('jwt'))
   async whoami(@Req() req) {

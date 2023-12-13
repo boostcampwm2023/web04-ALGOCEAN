@@ -1,6 +1,10 @@
 import { Suspense, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useSuspenseQuery,
+  useQuery,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
@@ -37,18 +41,25 @@ const QuestionContent = ({ questionId }: { questionId: string }) => {
   return <QuestionDetailContent questionData={questionDetailContentData} />;
 };
 
-const QuestionAnswers = ({ questionId }: { questionId: string }) => {
+const QuestionAnswers = ({
+  questionId,
+  answerReloadTrigger,
+}: {
+  questionId: string;
+  answerReloadTrigger: unknown;
+}) => {
   const getAnswers = async () => {
     return await getQuestionAnswerListData(questionId!);
   };
 
-  const { data: questionAnswerListData } = useSuspenseQuery({
-    queryKey: ['questionDetailAnswer', questionId],
+  const { data: questionAnswerListData, isLoading } = useQuery({
+    queryKey: ['questionDetailAnswer', questionId, answerReloadTrigger],
     queryFn: getAnswers,
     staleTime: 30 * 1000,
     gcTime: 30 * 1000,
     refetchOnWindowFocus: false,
     retry: false,
+    placeholderData: keepPreviousData,
   });
 
   return (
@@ -57,7 +68,9 @@ const QuestionAnswers = ({ questionId }: { questionId: string }) => {
         questionAnswerListData.map((answer, idx: number) => (
           <QuestionAnswerCard key={idx} cardData={answer} />
         ))}
-      {!questionAnswerListData && <NoAnswer>답변이 없습니다</NoAnswer>}
+      {!isLoading && !questionAnswerListData && (
+        <NoAnswer>답변이 없습니다</NoAnswer>
+      )}
     </AnswerContainer>
   );
 };
@@ -65,10 +78,12 @@ const QuestionAnswers = ({ questionId }: { questionId: string }) => {
 const QuestionDetailPage = () => {
   const { id: questionId } = useParams();
   const [answerActivate, setAnswerActivate] = useState(false);
+  const [answerCount, setAnswerCount] = useState(0);
 
   const submitAnswer = async (content: string) => {
     setAnswerActivate(false);
     await postAnswer(content, questionId!);
+    setAnswerCount((v) => v + 1);
   };
 
   return (
@@ -87,9 +102,10 @@ const QuestionDetailPage = () => {
             handleSubmit={submitAnswer}
           />
         )}
-        <Suspense fallback={<div>답변 로딩중!</div>}>
-          <QuestionAnswers questionId={questionId!} />
-        </Suspense>
+        <QuestionAnswers
+          questionId={questionId!}
+          answerReloadTrigger={answerCount}
+        />
       </Suspense>
     </Container>
   );

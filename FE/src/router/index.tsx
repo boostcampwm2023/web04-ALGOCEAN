@@ -59,6 +59,7 @@ export const router = createBrowserRouter([
         </AuthContextProvider>
       </QueryClientProvider>
     ),
+    errorElement: <div>Unknown Error</div>,
     children: [
       {
         path: '',

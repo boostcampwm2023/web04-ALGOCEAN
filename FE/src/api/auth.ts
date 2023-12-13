@@ -62,6 +62,7 @@ export const getWhoAmI = async () => {
     return { userId, nickname, points };
   } catch (error: any) {
     console.error(error);
+    throw error();
   }
 };
 

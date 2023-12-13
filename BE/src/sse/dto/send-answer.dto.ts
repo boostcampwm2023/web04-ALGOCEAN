@@ -4,6 +4,14 @@ import { ApiProperty } from '@nestjs/swagger';
 export class SendAnswerDto {
   @ApiProperty({
     example: 1,
+    description: '알림을 받을 유저의 ID',
+    type: Number,
+  })
+  @IsNumber()
+  userId: number;
+
+  @ApiProperty({
+    example: 1,
     description: '질문의 ID',
     type: Number,
   })

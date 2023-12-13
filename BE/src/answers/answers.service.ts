@@ -75,13 +75,14 @@ export class AnswersService {
       });
 
       const sendAnswerDto = {
+        userId: adoptedAnswer.UserId,
         questionId: adoptedAnswer.Question.Id,
         questionTitle: adoptedAnswer.Question.Title,
         answerId: adoptedAnswer.Id,
         answerCreatedDate: adoptedAnswer.CreatedAt,
       };
 
-      await this.sseService.sendNotificationToUser(1, sendAnswerDto);
+      await this.sseService.sendNotificationToUser(sendAnswerDto);
     });
   }
 }

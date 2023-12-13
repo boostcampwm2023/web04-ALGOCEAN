@@ -116,8 +116,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Get('/me')
   async getMyProfile(@Req() req) {
-    const userId =
-      req.user.provider === 'local' ? req.user.UserId : '_' + req.user.UserId;
+    const userId = req.user.UserId;
     return await this.profileInfo(userId);
   }
 

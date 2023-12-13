@@ -90,18 +90,30 @@ const LoginPage = () => {
     const { accessToken } = data;
     setAccessToken(accessToken);
 
-    const userInfo = await getWhoAmI();
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    try {
+      const userInfo = await getWhoAmI();
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-    Swal.fire({
-      icon: 'success',
-      title: '로그인이 완료되었습니다',
-      showConfirmButton: false,
-      toast: true,
-      timer: 1000,
-    });
+      Swal.fire({
+        icon: 'success',
+        title: '로그인이 완료되었습니다',
+        showConfirmButton: false,
+        toast: true,
+        timer: 1000,
+      });
 
-    navigate(-1);
+      navigate(-1);
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        text: '다시 시도해주세요',
+        showConfirmButton: false,
+        toast: true,
+        timer: 1000,
+      });
+      navigate('/login');
+    }
   };
 
   return (

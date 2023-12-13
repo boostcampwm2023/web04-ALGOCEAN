@@ -79,7 +79,11 @@ export class AlarmService {
         answerId: notification.AnswerId,
         answerCreatedDate: notification.AnswerCreatedAt,
       };
-      this.userSubjects[userId].next(JSON.stringify(alarmMessage));
+      const encodedMessage = Buffer.from(
+        JSON.stringify(alarmMessage),
+        'utf-8',
+      ).toString('base64');
+      this.userSubjects[userId].next(JSON.stringify(encodedMessage));
     });
 
     await this.prisma.notification.updateMany({

@@ -83,8 +83,10 @@ model Question {
   DeletedAt           DateTime? @db.DateTime(0)
   Answer              Answer[]
   User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_ibfk_1")
+  ViewLog             ViewLog[]
 
   @@index([UserId], map: "UserId")
+  @@index([DeletedAt, CreatedAt(sort: Desc)], map: "idx_question_filter_sort")
 }
 
 model User {
@@ -97,10 +99,11 @@ model User {
   CreatedAt          DateTime?            @default(now()) @db.DateTime(0)
   UpdatedAt          DateTime?            @default(now()) @db.DateTime(0)
   DeletedAt          DateTime?            @db.DateTime(0)
-  GithubId           String?              @unique(map: "githubId") @db.VarChar(255)
+  GithubId           String?              @unique(map: "GithubId") @db.VarChar(255)
   Answer             Answer[]
   Delete_History     Delete_History[]
   LikeInfo           LikeInfo[]
+  Notification       Notification[]
   Point_History      Point_History[]
   Question           Question[]
   Question_Temporary Question_Temporary[]
@@ -131,4 +134,26 @@ model Question_Temporary {
   User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_Temporary_ibfk_1")
 
   @@index([UserId], map: "UserId")
+}
+
+model Notification {
+  Id              Int       @id @default(autoincrement())
+  UserId          Int?
+  QuestionId      Int?
+  QuestionTitle   String?   @db.VarChar(255)
+  AnswerId        Int?
+  AnswerCreatedAt DateTime? @db.DateTime(0)
+  IsRead          Boolean?  @default(false)
+  User            User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Notification_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model ViewLog {
+  Id         Int       @id @default(autoincrement())
+  QuestionId Int?
+  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
+  Question   Question? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "ViewLog_ibfk_1")
+
+  @@index([QuestionId], map: "QuestionId")
 }

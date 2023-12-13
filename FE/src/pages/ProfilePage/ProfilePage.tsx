@@ -34,6 +34,7 @@ export default function ProfilePage() {
               userAdoptedAnswerCount={userProfileData.adoptedAnswerCount}
               userAnswerCount={userProfileData.answerCount}
               userQuestionCount={userProfileData.questionCount}
+              userRanking={userProfileData.ranking}
             />
             <ProfileQuestionList
               userQuestionList={userProfileData.recentQuestions}

@@ -17,12 +17,26 @@ import {
 import { MainPageMetas } from '../../metas/metas';
 
 const PAGINATION_SPLIT_NUMBER = 10;
+const UNIQUE_QUESTION_INITIAL_DATA = [
+  {
+    type: 'hot',
+    title: '',
+    id: 0,
+  },
+  {
+    type: 'today',
+    title: '',
+    id: 0,
+  },
+  {
+    type: 'random',
+    title: '',
+    id: 0,
+  },
+];
 
-export default function MainPage() {
+const MainContent = ({ page }: { page: number }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const page = Number(queryParams.get('page')) || 1;
 
   const getQuestionListData = async () => {
     return await getQuestionList({ page: page });
@@ -31,10 +45,38 @@ export default function MainPage() {
   const { data: questionListData } = useQuery({
     queryKey: ['questionList', page],
     queryFn: getQuestionListData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
+
+  const wholePageCount = questionListData?.totalPage || 0;
+
+  const handleCurrentPage = (page: number) => {
+    navigate(`/?page=${encodeURIComponent(page)}`);
+  };
+
+  return (
+    <Main>
+      {questionListData && (
+        <>
+          <QuestionList questionListData={questionListData.questions} />
+          {!!wholePageCount && (
+            <Pagination
+              wholePageCount={wholePageCount}
+              currentPage={page}
+              handleCurrentPage={handleCurrentPage}
+              splitNumber={PAGINATION_SPLIT_NUMBER}
+            />
+          )}
+        </>
+      )}
+    </Main>
+  );
+};
+
+export default function MainPage() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const page = Number(queryParams.get('page')) || 1;
 
   const getNavQuestionData = async () => {
     try {
@@ -72,16 +114,10 @@ export default function MainPage() {
   const { data: navQuestionData } = useQuery({
     queryKey: ['navQuestion'],
     queryFn: getNavQuestionData,
-    staleTime: 30 * 1000,
-    gcTime: 30 * 1000,
+    staleTime: 0,
+    initialData: () => UNIQUE_QUESTION_INITIAL_DATA,
     placeholderData: keepPreviousData,
   });
-
-  const wholePageCount = questionListData?.totalPage || 0;
-
-  const handleCurrentPage = (page: number) => {
-    navigate(`/?page=${encodeURIComponent(page)}`);
-  };
 
   return (
     <Container>
@@ -91,21 +127,7 @@ export default function MainPage() {
           <UniqueQuestions questions={navQuestionData as Question[]} />
           <QuestionProfile />
         </HeroBanner>
-        <Main>
-          {questionListData && (
-            <>
-              <QuestionList questionListData={questionListData.questions} />
-              {!!wholePageCount && (
-                <Pagination
-                  wholePageCount={wholePageCount}
-                  currentPage={page}
-                  handleCurrentPage={handleCurrentPage}
-                  splitNumber={PAGINATION_SPLIT_NUMBER}
-                />
-              )}
-            </>
-          )}
-        </Main>
+        <MainContent page={page} />
       </Inner>
     </Container>
   );

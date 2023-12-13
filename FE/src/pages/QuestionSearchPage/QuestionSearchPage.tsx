@@ -21,8 +21,6 @@ const QuestionSearchPage = () => {
   const { data: questionListData } = useQuery({
     queryKey: ['questionList', searchQuery, page],
     queryFn: getQuestionListData,
-    staleTime: 10 * 1000,
-    gcTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 

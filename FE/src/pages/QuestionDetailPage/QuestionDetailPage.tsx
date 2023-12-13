@@ -1,5 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Suspense, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  useSuspenseQuery,
+  useQuery,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
@@ -12,97 +17,94 @@ import {
   getQuestionAnswerListData,
   postAnswer,
 } from '../../api';
-import {
-  QuestionDetailData as QuestionData,
-  QuestionAnswerCardProps,
-} from 'src/types/type';
-
-import { Container, NoAnswer } from './QuestionDetailPage.styles';
-import { AuthContext } from '../../contexts/AuthContexts';
-import Swal from 'sweetalert2';
 import { QuestionDetailPageMetas } from '../../metas/metas';
+import {
+  Container,
+  AnswerContainer,
+  NoAnswer,
+} from './QuestionDetailPage.styles';
+
+const QuestionContent = ({ questionId }: { questionId: string }) => {
+  const getContent = async () => {
+    return await getQuestionDetailContentData(questionId);
+  };
+
+  const { data: questionDetailContentData } = useSuspenseQuery({
+    queryKey: ['questionDetailContent', questionId],
+    queryFn: getContent,
+    staleTime: 10 * 6000,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  return <QuestionDetailContent questionData={questionDetailContentData} />;
+};
+
+const QuestionAnswers = ({
+  questionId,
+  answerReloadTrigger,
+}: {
+  questionId: string;
+  answerReloadTrigger: unknown;
+}) => {
+  const getAnswers = async () => {
+    return await getQuestionAnswerListData(questionId!);
+  };
+
+  const { data: questionAnswerListData, isLoading } = useQuery({
+    queryKey: ['questionDetailAnswer', questionId, answerReloadTrigger],
+    queryFn: getAnswers,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: false,
+    retry: false,
+    placeholderData: keepPreviousData,
+  });
+
+  return (
+    <AnswerContainer>
+      {!!questionAnswerListData &&
+        questionAnswerListData.map((answer, idx: number) => (
+          <QuestionAnswerCard key={idx} cardData={answer} />
+        ))}
+      {!isLoading && !questionAnswerListData && (
+        <NoAnswer>답변이 없습니다</NoAnswer>
+      )}
+    </AnswerContainer>
+  );
+};
 
 const QuestionDetailPage = () => {
   const { id: questionId } = useParams();
-  const { getAccessToken } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [answerState, setAnswerState] = useState<
-    'notyet' | 'progress' | 'done'
-  >('notyet');
-  const [questionData, setQuestionData] = useState<QuestionData | null>(null);
-  const [answerListData, setAnswerListData] = useState<
-    QuestionAnswerCardProps[] | null
-  >(null);
+  const [answerActivate, setAnswerActivate] = useState(false);
+  const [answerCount, setAnswerCount] = useState(0);
 
   const submitAnswer = async (content: string) => {
-    if (!getAccessToken()) {
-      Swal.fire({
-        icon: 'error',
-        title: '로그인후 답변가능합니다',
-        confirmButtonText: '확인',
-      });
-      return navigate('/login');
-    }
-
+    setAnswerActivate(false);
     await postAnswer(content, questionId!);
-    setAnswerState(() => 'done');
-    initAnswerListData();
+    setAnswerCount((v) => v + 1);
   };
-
-  const initQuestionDetailContentData = async () => {
-    try {
-      const questionData = await getQuestionDetailContentData(questionId!);
-      setQuestionData(questionData);
-    } catch (e) {
-      return navigate('/notfound');
-    }
-  };
-
-  const initAnswerListData = async () => {
-    const answerListData = await getQuestionAnswerListData(questionId!);
-    setAnswerListData(answerListData);
-  };
-
-  const initFetchData = async () => {
-    await initQuestionDetailContentData();
-    await initAnswerListData();
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    initFetchData();
-  }, []);
-
-  useEffect(() => {
-    // TODO : 이미 질문에 응답했는지 확인 여부 확인 필요
-  }, []);
 
   return (
     <Container>
       <QuestionDetailPageMetas />
-      {isLoading && <Loading />}
-      {!isLoading && (
-        <>
-          <QuestionDetailContent questionData={questionData!} />
-          {answerState === 'notyet' && (
-            <QuestionAnswerRequestCard
-              onAnswerButtonClick={() => setAnswerState('progress')}
-            />
-          )}
-          {answerState === 'progress' && (
-            <QuestionAnswerFormCard
-              handleCancel={() => setAnswerState('notyet')}
-              handleSubmit={submitAnswer}
-            />
-          )}
-          {!!answerListData &&
-            answerListData.map(({ cardData }, idx) => (
-              <QuestionAnswerCard key={idx} cardData={cardData} />
-            ))}
-          {!answerListData && <NoAnswer>답변이 없습니다</NoAnswer>}
-        </>
-      )}
+      <Suspense fallback={<Loading />}>
+        <QuestionContent questionId={questionId!} />
+        {!answerActivate && (
+          <QuestionAnswerRequestCard
+            onAnswerButtonClick={() => setAnswerActivate(true)}
+          />
+        )}
+        {answerActivate && (
+          <QuestionAnswerFormCard
+            handleCancel={() => setAnswerActivate(false)}
+            handleSubmit={submitAnswer}
+          />
+        )}
+        <QuestionAnswers
+          questionId={questionId!}
+          answerReloadTrigger={answerCount}
+        />
+      </Suspense>
     </Container>
   );
 };

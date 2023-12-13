@@ -1,4 +1,8 @@
-import { GetQuestionListOptions as Options, QuestionData } from '../types/type';
+import {
+  GetQuestionListOptions as Options,
+  QuestionData,
+  QuestionAnswerData,
+} from '../types/type';
 import { client } from '../utils/network';
 
 export const getQuestionList = async (options: Options) => {
@@ -35,18 +39,12 @@ export const getQuestionAnswerListData = async (questionId: string) => {
   try {
     const url = `/api/answers/${questionId}`;
     const { data } = await client.get(url);
-    const { answers } = data;
-    return answers.map((answer: unknown) => {
-      return { cardData: answer };
-    });
+    if (data === '') return null;
+
+    const answers: QuestionAnswerData[] = data.answers;
+    return answers;
   } catch (error: any) {
-    if (error.response) {
-      if (error.response.status === 404) {
-        return null;
-      }
-    } else {
-      console.error('Error from get answer list data:', error.message);
-    }
+    console.error('Error from get answer list data:', error.message);
     throw error;
   }
 };

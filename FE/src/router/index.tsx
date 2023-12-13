@@ -32,7 +32,14 @@ const authorizedLoader = () => {
   return isLogined ? redirect('/') : null;
 };
 
-const queryClient = new QueryClient({});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 1000,
+      gcTime: 30 * 1000,
+    },
+  },
+});
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +59,7 @@ export const router = createBrowserRouter([
         </AuthContextProvider>
       </QueryClientProvider>
     ),
+    errorElement: <div>Unknown Error</div>,
     children: [
       {
         path: '',
@@ -65,6 +73,7 @@ export const router = createBrowserRouter([
       {
         path: '/question/:id',
         element: <QuestionDetailPage />,
+        errorElement: <NotFoundPage />,
       },
       {
         path: '/search',

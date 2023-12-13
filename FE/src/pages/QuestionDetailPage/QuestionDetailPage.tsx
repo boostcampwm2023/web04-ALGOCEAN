@@ -1,125 +1,108 @@
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   QuestionDetailContent,
   QuestionAnswerRequestCard,
   QuestionAnswerCard,
   QuestionAnswerFormCard,
+  Loading,
 } from '../../components';
-import { QuestionAnswerCardProps } from 'src/types/type';
-import { Container } from './QuestionDetailPage.styles';
+import {
+  getQuestionDetailContentData,
+  getQuestionAnswerListData,
+  postAnswer,
+} from '../../api';
+import {
+  QuestionDetailData as QuestionData,
+  QuestionAnswerCardProps,
+} from 'src/types/type';
 
-const QuestionDetailContentProps = {
-  questionData: {
-    id: 123,
-    title: 'Voluptas consequatur iure ea cupiditate.',
-    nickname: '닉네임',
-    tag: 'baekjoon',
-    createdAt: '2023-11-27T13:17:31.000Z',
-    programmingLanguage: 'C',
-    isAdopted: false,
-    viewCount: 123,
-    likeCount: 12,
-    isLiked: true,
-    content:
-      'Molestiae vel fugit vitae ut consequuntur minima sunt eaque ut. Dolor aut incidunt. Ut fugit possimus sequi voluptatem. Qui quas reprehenderit ut repellendus sint aut voluptatibus. Veniam vel ut dolorum voluptas. Culpa deleniti rerum inventore enim asperiores eius neque eveniet.',
-  },
-} as const;
-const dummyQuestionAnswerCardProps = {
-  cardData: {
-    userId: 122,
-    nickname: '질문자 본인',
-    answerId: 1243,
-    content:
-      't incidunt. Ut fugit possimus sequi voluptatem. Qui quas reprehenderit ut repellendus sint aut voluptatibus. Veniam vel ut dolorum voluptas. Culpa deleniti rerum inventore enim asperiores eius neque eveniet.',
-    videoLink: '',
-    isAdopted: true,
-    createdAt: '2023-11-27T13:17:31.000Z',
-    isLiked: false,
-  },
-} as const;
-const dummyQuestionAnswerCardProps2 = {
-  cardData: {
-    userId: 124,
-    nickname: '제주도 감귤',
-    answerId: 1243,
-    content:
-      't incidunt. Ut fugit possimus sequi voluptatem. Qui quas reprehenderit ut repellendus sint aut voluptatibus. Veniam vel ut dolorum voluptas. Culpa deleniti rerum inventore enim asperiores eius neque eveniet.',
-    videoLink: '',
-    isAdopted: false,
-    createdAt: '2023-11-27T13:17:31.000Z',
-    isLiked: false,
-  },
-} as const;
-const dummyQuestionAnswerList = [
-  dummyQuestionAnswerCardProps,
-  dummyQuestionAnswerCardProps2,
-];
-const GLOBAL_USER_ID = 123;
+import { Container, NoAnswer } from './QuestionDetailPage.styles';
+import { AuthContext } from '../../contexts/AuthContexts';
+import Swal from 'sweetalert2';
+import { QuestionDetailPageMetas } from '../../metas/metas';
 
 const QuestionDetailPage = () => {
-  const [isUserAnswering, setIsUserAnswering] = useState(false);
-  const [isUserAnswered, setIsUserAnswered] = useState(false);
-  const [answerList, setAnswerList] = useState<
+  const { id: questionId } = useParams();
+  const { getAccessToken } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [answerState, setAnswerState] = useState<
+    'notyet' | 'progress' | 'done'
+  >('notyet');
+  const [questionData, setQuestionData] = useState<QuestionData | null>(null);
+  const [answerListData, setAnswerListData] = useState<
     QuestionAnswerCardProps[] | null
   >(null);
 
-  const activateUserAnswering = () => {
-    setIsUserAnswering(true);
-  };
-
-  const deactivateUserAnswering = () => {
-    setIsUserAnswering(false);
-  };
-
-  const submitUserAnswer = (content: string) => {
-    setIsUserAnswered(true);
-    // ⚠️ 서버로의 POST 로직
-    initAnswerList();
-    alert(`${content} 추가 완료`);
-    deactivateUserAnswering();
-  };
-
-  const isAnswerListContainsUserAnswer = () => {
-    return answerList!.find(
-      ({ cardData }) => cardData.userId === GLOBAL_USER_ID,
-    );
-  };
-
-  const initAnswerList = async () => {
-    const answerList = dummyQuestionAnswerList;
-    setAnswerList(answerList);
-  };
-
-  useLayoutEffect(() => {
-    if (answerList && isAnswerListContainsUserAnswer()) {
-      setIsUserAnswered(true);
-    } else {
-      setIsUserAnswered(false);
+  const submitAnswer = async (content: string) => {
+    if (!getAccessToken()) {
+      Swal.fire({
+        icon: 'error',
+        title: '로그인후 답변가능합니다',
+        confirmButtonText: '확인',
+      });
+      return navigate('/login');
     }
-  }, [answerList]);
 
-  useLayoutEffect(() => {
-    initAnswerList();
+    await postAnswer(content, questionId!);
+    setAnswerState(() => 'done');
+    initAnswerListData();
+  };
+
+  const initQuestionDetailContentData = async () => {
+    try {
+      const questionData = await getQuestionDetailContentData(questionId!);
+      setQuestionData(questionData);
+    } catch (e) {
+      return navigate('/notfound');
+    }
+  };
+
+  const initAnswerListData = async () => {
+    const answerListData = await getQuestionAnswerListData(questionId!);
+    setAnswerListData(answerListData);
+  };
+
+  const initFetchData = async () => {
+    await initQuestionDetailContentData();
+    await initAnswerListData();
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    initFetchData();
+  }, []);
+
+  useEffect(() => {
+    // TODO : 이미 질문에 응답했는지 확인 여부 확인 필요
   }, []);
 
   return (
     <Container>
-      <QuestionDetailContent {...QuestionDetailContentProps} />
-      {!isUserAnswered && !isUserAnswering && (
-        <QuestionAnswerRequestCard
-          onAnswerButtonClick={activateUserAnswering}
-        />
+      <QuestionDetailPageMetas />
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <>
+          <QuestionDetailContent questionData={questionData!} />
+          {answerState === 'notyet' && (
+            <QuestionAnswerRequestCard
+              onAnswerButtonClick={() => setAnswerState('progress')}
+            />
+          )}
+          {answerState === 'progress' && (
+            <QuestionAnswerFormCard
+              handleCancel={() => setAnswerState('notyet')}
+              handleSubmit={submitAnswer}
+            />
+          )}
+          {!!answerListData &&
+            answerListData.map(({ cardData }, idx) => (
+              <QuestionAnswerCard key={idx} cardData={cardData} />
+            ))}
+          {!answerListData && <NoAnswer>답변이 없습니다</NoAnswer>}
+        </>
       )}
-      {isUserAnswering && (
-        <QuestionAnswerFormCard
-          handleCancel={deactivateUserAnswering}
-          handleSubmit={submitUserAnswer}
-        />
-      )}
-      {!!answerList &&
-        answerList.map(({ cardData }) => (
-          <QuestionAnswerCard cardData={cardData} />
-        ))}
     </Container>
   );
 };

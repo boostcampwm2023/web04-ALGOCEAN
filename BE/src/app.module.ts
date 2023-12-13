@@ -32,6 +32,7 @@ import { PollingModule } from './polling/polling.module';
     SseModule,
     LikesModule,
     PollingModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

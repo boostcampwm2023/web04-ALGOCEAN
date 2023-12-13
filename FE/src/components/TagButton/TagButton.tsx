@@ -24,8 +24,8 @@ const TagButton = ({
 
   return (
     <Container
-      isSelected={isSelected}
-      isInteractive={isInteractive}
+      isselected={String(isSelected)}
+      isinteractive={String(isInteractive)}
       onClick={handleButtonState}
     >
       {content}

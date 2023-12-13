@@ -8,11 +8,16 @@ import {
   SearchbarLabel,
   MainHeaderContainer,
 } from './MainHeader.styles';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const PAGE_TITLE = 'ALGOCEAN';
+
 function Logo() {
+  const navigate = useNavigate();
   return (
-    <LogoContainer>
+    <LogoContainer onClick={() => navigate('/')}>
       <img src={logoIcon} alt="ALGOCEAN" />
       <h1>{PAGE_TITLE}</h1>
     </LogoContainer>
@@ -20,11 +25,38 @@ function Logo() {
 }
 
 function SearchBar() {
+  const [searchValue, setSearchValue] = useState('');
+  const navigate = useNavigate();
+  const handleInputChange = (e: any) => {
+    setSearchValue(e.target.value);
+  };
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    // 검색어가 비어있으면 navigate를 하지 않음
+    if (!searchValue.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: '검색어를 입력해주세요.',
+        confirmButtonText: '확인',
+        toast: true,
+        timer: 1000,
+        showConfirmButton: false,
+      });
+
+      return;
+    }
+    navigate(`/search?query=${encodeURIComponent(searchValue)}`);
+  };
   return (
     <Searchbar>
       <SearchbarLabel htmlFor="searchInput"></SearchbarLabel>
-      <SearchbarInput id="searchInput" placeholder="검색어를 입력해 주세요" />
-      <SearchbarButton onClick={(e) => e.preventDefault()}>
+      <SearchbarInput
+        id="searchInput"
+        placeholder="검색어를 입력해 주세요"
+        value={searchValue}
+        onChange={handleInputChange}
+      />
+      <SearchbarButton onClick={handleSearch}>
         <img src={searchIcon} alt="searchbar button" />
       </SearchbarButton>
     </Searchbar>

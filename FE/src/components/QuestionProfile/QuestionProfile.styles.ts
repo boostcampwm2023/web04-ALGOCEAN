@@ -30,6 +30,21 @@ export const LoginButton = styled.button`
   }
 `;
 
+export const AuthorizedProfileContainer = styled.div`
+  text-align: center;
+
+  strong {
+    padding: 0 0.2rem;
+    ${({ theme }) => theme.font.bold14}
+    color: ${({ theme }) => theme.color.mainColor.blueMain};
+  }
+
+  button {
+    margin-top: 0.5rem;
+    color: ${({ theme }) => theme.color.grayscale[300]};
+  }
+`;
+
 export const QuestionProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,7 +52,12 @@ export const QuestionProfileContainer = styled.div`
   flex-shrink: 0;
 
   width: 20rem;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 1rem;
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.color.grayscale[50]};
+`;
+
+export const Signup = styled.div`
+  margin-top: 1rem;
+  cursor: pointer;
 `;

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { UniqueQuestionItem as Item } from '../../types/type';
 import {
   ItemContainer,
@@ -22,11 +23,17 @@ const itemTypeInfo = {
   },
 };
 
-function Item({ type, title: content, url }: Item) {
+function Item({ type, title: content, id }: Item) {
   const { title, imageUrl } = itemTypeInfo[type];
 
+  const navigate = useNavigate();
+
+  const handleNavigate = (questionId: number) => {
+    navigate(`/question/${questionId}`);
+  };
+
   return (
-    <ItemContainer $type={type} data-url={url}>
+    <ItemContainer $type={type} onClick={() => handleNavigate(id)}>
       <ItemTitle>{title}</ItemTitle>
       <ItemContent>{content}</ItemContent>
       <ItemIcon src={imageUrl} alt={title} />
@@ -37,8 +44,8 @@ function Item({ type, title: content, url }: Item) {
 export function UniqueQuestions({ questions }: { questions: Item[] }) {
   return (
     <UniqueQuestionsContainer>
-      {questions.map(({ type, title, url }, idx) => (
-        <Item key={idx} type={type} title={title} url={url} />
+      {questions?.map(({ type, title, id }, idx) => (
+        <Item key={idx} type={type} title={title} id={id} />
       ))}
     </UniqueQuestionsContainer>
   );

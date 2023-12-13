@@ -59,7 +59,11 @@ export class AuthService {
   async findOrCreateGithubUser(profile: Profile) {
     return this.prisma.user.upsert({
       where: { GithubId: profile.username },
-      create: { GithubId: profile.username, Nickname: profile.displayName },
+      create: {
+        GithubId: profile.username,
+        Nickname: profile.displayName,
+        UserId: '_' + profile.username,
+      },
       update: { Nickname: profile.displayName },
     });
   }
@@ -94,9 +98,9 @@ export class AuthService {
     }
 
     return await this.createTokens({
-      sub: user.sub,
-      username: user.username,
-      provider: user.provider,
+      sub: decoded.sub,
+      username: decoded.username,
+      provider: decoded.provider,
     });
   }
 }

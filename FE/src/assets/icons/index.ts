@@ -3,5 +3,13 @@ import ArrowBackIcon from './arrow-back.svg?react';
 import KebabIcon from './kebab.svg?react';
 import EyeIcon from './eye.svg?react';
 import LikeIcon from './like.svg?react';
+import WriteIcon from './write.svg?react';
 
-export { CheckCircleIcon, ArrowBackIcon, KebabIcon, EyeIcon, LikeIcon };
+export {
+  CheckCircleIcon,
+  ArrowBackIcon,
+  KebabIcon,
+  EyeIcon,
+  LikeIcon,
+  WriteIcon,
+};

@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { LikesModule } from './likes/likes.module';
+import { CrawlerModule } from './crawler/crawler.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LikesModule } from './likes/likes.module';
     UsersModule,
     AuthModule,
     LikesModule,
+    CrawlerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

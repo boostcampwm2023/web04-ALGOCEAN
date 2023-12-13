@@ -1,6 +1,14 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.li`
+interface ContainerProps {
+  ismydata: boolean;
+}
+
+const myDataStyle = css`
+  border: 1px solid ${({ theme }) => theme.color.mainColor.blueMain};
+`;
+
+export const Container = styled.li<ContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,6 +18,8 @@ export const Container = styled.li`
   margin: 1rem 0;
   padding: 0 0.5rem;
   border-radius: 0.5rem;
+
+  ${({ ismydata }) => (ismydata ? myDataStyle : '')}
 
   &:last-of-type {
     margin: 0;

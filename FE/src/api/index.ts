@@ -18,4 +18,4 @@ export {
   putDraftQuestionAPI,
 } from './questionService';
 
-export { getRankingListData } from './ranking';
+export { getRankingListData, getUserRankingData } from './ranking';

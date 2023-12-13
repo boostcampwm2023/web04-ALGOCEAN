@@ -90,8 +90,8 @@ const LoginPage = () => {
     const { accessToken } = data;
     setAccessToken(accessToken);
 
-    const { Nickname: nickname, Points: points } = await getWhoAmI();
-    localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    const userInfo = await getWhoAmI();
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
     Swal.fire({
       icon: 'success',

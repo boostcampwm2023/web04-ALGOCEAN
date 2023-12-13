@@ -56,9 +56,10 @@ export const refreshAccessToken = async () => {
 
 export const getWhoAmI = async () => {
   try {
-    const url = '/api/auth/whoami';
+    const url = '/api/users/me';
     const { data } = await client.get(url);
-    return data;
+    const { userId, nickname, points } = data;
+    return { userId, nickname, points };
   } catch (error: any) {
     console.error(error);
   }

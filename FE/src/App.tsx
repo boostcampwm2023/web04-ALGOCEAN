@@ -5,10 +5,9 @@ import { router } from './router';
 
 function App() {
   const setUserInfo = async () => {
-    const data = await getWhoAmI();
-    if (data) {
-      const { Nickname: nickname, Points: points } = data;
-      localStorage.setItem('userInfo', JSON.stringify({ nickname, points }));
+    const userInfo = await getWhoAmI();
+    if (userInfo) {
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
     }
   };
 

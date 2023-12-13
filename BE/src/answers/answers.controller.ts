@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Res,
   Param,
-  HttpException,
   Get,
 } from '@nestjs/common';
 import { AnswersService } from './answers.service';
@@ -48,7 +47,7 @@ export class AnswersController {
   ) {
     const answers = await this.answersService.findAllByQuestionId(questionId);
     if (answers.length === 0) {
-      throw new HttpException('Answers not found', HttpStatus.NOT_FOUND);
+      return res.status(HttpStatus.NO_CONTENT).json([]);
     }
     return res
       .status(HttpStatus.OK)

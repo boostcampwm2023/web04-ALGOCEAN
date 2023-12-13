@@ -1,6 +1,5 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -57,6 +56,19 @@ model LikeInfo {
   @@index([UserId], map: "UserId")
 }
 
+model Notification {
+  Id              Int       @id @default(autoincrement())
+  UserId          Int?
+  QuestionId      Int?
+  QuestionTitle   String?   @db.VarChar(255)
+  AnswerId        Int?
+  AnswerCreatedAt DateTime? @db.DateTime(0)
+  IsRead          Boolean?  @default(false)
+  User            User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Notification_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
 model Point_History {
   Id          Int       @id @default(autoincrement())
   UserId      Int?
@@ -88,6 +100,20 @@ model Question {
 
   @@index([UserId], map: "UserId")
   @@index([DeletedAt, CreatedAt(sort: Desc)], map: "idx_question_filter_sort")
+}
+
+model Question_Temporary {
+  Id                  Int       @id @default(autoincrement())
+  UserId              Int?
+  Title               String?   @db.VarChar(255)
+  Content             String?   @db.Text
+  Tag                 String?   @db.VarChar(255)
+  ProgrammingLanguage String?   @db.VarChar(255)
+  OriginalLink        String?   @db.VarChar(255)
+  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
+  User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_Temporary_ibfk_1")
+
+  @@index([UserId], map: "UserId")
 }
 
 model User {
@@ -123,20 +149,6 @@ model User_Item {
   @@index([UserId], map: "UserId")
 }
 
-model Question_Temporary {
-  Id                  Int       @id @default(autoincrement())
-  UserId              Int?
-  Title               String?   @db.VarChar(255)
-  Content             String?   @db.Text
-  Tag                 String?   @db.VarChar(255)
-  ProgrammingLanguage String?   @db.VarChar(255)
-  OriginalLink        String?   @db.VarChar(255)
-  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
-  User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_Temporary_ibfk_1")
-
-  @@index([UserId], map: "UserId")
-}
-
 model ViewLog {
   Id         Int       @id @default(autoincrement())
   QuestionId Int?
@@ -144,17 +156,4 @@ model ViewLog {
   Question   Question? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "ViewLog_ibfk_1")
 
   @@index([QuestionId], map: "QuestionId")
-}
-
-model Notification {
-  Id              Int       @id @default(autoincrement())
-  UserId          Int?
-  QuestionId      Int?
-  QuestionTitle   String?   @db.VarChar(255)
-  AnswerId        Int?
-  AnswerCreatedAt DateTime? @db.DateTime(0)
-  IsRead          Boolean?  @default(false)
-  User            User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Notification_ibfk_1")
-
-  @@index([UserId], map: "UserId")
 }

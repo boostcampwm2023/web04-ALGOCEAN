@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 
 const getCurrentNavItem = (pathname: string) => {
   if (pathname === '/ranking') return 'ranking';
+  if (pathname === '/profile') return 'profile';
   return 'question';
 };
 
@@ -48,9 +49,10 @@ export function MainNav() {
     });
   };
 
-  const handleClick = (type: 'question' | 'ranking') => {
+  const handleClick = (type: 'question' | 'ranking' | 'profile') => {
     if (type === currentNavItem) return;
-    navigate(`/${type === 'ranking' ? 'ranking' : ''}`);
+    if (type === 'question') return navigate('');
+    navigate(`/${type}`);
   };
 
   return (
@@ -68,6 +70,12 @@ export function MainNav() {
             onClick={() => handleClick('ranking')}
           >
             <Link to="/ranking">랭킹 게시판</Link>
+          </li>
+          <li
+            className={currentNavItem === 'profile' ? 'selected' : ''}
+            onClick={() => handleClick('profile')}
+          >
+            <Link to="/profile">내 정보</Link>
           </li>
         </ol>
         <button onClick={handleButtonClick}>

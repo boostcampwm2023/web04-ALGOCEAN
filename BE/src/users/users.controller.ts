@@ -157,6 +157,7 @@ export class UsersController {
       nickname: user.Nickname,
       points: user.Points,
       grade: user.grade,
+      ranking: user.ranking,
       profileImage: user.ProfileImage,
       likeCount: questions.likes + answers.likes,
       questionCount: questions.questionCount,

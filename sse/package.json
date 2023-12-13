@@ -27,6 +27,7 @@
     "@prisma/client": "^5.5.2",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
+    "ioredis": "^5.3.2",
     "lru-cache": "^10.1.0",
     "prisma": "5.5.2",
     "reflect-metadata": "^0.1.13",

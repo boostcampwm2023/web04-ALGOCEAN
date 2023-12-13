@@ -48,19 +48,21 @@ export interface SquareButtonProps {
   handleClick?: () => void;
 }
 
-export interface QuestionAnswerCardProps {
-  cardData: {
+export interface QuestionAnswerData {
+  Id: number;
+  User: {
     Id: number;
-    User: {
-      Id: number;
-      Nickname: string;
-      ProfileImage: string;
-    };
-    Content: string;
-    VideoLink: string;
-    IsAdopted: boolean;
-    CreatedAt: string;
+    Nickname: string;
+    ProfileImage: string;
   };
+  Content: string;
+  VideoLink: string;
+  IsAdopted: boolean;
+  CreatedAt: string;
+}
+
+export interface QuestionAnswerCardProps {
+  cardData: QuestionAnswerData;
 }
 
 export interface QuestionAnswerFormCardProps {

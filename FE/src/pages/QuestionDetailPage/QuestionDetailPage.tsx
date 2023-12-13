@@ -29,6 +29,7 @@ const QuestionContent = ({ questionId }: { questionId: string }) => {
     queryKey: ['questionDetailContent', questionId],
     queryFn: getContent,
     staleTime: 10 * 6000,
+    gcTime: 30 * 1000,
     refetchOnWindowFocus: false,
     retry: false,
   });
@@ -44,6 +45,8 @@ const QuestionAnswers = ({ questionId }: { questionId: string }) => {
   const { data: questionAnswerListData } = useSuspenseQuery({
     queryKey: ['questionDetailAnswer', questionId],
     queryFn: getAnswers,
+    staleTime: 30 * 1000,
+    gcTime: 30 * 1000,
     refetchOnWindowFocus: false,
     retry: false,
   });

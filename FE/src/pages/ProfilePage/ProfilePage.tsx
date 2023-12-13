@@ -1,26 +1,28 @@
+import { Suspense } from 'react';
 import { ProfilePageMetas } from '../../metas/metas';
 import { getUserProfileAPI } from '../../api/profile';
 import {
+  Loading,
   ProfileAnswerList,
   ProfileInfo,
   ProfileQuestionList,
 } from '../../components';
 import { Container, Inner } from './ProfilePage.styles';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-export default function ProfilePage() {
+const ProfileContent = () => {
   const getUserProfileData = async () => {
     return await getUserProfileAPI();
   };
 
-  const { data: userProfileData } = useQuery({
+  const { data: userProfileData } = useSuspenseQuery({
     queryKey: ['userProfile'],
     queryFn: getUserProfileData,
-    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 
   return (
-    <Container>
+    <>
       {userProfileData && (
         <>
           <ProfilePageMetas userName={userProfileData.nickname} />
@@ -41,6 +43,15 @@ export default function ProfilePage() {
           </Inner>
         </>
       )}
+    </>
+  );
+};
+export default function ProfilePage() {
+  return (
+    <Container>
+      <Suspense fallback={<Loading />}>
+        <ProfileContent />
+      </Suspense>
     </Container>
   );
 }

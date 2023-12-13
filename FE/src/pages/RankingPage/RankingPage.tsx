@@ -1,6 +1,11 @@
-import { RankingItem } from '../../components';
+import { Suspense } from 'react';
+import { Loading, RankingItem } from '../../components';
 import { getRankingListData, getUserRankingData } from '../../api';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import {
+  useSuspenseQuery,
+  useQuery,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import {
   Main,
   Header,
@@ -10,16 +15,31 @@ import {
   RankingTitle,
 } from './RankingPage.style';
 
-const RankingPage = () => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-  const { data: rankingListData } = useQuery({
+const RankingList = () => {
+  const { data: rankingListData } = useSuspenseQuery({
     queryKey: ['rankingList'],
     queryFn: getRankingListData,
-    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 
+  return (
+    <ul>
+      {!!rankingListData &&
+        rankingListData.map((data: any) => (
+          <RankingItem
+            ranking={data.ranking}
+            userInfo={data}
+            key={data.userId}
+          />
+        ))}
+    </ul>
+  );
+};
+const RankingPage = () => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+
   const getMyRankingData = async () => {
-    if (!userInfo) return;
+    if (!userInfo.userId) return null;
     return await getUserRankingData(userInfo.userId);
   };
 
@@ -50,17 +70,9 @@ const RankingPage = () => {
           <div>포인트</div>
           <div>등급</div>
         </RankingHeader>
-        {!!rankingListData && (
-          <ul>
-            {rankingListData.map((data: any, idx: number) => (
-              <RankingItem
-                ranking={idx + 1}
-                userInfo={data}
-                key={data.userId}
-              />
-            ))}
-          </ul>
-        )}
+        <Suspense fallback={<Loading />}>
+          <RankingList />
+        </Suspense>
       </InnerDiv>
     </Main>
   );

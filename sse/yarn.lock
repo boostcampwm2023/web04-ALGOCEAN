@@ -879,6 +879,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs-modules/ioredis@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@nestjs-modules/ioredis@npm:1.0.1"
+  peerDependencies:
+    "@nestjs/common": ^6.7.0 || ^7.0.0 || ^8.0.0
+    "@nestjs/core": ^6.7.0 || ^7.0.0 || ^8.0.0
+    ioredis: ^4.0.0
+  checksum: 5910d043b7cec83d3eb422f9c0617eea88650853852fbe98a060b74adc38f1fd710dd9611faead99d84b69ea35cd070e9dc90d022e829be5fc22a8118d810fce
+  languageName: node
+  linkType: hard
+
 "@nestjs/cli@npm:^10.0.0":
   version: 10.2.1
   resolution: "@nestjs/cli@npm:10.2.1"
@@ -6105,7 +6116,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.1, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
+"rxjs@npm:7.8.1, rxjs@npm:^7.5.5":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -6368,6 +6379,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sse@workspace:."
   dependencies:
+    "@nestjs-modules/ioredis": "npm:^1.0.1"
     "@nestjs/cli": "npm:^10.0.0"
     "@nestjs/common": "npm:^10.0.0"
     "@nestjs/core": "npm:^10.0.0"
@@ -6389,7 +6401,7 @@ __metadata:
     prettier: "npm:^3.0.0"
     prisma: "npm:5.5.2"
     reflect-metadata: "npm:^0.1.13"
-    rxjs: "npm:^7.8.1"
+    rxjs: "npm:7.8.1"
     source-map-support: "npm:^0.5.21"
     supertest: "npm:^6.3.3"
     ts-jest: "npm:^29.1.0"

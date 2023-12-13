@@ -101,7 +101,7 @@ export const TagButton = styled.button<TagButtonProps>`
       : '1px solid transparent'};
   border-radius: 1rem;
   background-color: ${({ $isactive, theme }) =>
-    $isactive ? theme.color.grayscale.white : theme.color.grayscale[50]};
+    $isactive ? theme.color.mainColor.blueOutline : theme.color.grayscale[50]};
   color: ${({ $isactive, theme }) =>
     $isactive ? theme.color.grayscale.black : theme.color.grayscale[200]};
 `;

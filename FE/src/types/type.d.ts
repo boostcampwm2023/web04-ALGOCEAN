@@ -135,3 +135,11 @@ export interface RankingItemProps {
   };
   isMyData?: boolean;
 }
+
+interface DraftData {
+  title: string;
+  content: string;
+  tag: string;
+  programmingLanguage: string;
+  originalLink: string;
+}

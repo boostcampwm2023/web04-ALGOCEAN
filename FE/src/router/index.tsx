@@ -18,7 +18,6 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HelmetProvider } from 'react-helmet-async';
-import { DefaultMetas } from '../metas/metas';
 
 const { DEV } = import.meta.env;
 
@@ -50,7 +49,6 @@ export const router = createBrowserRouter([
         <AuthContextProvider>
           <HelmetProvider>
             <ThemeProvider theme={theme}>
-              <DefaultMetas />
               <MainHeader />
               <MainNav />
               <Outlet />

@@ -50,6 +50,7 @@ const DocumentEditor = ({
 
   // draft 반영
   useDidMountEffect(() => {
+    if (!draftContent) return;
     const blocksFromHTML = htmlToDraft(draftContent as string);
     if (!blocksFromHTML) return;
     const { contentBlocks, entityMap } = blocksFromHTML;

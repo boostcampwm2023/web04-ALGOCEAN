@@ -270,7 +270,7 @@ const QuestionCreationPage = () => {
             <Label>제목</Label>
             <Input
               type="text"
-              value={formData.title}
+              value={formData.title || ''}
               placeholder="내용을 입력해 주세요."
               onFocus={handleFocus}
               onBlur={handleBlur}
@@ -302,7 +302,7 @@ const QuestionCreationPage = () => {
             <Label>문제 원본 링크</Label>
             <Input
               type="text"
-              value={formData.originalLink}
+              value={formData.originalLink || ''}
               placeholder="내용을 입력해 주세요."
               onChange={(e) =>
                 handleInputChange('originalLink', e.target.value)

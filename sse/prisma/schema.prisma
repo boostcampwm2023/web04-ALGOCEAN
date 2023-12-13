@@ -1,35 +1,7 @@
 generator client {
   provider = "prisma-client-js"
 }
-commit 8766f00c4663c8d58bb603a963d1b1741908bcdf (HEAD -> main)
-Author: Kim Tae Ho <kok8454@gmail.com>
-Date:   Thu Dec 14 01:45:28 2023 +0900
 
-build: prisma 초기 세팅
-
-- prisma 5.5.2 설치
-- prisma/client 5.5.2 설치
-- yarn prisma db pull
-- yarn prisma generate
-
-commit 20b481cfcbf8c3654f64764373f42b72a59501b7
-Author: Kim Tae Ho <kok8454@gmail.com>
-Date:   Thu Dec 14 01:38:08 2023 +0900
-
-feat: SSE 서버 초기 세팅
-
-- lru-cache 설치
-- yarn install 적용
-
-commit cf0f0b6b1c5775c40fd26dfb8ed7177568897b92
-Author: Kim Tae Ho <kok8454@gmail.com>
-Date:   Thu Dec 14 01:11:03 2023 +0900
-
-feat: SSE 서버 초기 세팅
-
-- nest new SSE 커맨드 사용
-- yarn set version berry 적용
-- yarn set version 4.0.1 적용
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")

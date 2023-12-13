@@ -33,6 +33,7 @@ export const MainPageMetas = () => {
         content="알고리즘 관련 질문을 올리고 답변할 수 있는 커뮤니티"
       />
       <meta name="keywords" content="알고션, ALGOCEAN" />
+      <link rel="canonical" href="https://algocean.site" />
     </Helmet>
   );
 };

@@ -175,7 +175,7 @@ export class AnswersService {
 
     const recentAnswers = await this.prisma.answer.findMany({
       where: {
-        UserId: parseInt(userId, 10),
+        UserId: user.Id,
         DeletedAt: null,
       },
       select: {

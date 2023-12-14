@@ -86,15 +86,66 @@ export class AlarmService {
       this.userSubjects[userId].next(JSON.stringify(encodedMessage));
     });
 
-    await this.prisma.notification.updateMany({
-      where: {
-        UserId: userId,
-        IsRead: false,
-      },
-      data: {
-        IsRead: true,
-      },
+    // await this.prisma.notification.updateMany({
+    //   where: {
+    //     UserId: userId,
+    //     IsRead: false,
+    //   },
+    //   data: {
+    //     IsRead: true,
+    //   },
+    // });
+
+    return this.userSubjects[userId];
+  }
+
+  async createSseStreamForUser2(
+    userId: number,
+  ): Promise<ReplaySubject<string>> {
+    if (!this.userSubjects[userId]) {
+      this.userSubjects[userId] = new ReplaySubject<string>(10);
+
+      // Redis Pub/Sub을 통한 메시지 구독
+      await this.subscribeClient.subscribe(`user:${userId}`);
+      this.subscribeClient.on('message', async (channel, message) => {
+        if (channel === `user:${userId}`) {
+          this.userSubjects[userId].next(message);
+          const decodedMessage = Buffer.from(message, 'base64').toString();
+          const { questionId } = JSON.parse(decodedMessage);
+          await this.prisma
+            .$executeRaw`UPDATE Notification SET IsRead = true WHERE UserId = ${userId} AND QuestionId = ${questionId}`;
+        }
+      });
+    }
+
+    // NestJS 서버 재시작 후에 Redis에서 데이터를 가져오기 위해 Prisma 사용
+    const pendingNotifications: any[] = await this.prisma
+      .$queryRaw`SELECT * FROM Notification WHERE UserId = ${userId} AND IsRead = false`;
+    // pendingNotifications에 저장된 알림을 SendAnswerDto 형태로 변환하여 SSE 스트림에 전달
+
+    pendingNotifications.forEach((notification) => {
+      const alarmMessage: SendAnswerDto = {
+        questionId: notification.QuestionId,
+        questionTitle: notification.QuestionTitle,
+        answerId: notification.AnswerId,
+        answerCreatedDate: notification.AnswerCreatedAt,
+      };
+      const encodedMessage = Buffer.from(
+        JSON.stringify(alarmMessage),
+        'utf-8',
+      ).toString('base64');
+      this.userSubjects[userId].next(JSON.stringify(encodedMessage));
     });
+
+    // await this.prisma.notification.updateMany({
+    //   where: {
+    //     UserId: userId,
+    //     IsRead: false,
+    //   },
+    //   data: {
+    //     IsRead: true,
+    //   },
+    // });
 
     return this.userSubjects[userId];
   }
@@ -120,5 +171,18 @@ export class AlarmService {
   removeSseStreamForUser(userId: number) {
     this.subscribeClient.unsubscribe(`user:${userId}`);
     delete this.userSubjects[userId];
+  }
+
+  async dummy() {
+    // 1 ~ 10번 userId를 가진 사용자에게 더미데이터 전송
+    for (let i = 1; i <= 500; i++) {
+      const alarmMessage: SendAnswerDto = {
+        questionId: 1,
+        questionTitle: '더미데이터',
+        answerId: 1,
+        answerCreatedDate: new Date(),
+      };
+      await this.sendNotificationToUser(i, alarmMessage);
+    }
   }
 }

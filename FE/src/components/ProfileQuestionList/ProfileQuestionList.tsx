@@ -27,12 +27,12 @@ export function ProfileQuestionList({ userQuestionList }: QuestionListProps) {
         {userQuestionList &&
           userQuestionList.map((data: any) => (
             <ContentDiv key={data.Id}>
-              <p>{data.Title}</p>
-              <p>{data.Tag}</p>
-              <p>{data.ProgrammingLanguage}</p>
-              <p>{data.IsAdopted ? 'O' : 'X'}</p>
-              <p>{data.LikeCount}</p>
-              <p>{getFormalizedDate(data.CreatedAt)}</p>
+              <p>{data.title}</p>
+              <p>{data.tag}</p>
+              <p>{data.programmingLanguage}</p>
+              <p>{data.isAdopted ? 'O' : 'X'}</p>
+              <p>{data.likeCount}</p>
+              <p>{getFormalizedDate(data.createdAt)}</p>
             </ContentDiv>
           ))}
       </QuestionListDiv>

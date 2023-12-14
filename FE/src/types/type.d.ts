@@ -108,14 +108,14 @@ export interface GetQuestionListOptions {
 }
 
 export interface QuestionList {
-  Id: number;
-  Title: string;
-  CreatedAt: string;
-  Tag: string;
-  ProgrammingLanguage: string;
-  IsAdopted: boolean;
-  ViewCount: number;
-  LikeCount: number;
+  id: number;
+  title: string;
+  createdAt: string;
+  tag: string;
+  programmingLanguage: string;
+  isAdopted: boolean;
+  viewCount: number;
+  likeCount: number;
 }
 
 export interface AnswerList {

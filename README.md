@@ -36,6 +36,14 @@
 
 ## 🛠 주요 기능
 
+| 메인 페이지 | 랭킹 페이지 |
+|:---:|:---:|
+| <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/7ac4f93a-a9ba-4564-b3a1-34e6203443bd" alt="메인페이지" width="400" height="300"> | <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/dff0893a-f35d-4a26-b912-eb24a12e9883" alt="랭킹페이지" width="400" height="300"> |
+| **질문 등록 페이지** | **질문 상세 페이지** |
+| <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/7ac4f93a-a9ba-4564-b3a1-34e6203443bd" alt="메인페이지" width="400" height="300"> | <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/dff0893a-f35d-4a26-b912-eb24a12e9883" alt="랭킹페이지" width="400" height="300"> |
+| **질문 검색 페이지** | **프로필 페이지** |
+| <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/36553e68-3985-45e9-82ab-370150f5cf52" alt="질문검색페이지" width="400" height="300"> | <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/dff0893a-f35d-4a26-b912-eb24a12e9883" alt="랭킹페이지" width="400" height="300"> |
+
 ### 메인 페이지
 
 - 설명 1

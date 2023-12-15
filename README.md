@@ -42,37 +42,43 @@ Algocean에서 자유롭게 헤엄치며<br />
 
 ## 🛠 주요 기능
 
-|                                                                           메인 페이지                                                                                        |                                                                                랭킹 페이지                                                                                 |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|         <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/7ac4f93a-a9ba-4564-b3a1-34e6203443bd" alt="메인페이지" width="400" height="300">          |               <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/dff0893a-f35d-4a26-b912-eb24a12e9883" alt="랭킹페이지" width="400" height="300"> |
-|                                                                       **질문 등록 페이지**                                                                                    |                                                                           **질문 상세 페이지**                                                                            |
-|       <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/1b75a8ce-5479-44d7-be78-33e20ab453ff" alt="질문등록페이지" width="400" height="300">         |          <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/b984c20c-a648-4f63-b480-591afbca90e1" alt="질문상세페이지" width="400" height="300">  |
-|                                                                       **질문 검색 페이지**                                                                                    |                                                                            **프로필 페이지**                                                                               |
-|           <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/36553e68-3985-45e9-82ab-370150f5cf52" alt="질문검색페이지" width="400" height="300">     |         <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/a2010189-94b4-4f48-b2c6-22810842fa6e" alt="프로필페이지" width="400" height="300">     |
+|                                                                           메인 페이지                                                                            |                                                                           랭킹 페이지                                                                            |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|   <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/7ac4f93a-a9ba-4564-b3a1-34e6203443bd" alt="메인페이지" width="400" height="300">   |   <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/dff0893a-f35d-4a26-b912-eb24a12e9883" alt="랭킹페이지" width="400" height="300">   |
+|                                                                       **질문 등록 페이지**                                                                       |                                                                       **질문 상세 페이지**                                                                       |
+| <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/1b75a8ce-5479-44d7-be78-33e20ab453ff" alt="질문등록페이지" width="400" height="300"> | <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/b984c20c-a648-4f63-b480-591afbca90e1" alt="질문상세페이지" width="400" height="300"> |
+|                                                                       **질문 검색 페이지**                                                                       |                                                                        **프로필 페이지**                                                                         |
+| <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/36553e68-3985-45e9-82ab-370150f5cf52" alt="질문검색페이지" width="400" height="300"> |  <img src="https://github.com/boostcampwm2023/web04-ALGOCEAN/assets/87417773/a2010189-94b4-4f48-b2c6-22810842fa6e" alt="프로필페이지" width="400" height="300">  |
 
 <br />
 
 ## 메인 페이지
+
 - 조회수 급상승 질문, 오늘의 질문, 랜덤 질문등을 확인할 수 있어요.
 - 실시간으로 업데이트되는 질문게시판을 확인할 수 있어요.
 
 ## 랭킹 페이지
+
 - 순위대로 사용자의 닉네임, 포인트, 등급을 확인할 수 있어요.
 - 자신의 랭킹을 확인할 수 있어요.
 
 ## 질문 등록 페이지
+
 - 질문을 등록할 수 있어요.
 - 폴링을 사용하여 임시 글이 자동으로 서버에 업데이트 되어요.
 
 ## 질문 상세 페이지
+
 - 다른 사용자가 남긴 질문을 확인할 수 있어요.
 - 다른 사용자가 남긴 질문에 답변할 수 있어요.
 - 마음에 드는 답변을 채택할 수 있어요.
 
 ## 질문 검색 페이지
+
 - 검색어를 통해 검색어에 매칭되는 게시글을 찾을 수 있어요.
 
 ## 프로필 페이지
+
 - 나의 정보를 확인할 수 있어요.
 - 나의 질문을 확인할 수 있어요.
 - 나의 답변을 확인할 수 있어요.
@@ -91,11 +97,13 @@ Algocean에서 자유롭게 헤엄치며<br />
         <td>FE</td>
         <td>
           <img src='https://img.shields.io/badge/react-%2361DAFB?logo=react&logoColor=%23fff'>
-          <img src='https://img.shields.io/badge/react_query-%2FF4154?logo=react&logoColor=%23fff'>
-          <img src='https://img.shields.io/badge/react_router-%23CA4245?logo=react&logoColor=%23fff'><br/>
-          <img src='https://img.shields.io/badge/vite-%23646CFF?logo=react&logoColor=%23fff'>
-          <img src='https://img.shields.io/badge/vite-%235A29E4?logo=react&logoColor=%23fff'>
-          <img src='https://img.shields.io/badge/vite-%23DB7093?logo=react&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/react_query-%23FF4154?logo=react&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/react_router-%23CA4245?logo=react&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/react_hook_form-%23EC5990?logo=react&logoColor=%23fff'><br/>
+          <img src='https://img.shields.io/badge/vite-%23646CFF?logo=vite&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/axios-%235A29E4?logo=axios&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/styledcomponents-%23DB7093?logo=styledcomponents&logoColor=%23fff'>
+           <img src='https://img.shields.io/badge/react_draft_wysiwyg-%23333'>
         </td>
       </tr>
       <tr>

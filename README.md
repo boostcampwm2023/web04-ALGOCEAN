@@ -9,7 +9,7 @@ Algocean에서 자유롭게 헤엄치며<br />
 </p>
 <br/>
 <p>
-<a href="https://www.algocean.site" target="_blank">지금 바로 ALGOCEAN 사용해보기</a>
+<a href="https://algocean.site" target="_blank">지금 바로 ALGOCEAN 사용해보기</a>
 </p>
 <a href=""><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/boostcampwm2023/web04-ALGOCEAN&count_bg=%238F84ED&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 <img src="https://img.shields.io/badge/release-1.0.0-8F84ED">

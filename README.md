@@ -102,7 +102,7 @@ Algocean에서 자유롭게 헤엄치며<br />
           <img src='https://img.shields.io/badge/react_hook_form-%23EC5990?logo=react&logoColor=%23fff'><br/>
           <img src='https://img.shields.io/badge/vite-%23646CFF?logo=vite&logoColor=%23fff'>
           <img src='https://img.shields.io/badge/axios-%235A29E4?logo=axios&logoColor=%23fff'>
-          <img src='https://img.shields.io/badge/styledcomponents-%23DB7093?logo=styledcomponents&logoColor=%23fff'>
+          <img src='https://img.shields.io/badge/styled_components-%23DB7093?logo=styledcomponents&logoColor=%23fff'>
            <img src='https://img.shields.io/badge/react_draft_wysiwyg-%23333'>
         </td>
       </tr>

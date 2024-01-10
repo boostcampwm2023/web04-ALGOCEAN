@@ -31,5 +31,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push Docker image
-      working-directory: BE
+      working-directory: ./BE
       run: docker push ${{ secrets.DOCKER_USERNAME }}/was

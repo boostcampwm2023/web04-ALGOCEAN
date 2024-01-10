@@ -1,0 +1,35 @@
+name: BE Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Make ENV
+      working-directory: ./BE
+      run: |
+        touch .env
+        echo "${{ secrets.ENV }}" > .env
+      shell: bash
+      
+    - name: Build Docker image
+      working-directory: ./BE
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/was -f dev.dockerfile .
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker image
+      working-directory: BE
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/was

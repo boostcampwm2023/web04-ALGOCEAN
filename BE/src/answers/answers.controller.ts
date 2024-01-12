@@ -5,14 +5,16 @@ import {
   HttpStatus,
   Res,
   Param,
-  HttpException,
   Get,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { AdoptAnswerDto } from './dto/adopt-answer.dto';
 import { Response } from 'express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('answers')
 @Controller('answers')
@@ -21,12 +23,18 @@ export class AnswersController {
 
   @ApiOperation({
     summary: '답변 생성',
-    description: '답변을 생성합니다.',
+    description: '답변을 생성합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() createAnswerDto: CreateAnswerDto, @Res() res: Response) {
+  async create(
+    @Body() createAnswerDto: CreateAnswerDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      await this.answersService.create(createAnswerDto);
+      await this.answersService.create(createAnswerDto, req.user.Id);
       return res
         .status(HttpStatus.CREATED)
         .json({ message: 'Answer created successfully' });
@@ -48,7 +56,7 @@ export class AnswersController {
   ) {
     const answers = await this.answersService.findAllByQuestionId(questionId);
     if (answers.length === 0) {
-      throw new HttpException('Answers not found', HttpStatus.NOT_FOUND);
+      return res.status(HttpStatus.NO_CONTENT).json([]);
     }
     return res
       .status(HttpStatus.OK)
@@ -57,13 +65,18 @@ export class AnswersController {
 
   @ApiOperation({
     summary: '답변 채택',
-    description: '답변을 채택합니다.',
+    description: '답변을 채택합니다. (토큰 필요)',
   })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
   @Post('adopt')
-  adopt(@Body() adoptAnswerDto: AdoptAnswerDto, @Res() res: Response) {
-    //TODO: get user id from request, and pass it to answersService.adopt
+  async adopt(
+    @Body() adoptAnswerDto: AdoptAnswerDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      this.answersService.adopt(adoptAnswerDto);
+      await this.answersService.adopt(adoptAnswerDto, req.user.Id);
       return res.status(HttpStatus.OK).json({ message: 'Answer adopted' });
     } catch (e) {
       return res

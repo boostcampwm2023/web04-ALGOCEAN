@@ -1,32 +1,24 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { MainHeader, MainNav, Scroller } from './components';
-import {
-  MainPage,
-  QuestionCreationPage,
-  QuestionDetailPage,
-  QuestionSearchPage,
-} from './pages';
-import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme';
+import { useEffect } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { getWhoAmI } from './api';
+import { router } from './router';
 
 function App() {
-  return (
-    <>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <MainHeader />
-          <MainNav />
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/question/create" element={<QuestionCreationPage />} />
-            <Route path="/question/:id" element={<QuestionDetailPage />} />
-            <Route path="/search" element={<QuestionSearchPage />} />
-          </Routes>
-          <Scroller />
-        </Router>
-      </ThemeProvider>
-    </>
-  );
+  const setUserInfo = async () => {
+    const userInfo = await getWhoAmI();
+    if (userInfo) {
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    }
+  };
+
+  useEffect(() => {
+    const isLogined = !!localStorage.getItem('userInfo');
+    if (isLogined) {
+      setUserInfo();
+    }
+  }, []);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;

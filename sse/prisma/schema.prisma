@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Answer {
+  Id         Int       @id @default(autoincrement())
+  UserId     Int?
+  QuestionId Int?
+  Content    String?   @db.Text
+  VideoLink  String?   @db.VarChar(255)
+  IsAdopted  Boolean?  @default(false)
+  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
+  UpdatedAt  DateTime? @default(now()) @db.DateTime(0)
+  DeletedAt  DateTime? @db.DateTime(0)
+  LikeCount  Int?      @default(0)
+  User       User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Answer_ibfk_1")
+  Question   Question? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Answer_ibfk_2")
+
+  @@index([QuestionId], map: "QuestionId")
+  @@index([UserId], map: "UserId")
+}
+
+model Delete_History {
+  Id                Int       @id @default(autoincrement())
+  OriginalTableName String?   @db.VarChar(255)
+  OriginalDataId    Int?
+  DeleteDate        DateTime? @db.DateTime(0)
+  DeletedBy         Int?
+  User              User?     @relation(fields: [DeletedBy], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Delete_History_ibfk_1")
+
+  @@index([DeletedBy], map: "DeletedBy")
+}
+
+model Item {
+  Id          Int         @id @default(autoincrement())
+  Name        String?     @db.VarChar(255)
+  Description String?     @db.Text
+  Price       Int?
+  Quantity    Int?
+  User_Item   User_Item[]
+}
+
+model LikeInfo {
+  Id              Int      @id @default(autoincrement())
+  UserId          Int?
+  LikedEntityId   Int?
+  LikedEntityType String?  @db.VarChar(255)
+  IsLiked         Boolean? @default(false)
+  User            User?    @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "LikeInfo_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model Notification {
+  Id              Int       @id @default(autoincrement())
+  UserId          Int?
+  QuestionId      Int?
+  QuestionTitle   String?   @db.VarChar(255)
+  AnswerId        Int?
+  AnswerCreatedAt DateTime? @db.DateTime(0)
+  IsRead          Boolean?  @default(false)
+  User            User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Notification_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model Point_History {
+  Id          Int       @id @default(autoincrement())
+  UserId      Int?
+  PointChange Int?
+  Reason      String?   @db.VarChar(255)
+  ChangeDate  DateTime? @default(now()) @db.DateTime(0)
+  User        User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Point_History_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model Question {
+  Id                  Int       @id @default(autoincrement())
+  UserId              Int?
+  Title               String?   @db.VarChar(255)
+  Content             String?   @db.Text
+  Tag                 String?   @db.VarChar(255)
+  ProgrammingLanguage String?   @db.VarChar(255)
+  OriginalLink        String?   @db.VarChar(255)
+  IsAdopted           Boolean?  @default(false)
+  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
+  UpdatedAt           DateTime? @default(now()) @db.DateTime(0)
+  ViewCount           Int?      @default(0)
+  LikeCount           Int?      @default(0)
+  DeletedAt           DateTime? @db.DateTime(0)
+  Answer              Answer[]
+  User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_ibfk_1")
+  ViewLog             ViewLog[]
+
+  @@index([UserId], map: "UserId")
+  @@index([DeletedAt, CreatedAt(sort: Desc)], map: "idx_question_filter_sort")
+}
+
+model Question_Temporary {
+  Id                  Int       @id @default(autoincrement())
+  UserId              Int?
+  Title               String?   @db.VarChar(255)
+  Content             String?   @db.Text
+  Tag                 String?   @db.VarChar(255)
+  ProgrammingLanguage String?   @db.VarChar(255)
+  OriginalLink        String?   @db.VarChar(255)
+  CreatedAt           DateTime? @default(now()) @db.DateTime(0)
+  User                User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Question_Temporary_ibfk_1")
+
+  @@index([UserId], map: "UserId")
+}
+
+model User {
+  Id                 Int                  @id @default(autoincrement())
+  UserId             String?              @unique(map: "UserId") @db.VarChar(255)
+  Password           String?              @db.VarChar(255)
+  Nickname           String?              @db.VarChar(255)
+  ProfileImage       String?              @db.VarChar(255)
+  Points             Int?                 @default(0)
+  CreatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  UpdatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  DeletedAt          DateTime?            @db.DateTime(0)
+  GithubId           String?              @unique(map: "GithubId") @db.VarChar(255)
+  Answer             Answer[]
+  Delete_History     Delete_History[]
+  LikeInfo           LikeInfo[]
+  Notification       Notification[]
+  Point_History      Point_History[]
+  Question           Question[]
+  Question_Temporary Question_Temporary[]
+  User_Item          User_Item[]
+}
+
+model User_Item {
+  Id           Int       @id @default(autoincrement())
+  UserId       Int?
+  ItemId       Int?
+  PurchaseDate DateTime? @db.DateTime(0)
+  User         User?     @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "User_Item_ibfk_1")
+  Item         Item?     @relation(fields: [ItemId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "User_Item_ibfk_2")
+
+  @@index([ItemId], map: "ItemId")
+  @@index([UserId], map: "UserId")
+}
+
+model ViewLog {
+  Id         Int       @id @default(autoincrement())
+  QuestionId Int?
+  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
+  Question   Question? @relation(fields: [QuestionId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "ViewLog_ibfk_1")
+
+  @@index([QuestionId], map: "QuestionId")
+}

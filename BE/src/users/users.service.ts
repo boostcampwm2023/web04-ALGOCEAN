@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -70,7 +70,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserGrade(userId: string): Promise<string> {
+  async getUserGradeAndRanking(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { UserId: userId },
     });
@@ -105,6 +105,82 @@ export class UsersService {
       grade = 'Bronze';
     }
 
-    return grade;
+    return { grade, ranking: userPosition + 1 };
+  }
+
+  async getUserProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+      select: {
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+    });
+    const { grade, ranking } = await this.getUserGradeAndRanking(userId);
+
+    return { ...user, userId, grade, ranking };
+  }
+
+  async getRankingLists() {
+    const users = await this.prisma.user.findMany({
+      where: { DeletedAt: null },
+      select: {
+        UserId: true,
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+      orderBy: [{ Points: 'desc' }, { CreatedAt: 'asc' }],
+      take: 30,
+    });
+
+    const rankingLists = await Promise.all(
+      users.map(async (user) => {
+        const { grade, ranking } = await this.getUserGradeAndRanking(
+          user.UserId,
+        );
+        return { ...user, grade, ranking };
+      }),
+    );
+
+    // userid, nickname, points, profileimage, grade, ranking를 key값으로
+    // 하는 객체를 배열에 담아 반환
+    return rankingLists.map((user) => {
+      return {
+        userId: user.UserId,
+        nickname: user.Nickname,
+        points: user.Points,
+        profileImage: user.ProfileImage,
+        grade: user.grade,
+        ranking: user.ranking,
+      };
+    });
+  }
+
+  async getRanking(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { UserId: userId },
+      select: {
+        UserId: true,
+        Nickname: true,
+        Points: true,
+        ProfileImage: true,
+      },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const { grade, ranking } = await this.getUserGradeAndRanking(userId);
+
+    return {
+      userId: user.UserId,
+      nickname: user.Nickname,
+      points: user.Points,
+      profileImage: user.ProfileImage,
+      grade: grade,
+      ranking: ranking,
+    };
   }
 }

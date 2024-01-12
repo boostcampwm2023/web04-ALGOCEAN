@@ -2,27 +2,29 @@ FROM node:20 AS builder
 
 WORKDIR /app
 COPY . .
+ENV NODE_ENV production
 RUN yarn set version berry
-RUN yarn install
+RUN yarn workspaces focus --all --production
+RUN yarn add @prisma/client
 RUN yarn prisma generate
-RUN yarn build
+RUN yarn run build
 
-FROM node:20-slim
+FROM node:20-alpine
 
-#TODO: 이미지 최적화 필요
 WORKDIR /app
 ENV NODE_ENV production
-RUN apt-get update -y && apt-get install -y openssl
+ARG GH_ENV_FILE
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/yarn.lock ./yarn.lock
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/.env ./.env
-RUN yarn set version berry
-RUN yarn workspaces focus --all --production
-COPY --from=builder /app/node_modules/.prisma/client ./node_modules/.prisma/client
+COPY --from=builder /app/node_modules ./node_modules
+
+ARG GH_ENV_FILE
+RUN test -n "$GH_ENV_FILE" && cp "$GH_ENV_FILE" .env || true
+
 EXPOSE 3000
 
 CMD ["yarn","start:prod"]

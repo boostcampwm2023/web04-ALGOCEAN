@@ -11,6 +11,8 @@ import {
   Put,
   Res,
   HttpException,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionsService } from './questions.service';
@@ -19,7 +21,8 @@ import { ReadQuestionListDto } from './dto/read-question-list.dto';
 import { QuestionListOptionsDto } from './dto/read-question-list-options.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { UpdateQuestionDraftDto } from './dto/update-question-draft.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('questions')
 @Controller('questions')
@@ -29,142 +32,20 @@ export class QuestionsController {
   @ApiOperation({
     summary: '질문 초안 생성',
     description:
-        '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다.',
+      '질문 초안을 생성합니다. 게시글 작성 페이지로 이동할 때 이 API를 반드시 호출해야합니다. (토큰 필요)',
   })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
   @Post('drafts')
-  async createDraft(@Res() res: Response) {
+  async createDraft(@Req() req, @Res() res: Response) {
     try {
-      const questionId = await this.questionsService.createOneQuestionDraft(1);
-
-      return res
-          .status(HttpStatus.CREATED)
-          .json({ message: 'Draft created successfully', id: questionId });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @ApiOperation({
-    summary: '질문 초안 읽기',
-    description: '질문 초안을 읽어옵니다.',
-  })
-  @Get('drafts')
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  async readDraft(@Res() res: Response) {
-    try {
-      const draft = await this.questionsService.readOneQuestionDraft(1);
-
-      if (!draft) {
-        return res
-            .status(HttpStatus.NOT_FOUND)
-            .json({ error: 'Draft not found' });
-      }
-
-      return res.status(HttpStatus.OK).json(draft);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-
-  @ApiOperation({
-    summary: '질문 초안 수정',
-    description: '질문 초안을 수정합니다.',
-  })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  @Put('drafts/:id')
-  async updateDraft(
-      @Param('id') id: number,
-      @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
-      @Res() res: Response,
-  ) {
-    try {
-      await this.questionsService.updateOneQuestionDraft(
-          id,
-          1,
-          updateQuestionDraftDto,
+      const questionId = await this.questionsService.createOneQuestionDraft(
+        req.user.Id,
       );
 
       return res
-          .status(HttpStatus.OK)
-          .json({ message: 'Draft updated successfully' });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @ApiOperation({
-    summary: '질문 초안 삭제',
-    description: '질문 초안을 삭제합니다.',
-  })
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
-  @Delete('drafts/:id')
-  async deleteDraft(@Param('id') id: number, @Res() res: Response) {
-    try {
-      await this.questionsService.deleteOneQuestionDraft(id, 1);
-
-      return res
-          .status(HttpStatus.OK)
-          .json({ message: 'Draft deleted successfully' });
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @Get('today')
-  async readTodayQuestion(@Res() res: Response) {
-    try {
-      const question = await this.questionsService.getTodayQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      if (error.message === 'Failed to get today question id') {
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-      }
-
-      throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-
-  @Get('/random')
-  async readRandomQuestion(@Res() res: Response) {
-    try {
-      const question = await this.questionsService.getRandomQuestionId();
-
-      res.redirect(HttpStatus.FOUND, `/questions/${question}`);
+        .status(HttpStatus.CREATED)
+        .json({ message: 'Draft created successfully', id: questionId });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -174,6 +55,146 @@ export class QuestionsController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  @ApiOperation({
+    summary: '질문 초안 읽기',
+    description: '질문 초안을 읽어옵니다. (토큰 필요)',
+  })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
+  @Get('drafts')
+  async readDraft(@Req() req, @Res() res: Response) {
+    try {
+      const draft = await this.questionsService.readOneQuestionDraft(
+        req.user.Id,
+      );
+
+      if (!draft) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ error: 'Draft not found' });
+      }
+
+      return res.status(HttpStatus.OK).json(draft);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({
+    summary: '질문 초안 수정',
+    description: '질문 초안을 수정합니다. (토큰 필요)',
+  })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
+  @Put('drafts/:id')
+  async updateDraft(
+    @Param('id') id: number,
+    @Body() updateQuestionDraftDto: UpdateQuestionDraftDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
+    try {
+      await this.questionsService.updateOneQuestionDraft(
+        id,
+        req.user.Id,
+        updateQuestionDraftDto,
+      );
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft updated successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({
+    summary: '질문 초안 삭제',
+    description: '질문 초안을 삭제합니다. (토큰 필요)',
+  })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('drafts/:id')
+  async deleteDraft(@Param('id') id: number, @Req() req, @Res() res: Response) {
+    try {
+      await this.questionsService.deleteOneQuestionDraft(id, req.user.Id);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Draft deleted successfully' });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('today')
+  async readTodayQuestion() {
+    try {
+      const todayQuestion = await this.questionsService.getTodayQuestion();
+      if (!todayQuestion) {
+        throw new HttpException('No Content', HttpStatus.NO_CONTENT);
+      }
+      return todayQuestion;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('/random')
+  async readRandomQuestion() {
+    try {
+      return await this.questionsService.getRandomQuestion();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({
+    summary: '급상승 질문 API',
+    description: '급상승 질문을 조회합니다.',
+  })
+  @Get('/trending')
+  async getMostViewedQuestion() {
+    const trendingQuetion = await this.questionsService.getTrendingQuestion();
+
+    if (!trendingQuetion) {
+      throw new HttpException('No Content', HttpStatus.NO_CONTENT);
+    }
+
+    return trendingQuetion;
   }
 
   @ApiOperation({
@@ -201,19 +222,20 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 생성',
-    description: '질문을 생성합니다.',
+    description: '질문을 생성합니다. (토큰 필요)',
   })
-
-  // TODO: Use UserGuard to obtain the user ID and associate it with the question
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('Authorization')
   @Post()
   async createQuestion(
     @Body() createQuestionDto: CreateQuestionDto,
+    @Req() req,
     @Res() res: Response,
   ) {
     try {
       const questionId = await this.questionsService.createOneQuestion(
         createQuestionDto,
-        1,
+        req.user.Id,
       );
 
       return res
@@ -255,13 +277,21 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 삭제',
-    description: '질문을 삭제합니다.',
+    description: '질문을 삭제합니다. (토큰 필요)',
   })
-  // TODO: use UserGuard to check if user is the owner of the question
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('Authorization')
   @Delete(':id')
-  async deleteOneQuestion(@Param('id') id: number, @Res() res: Response) {
+  async deleteOneQuestion(
+    @Param('id') id: number,
+    @Req() req,
+    @Res() res: Response,
+  ) {
     try {
-      const isDeleted = await this.questionsService.deleteOneQuestion(id, 1);
+      const isDeleted = await this.questionsService.deleteOneQuestion(
+        id,
+        req.user.Id,
+      );
 
       if (isDeleted) {
         return res
@@ -303,19 +333,21 @@ export class QuestionsController {
 
   @ApiOperation({
     summary: '질문 수정',
-    description: '질문을 수정합니다.',
+    description: '질문을 수정합니다. (토큰 필요)',
   })
-  // TODO: use UserGuard to check if user is the owner of the question
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('Authorization')
   @Put(':id')
   async updateOneQuestion(
     @Param('id') id: number,
     @Body() updateQuestionDto: UpdateQuestionDto,
+    @Req() req,
     @Res() res: Response,
   ) {
     try {
       const isUpdated = await this.questionsService.updateOneQuestion(
         id,
-        1,
+        req.user.Id,
         updateQuestionDto,
       );
 

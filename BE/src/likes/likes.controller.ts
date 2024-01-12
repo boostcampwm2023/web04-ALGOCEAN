@@ -1,14 +1,21 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { LikesService } from './likes.service';
 import { CreateLikesDto } from './create-likes.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
 @Controller('likes')
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
-  // TODO: use UserGuard to obtain the user ID and associate it with the likes
+  @ApiOperation({
+    summary: '좋아요',
+    description: '좋아요를 토글합니다. (토큰 필요)',
+  })
+  @ApiBearerAuth('Authorization')
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() createLikesDto: CreateLikesDto) {
-    return this.likesService.toggleLike(1, createLikesDto);
+  async create(@Body() createLikesDto: CreateLikesDto, @Req() req) {
+    return this.likesService.toggleLike(req.user.Id, createLikesDto);
   }
 }

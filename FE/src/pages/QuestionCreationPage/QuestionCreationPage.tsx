@@ -16,9 +16,15 @@ import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import {
   createQuestionAPI,
+  getDraftQuestionAPI,
   putDraftQuestionAPI,
-} from '../../api/questionService';
+} from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
+import { QuestionCreatePageMetas } from '../../metas/metas';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
+import { DraftData } from '../../types/type';
 
 const POLLING_INTERVAL = 20000;
 const TAG_LIST = ['baekjoon', 'programmers', 'leetcode', 'etc'];
@@ -36,25 +42,81 @@ const PROGRAMMING_LANGUAGE_LIST = [
   'Swift',
   'etc',
 ];
-const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
 
-const BUTTON_ONCLICK_HANDLER = [
-  () => {
-    //console.log('질문 등록하기');
-  },
-  () => {
-    //console.log('임시 등록');
-  },
-  () => {
-    //console.log('작성 취소하기');
-  },
-];
+const TAG_IDX_DICT: any = {
+  baekjoon: 0,
+  programmers: 1,
+  leetcode: 2,
+  etc: 3,
+};
+
+const PROGRAMMING_LANGUAGE_IDX_DICT: any = {
+  C: 0,
+  'C++': 1,
+  'C#': 2,
+  Go: 3,
+  Java: 4,
+  JavaScript: 5,
+  Kotlin: 6,
+  Python3: 7,
+  Ruby: 8,
+  Scala: 9,
+  Swift: 10,
+  etc: 11,
+};
+
+const BUTTON_LABEL_LIST = ['질문 등록하기', '임시 등록', '작성 취소하기'];
 
 const QuestionCreationPage = () => {
   const navigate = useNavigate();
   // draft ID 가져오기
   const location = useLocation();
   const locationData = location.state?.id || null;
+
+  const queryClient = useQueryClient();
+  // 사이드 바 버튼 핸들러
+  const BUTTON_ONCLICK_HANDLER = [
+    () => {},
+    () => {
+      putDraftQuestion();
+      Swal.fire({
+        icon: 'success',
+        title: '글이 임시 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
+    },
+    () => {
+      navigate('/');
+    },
+  ];
+
+  // 기존 draft 가져오는 로직
+  const getDraftData = async () => {
+    return await getDraftQuestionAPI();
+  };
+
+  const { data: draftData } = useQuery<DraftData>({
+    queryKey: ['draft'],
+    queryFn: getDraftData,
+    staleTime: 0,
+    gcTime: 0,
+  });
+
+  useDidMountEffect(() => {
+    if (!draftData) return;
+    setFormData({
+      title: draftData.title,
+      tag: draftData.tag,
+      programmingLanguage: draftData.programmingLanguage,
+      originalLink: draftData.originalLink,
+      draftId: locationData,
+    });
+    handleButtonClick('tagActiveButton', TAG_IDX_DICT[draftData.tag]);
+    handleButtonClick(
+      'programmingLanguageActiveButton',
+      PROGRAMMING_LANGUAGE_IDX_DICT[draftData.programmingLanguage],
+    );
+  }, [draftData]);
 
   // 서버에 제출할 데이터
   const [formData, setFormData] = useState({
@@ -85,14 +147,19 @@ const QuestionCreationPage = () => {
     };
   };
 
-  // 폼 제출 핸들러
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const postQuestion = async () => {
     const createQuestionData = preprocessData();
-    try {
-      await createQuestionAPI(createQuestionData);
+    return await createQuestionAPI(createQuestionData);
+  };
+  // 질문 등록
+  const { mutate: createQuestion } = useMutation({
+    mutationFn: postQuestion,
+    onSuccess: () => {
+      // 성공적인 뮤테이션 후 'questionList' 쿼리를 무효화하고 UI를 다시 불러온다.
+      queryClient.invalidateQueries({ queryKey: ['questionList'] });
       navigate('/');
-    } catch (error: any) {
+    },
+    onError: (error: any) => {
       if (error.response) {
         // 서버 응답이 있는 경우 (오류 상태 코드 처리)
         if (error.response.status === 400) {
@@ -104,7 +171,51 @@ const QuestionCreationPage = () => {
         // 서버 응답이 없는 경우 (네트워크 오류 등)
         console.error('Error creating question:', error.message);
       }
-      throw error;
+    },
+  });
+
+  // URL 검사
+  const isValidURL = (text: string) => {
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlRegex.test(text);
+  };
+
+  // 유효성 검사
+  const checkValidation = () => {
+    const errorMessages = [];
+
+    if (formData.title.trim() === '') {
+      errorMessages.push('제목을 입력해 주세요.');
+    }
+
+    if (!isValidURL(formData.originalLink)) {
+      errorMessages.push('유효한 URL을 입력해 주세요.');
+    }
+
+    if (errorMessages.length > 0) {
+      const errorMessageHTML = errorMessages.join('<br>');
+      Swal.fire({
+        icon: 'error',
+        title: '질문 등록 실패',
+        html: errorMessageHTML,
+        confirmButtonText: '확인',
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  // 폼 제출 핸들러
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (checkValidation()) {
+      Swal.fire({
+        icon: 'success',
+        title: '글이 등록되었습니다.',
+        confirmButtonText: '확인',
+      });
+      createQuestion();
     }
   };
 
@@ -125,15 +236,22 @@ const QuestionCreationPage = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   // 임시글 저장 처리
-  const [pollingIntervalId, setPollingIntervalId] = useState<
-    number | undefined
-  >(undefined);
+  const putDraft = async () => {
+    const putQuestionData = preprocessData();
+    return await putDraftQuestionAPI(putQuestionData);
+  };
+
+  const { mutate: putDraftQuestion } = useMutation({
+    mutationFn: putDraft,
+    onError: () => console.error('실패'),
+  });
+
+  const [pollingIntervalId, setPollingIntervalId] = useState<any>();
 
   const handleFocus = () => {
     // 폴링 시작
-    const intervalId = setInterval(async () => {
-      const putQuestionData = preprocessData();
-      await putDraftQuestionAPI(putQuestionData);
+    const intervalId = setInterval(() => {
+      putDraftQuestion();
     }, POLLING_INTERVAL);
     setPollingIntervalId(intervalId);
   };
@@ -145,6 +263,7 @@ const QuestionCreationPage = () => {
 
   return (
     <Main>
+      <QuestionCreatePageMetas />
       <InnerDiv className="inner">
         <Header>질문 작성</Header>
         <Form className="contentContainer" onSubmit={handleSubmit}>
@@ -152,7 +271,7 @@ const QuestionCreationPage = () => {
             <Label>제목</Label>
             <Input
               type="text"
-              value={formData.title}
+              value={formData.title || ''}
               placeholder="내용을 입력해 주세요."
               onFocus={handleFocus}
               onBlur={handleBlur}
@@ -163,6 +282,7 @@ const QuestionCreationPage = () => {
               handleFocusCallback={preprocessData}
               editorState={editorState}
               setEditorState={setEditorState}
+              draftContent={draftData?.content}
             />
             <Label>문제 출처 사이트</Label>
             <ButtonWrapper>
@@ -183,7 +303,7 @@ const QuestionCreationPage = () => {
             <Label>문제 원본 링크</Label>
             <Input
               type="text"
-              value={formData.originalLink}
+              value={formData.originalLink || ''}
               placeholder="내용을 입력해 주세요."
               onChange={(e) =>
                 handleInputChange('originalLink', e.target.value)
